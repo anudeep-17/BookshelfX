@@ -44,4 +44,4 @@ BookshelfX is a full-stack web application designed to replicate the functionali
 - [ ] Incorporate user feedback and feature requests for future iterations.
 
 ## Conclusion
-By following these milestones and project management practices, we aim to deliver a high-quality library management system that meets the needs of both librarians and customers.📚🌟
+To deliver a high-quality library management system that meets the needs of both librarians and customers.📚🌟
