@@ -5,9 +5,8 @@ import theme from '../Themes';
 import {ThemeProvider} from '@mui/material/styles';
 import Image from 'next/image';
 import Login_image from "../../assets/Login_image.jpg"
-import Login from './Login';
 import { Typography } from '@mui/material';
- 
+import Login_Signup from './Login_Signup';
  
 export default function Auth()
 {
@@ -52,7 +51,7 @@ export default function Auth()
                             <Typography variant="h3" letterSpacing={4}
                                 sx={{
                                     mb:4,
-                                    fontFamily: 'Roboto, sans-serif',
+                                    fontFamily: 'Sedan, serif',
                                     color: theme.palette.text.disabled,
                                     display: 'inline' // Add this to keep them on the same line
                                 }}
@@ -70,7 +69,7 @@ export default function Auth()
                                 X
                             </Typography>
                         </Box>
-                        <Login />
+                        <Login_Signup />
                     </Box>
                 </Box>
         </ThemeProvider>
