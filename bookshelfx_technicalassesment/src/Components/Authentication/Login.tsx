@@ -18,7 +18,7 @@ export default function Login()
                 <Typography variant="h4" letterSpacing={2}>
                     Login
                 </Typography>
-                <Typography variant="body2" letterSpacing={0}>
+                <Typography variant="body2" letterSpacing={0} sx={{mt:1}}>
                     Welcome back to BookshelfX! Please enter your details to login.
                 </Typography>
 

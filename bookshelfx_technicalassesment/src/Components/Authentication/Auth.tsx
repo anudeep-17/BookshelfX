@@ -6,6 +6,7 @@ import {ThemeProvider} from '@mui/material/styles';
 import Image from 'next/image';
 import Login_image from "../../assets/Login_image.jpg"
 import Login from './Login';
+import { Typography } from '@mui/material';
  
  
 export default function Auth()
@@ -42,8 +43,33 @@ export default function Auth()
                     justifyContent: 'center',
                     alignItems: 'center',
                     alignContent: 'center',
-                    flexDirection: ['column', 'row'], // column layout for small screens, row layout for larger screens
+                    flexDirection: ['column', 'column'], // column layout for small screens, row layout for larger screens
                     }}>
+                        <Box sx={{
+                            flexDirection: 'row', // column layout for small screens, row layout for larger screens
+                            mb: 7
+                        }}>
+                            <Typography variant="h3" letterSpacing={4}
+                                sx={{
+                                    mb:4,
+                                    fontFamily: 'Roboto, sans-serif',
+                                    color: theme.palette.text.disabled,
+                                    display: 'inline' // Add this to keep them on the same line
+                                }}
+                            >
+                                BookShelf
+                            </Typography>
+                            <Typography variant="h2" letterSpacing={4}
+                                sx={{
+                                    mb:4,
+                                    fontFamily: 'Roboto, sans-serif',
+                                    color: theme.palette.text.secondary, // Change this to the color you want for "X"
+                                    display: 'inline' // Add this to keep them on the same line
+                                }}
+                            >
+                                X
+                            </Typography>
+                        </Box>
                         <Login />
                     </Box>
                 </Box>
