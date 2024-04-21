@@ -3,17 +3,24 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import theme from '../Themes';
 import { ThemeProvider } from '@mui/material/styles';
-import { Typography } from '@mui/material';
+import { FormControl, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 export default function Login_Signup() {
     const [isregister, setisregister] = React.useState(false);
+    const [Role, setRole] = React.useState('');
 
     const handleRegisterRequest = () => {
         setisregister(true);
     };
+
+    const handleRoleChange = (event: SelectChangeEvent) => {
+        setRole(event.target.value as string);
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -79,6 +86,20 @@ export default function Login_Signup() {
                                 type="password"
                                 sx={{ mb: 2 }}
                             />
+                             <FormControl fullWidth sx={{mt:1}}>
+                                <InputLabel id="demo-simple-select-label">Role</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={Role}
+                                    label="Role"
+                                    onChange={handleRoleChange}
+                                    sx={{ mb: 2 }}
+                                >
+                                    <MenuItem value={'Librarian'}>Librarian</MenuItem>
+                                    <MenuItem value={'Customer'}>Customer</MenuItem>
+                                </Select>
+                            </FormControl>
 
                             <Button
                                 variant="contained"
