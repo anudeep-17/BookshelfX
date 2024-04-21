@@ -1,4 +1,6 @@
 import { createTheme } from "@mui/material";
+import '@fontsource/montserrat'; 
+
 
 // Create a theme instance
 const theme = createTheme({
@@ -18,7 +20,7 @@ const theme = createTheme({
         }
     },
     typography: {
-        fontFamily: 'Roboto,sans-serif',
+        fontFamily:'Montserrat, sans-serif',
     },
 });
 
