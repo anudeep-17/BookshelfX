@@ -20,7 +20,7 @@ export default function BookCard({ image, title, description, rating }: BookCard
     const [value, setValue] = React.useState<number | null>(rating);
     return(
         <ThemeProvider theme={theme}>
-            <Card sx={{ maxWidth: 345, minWidth:345, mb:2, ml:2}}>
+            <Card sx={{ maxWidth: 330, minWidth:300, mb:2, ml:2}}>
                 <CardMedia
                     sx={{ height: 140 }}
                     image={image}
@@ -36,8 +36,8 @@ export default function BookCard({ image, title, description, rating }: BookCard
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button size="small">Share</Button>
-                    <Button size="small">Learn More</Button>
+                    <Button size="small">Checkout</Button>
+                    <Button size="small">Learn More.</Button>
                 </CardActions>
             </Card>
         </ThemeProvider>

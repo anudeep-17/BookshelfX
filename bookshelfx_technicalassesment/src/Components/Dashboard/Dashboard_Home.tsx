@@ -10,11 +10,13 @@ import Navbar from '../Navbar/Navbar';
 import { AccountCircle } from '@mui/icons-material';
 import SavedSearchIcon from '@mui/icons-material/SavedSearch';
 import BookCard from './BookCard';
+ 
 
 export default function Dashboard_Home()
 {
-    const[searchLabel, setSearchLabel] = React.useState("Search for books, authors, genres...")
-
+    const [searchLabel, setSearchLabel] = React.useState("Search for books, authors, genres...");
+ 
+    
     return(
         <ThemeProvider theme={theme}>
             <Navbar/>
@@ -77,7 +79,7 @@ export default function Dashboard_Home()
                         label={searchLabel}
                         variant="outlined"
                         onFocus={() => setSearchLabel("")} // Change the label text when the TextField is focused
-                        onBlur={() => setSearchLabel("Search for books, authors, genres...")} // Change the label text back when the TextField loses focus
+                        onBlur={() => setSearchLabel("Search for books, authors, genres...")} // Change the label text based on the screen size when the TextField loses focus
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
@@ -91,7 +93,8 @@ export default function Dashboard_Home()
                         }}
                         sx={{
                             width:"100%",
-                            marginTop:5,
+                            mt:5,
+                            mb:5,
                             color: 'black', // Change the color of the text to black
                             '& .MuiOutlinedInput-root': { // Change the border radius of the TextField
                                 borderRadius: '50px',
@@ -114,11 +117,13 @@ export default function Dashboard_Home()
                 <Box sx={{
                     display: 'flex',
                     flexDirection: ['column', 'row'], // column layout for small screens, row layout for larger screens
-                    flexWrap: 'wrap', // allow cards to wrap to the next line
+                    flexWrap: 'wrap', // allow cards to wrap to the next line\
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    alignContent: 'center',
                     width: '100%',
                     height: '100%',
-                    mt: 2,
-                    ml: 2,
+                    mt: 3,
                 }}>
                     <BookCard 
                         image="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0"
