@@ -3,24 +3,41 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import theme from '../Themes';
 import {ThemeProvider} from '@mui/material/styles';
-import Image from 'next/image';
 import DashBoardImage from "../../assets/Dasboard_image1.jpg"
 import { InputAdornment, TextField, Typography } from '@mui/material';
 import Navbar from '../Navbar/Navbar';
-import { AccountCircle } from '@mui/icons-material';
 import SavedSearchIcon from '@mui/icons-material/SavedSearch';
 import BookCard from './BookCard';
- 
+import BookDetails from '../BookDetails/BookDetails';
+import { Book } from '../Book';
+import BooksData from  "../Mock-BookData.json";
 
 export default function Dashboard_Home()
 {
     const [searchLabel, setSearchLabel] = React.useState("Search for books, authors, genres...");
- 
+    const [isBookSelected, setIsBookSelected] = React.useState(false);
+    const [selectedBook, setSelectedBook] = React.useState<Book | null>(null);
+
+    const handleLearMoreClick = (book: any) => {
+        setIsBookSelected(true);
+        setSelectedBook(book);    
+    }
     
     return(
         <ThemeProvider theme={theme}>
             <Navbar/>
-            <Box
+            {isBookSelected? 
+                <BookDetails
+                    bookimage={selectedBook?.bookimage || ""}
+                    title={selectedBook?.title || ""}
+                    description={selectedBook?.description || ""}
+                    rating={selectedBook?.rating|| 0}
+                    publisher={selectedBook?.publisher|| ""}
+                    publishedDate={selectedBook?.publishedDate|| ""}
+                    category={selectedBook?.category|| ""}
+                    pageCount={selectedBook?.pageCount|| 0}
+                    customerReviews={selectedBook?.customerReviews|| ["No review available"]}
+                />:<Box
                 sx={{
                     display: 'flex',
                     flexDirection: ['column', 'column'], // column layout for small screens, row layout for larger screens
@@ -125,69 +142,23 @@ export default function Dashboard_Home()
                     height: '100%',
                     mt: 3,
                 }}>
-                    <BookCard 
-                        image="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0"
-                        title="The Great Gatsby"
-                        description="The Great Gatsby is a novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan."
-                        rating={4}
-                   />
-                    <BookCard 
-                        image="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0"
-                        title="The Great Gatsby"
-                        description="The Great Gatsby is a novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan."
-                        rating={4}
-                    />
-                    <BookCard
-                        image="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0"
-                        title="The Great Gatsby"
-                        description="The Great Gatsby is a novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan."
-                        rating={4}
-                    />
-                    <BookCard
-                        image="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0"
-                        title="The Great Gatsby"
-                        description="The Great Gatsby is a novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan."
-                        rating={4}
-                    />
-                     <BookCard
-                        image="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0"
-                        title="The Great Gatsby"
-                        description="The Great Gatsby is a novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan."
-                        rating={4}
-                   />
-                     <BookCard
-                        image="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0"
-                        title="The Great Gatsby"
-                        description="The Great Gatsby is a novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan."
-                        rating={4}
-                    />
-                     <BookCard
-                        image="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0"
-                        title="The Great Gatsby"
-                        description="The Great Gatsby is a novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan."
-                        rating={4}
-                    />
-                     <BookCard
-                        image="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0"
-                        title="The Great Gatsby"
-                        description="The Great Gatsby is a novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan."
-                        rating={4}
-                    />
-                    <BookCard
-                        image="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0"
-                        title="The Great Gatsby"
-                        description="The Great Gatsby is a novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan."
-                        rating={4}  
-                    />
-                     <BookCard
-                        image="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0"
-                        title="The Great Gatsby"
-                        description="The Great Gatsby is a novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan."
-                        rating={4}
-                    />
+                    {BooksData.map((book, index) => (
+                        <BookCard
+                            key={index}
+                            image={book.bookimage}
+                            title={book.title}
+                            description={book.description}
+                            rating={book.rating}
+                            onLearnMore={() => handleLearMoreClick(book)}
+                        />
+                    ))}
                 </Box>
-            </Box>
+            </Box>}
         </ThemeProvider>
     )
+}
+
+function setSelectedBook(book: any) {
+    throw new Error('Function not implemented.');
 }
  

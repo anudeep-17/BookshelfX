@@ -8,25 +8,29 @@ import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import { ThemeProvider } from '@mui/material';
 import theme from '../Themes';
+import { BookCardProps } from '../Book';
 
-export interface BookCardProps {
-    image: string;
-    title: string;
-    description: string;
-    rating: number;
-}
-
-export default function BookCard({ image, title, description, rating }: BookCardProps) {
+export default function BookCard({ image, title, description, rating, onLearnMore}: BookCardProps) {
     const [value, setValue] = React.useState<number | null>(rating);
     return(
         <ThemeProvider theme={theme}>
-            <Card sx={{ maxWidth: 330, minWidth:300, mb:2, ml:2}}>
+          <Card sx={{ 
+                maxWidth: 330, 
+                minWidth:330,
+                maxHeight: 480,
+                minHeight: 480,
+                mb:3, 
+                ml:2,
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'space-between' 
+            }}>
                 <CardMedia
-                    sx={{ height: 140 }}
+                    sx={{ height: 200, flex: '0 0 auto' }}
                     image={image}
                     title={title}
                 />
-                <CardContent>
+                <CardContent sx={{ flex: '1 0 auto' }}>
                     <Typography gutterBottom variant="h5" component="div">
                         {title}
                     </Typography>
@@ -35,9 +39,9 @@ export default function BookCard({ image, title, description, rating }: BookCard
                         {description}
                     </Typography>
                 </CardContent>
-                <CardActions>
+                <CardActions sx={{ flex: '0 0 auto' }}>
                     <Button size="small">Checkout</Button>
-                    <Button size="small">Learn More.</Button>
+                    <Button size="small" onClick={onLearnMore}>Learn More.</Button>
                 </CardActions>
             </Card>
         </ThemeProvider>
