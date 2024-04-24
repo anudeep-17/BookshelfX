@@ -7,7 +7,7 @@ import Rating from '@mui/material/Rating';
 import {Book} from '../Book'; 
 import Image from 'next/image';
 
-export default function BookDetails({bookimage, title, description, rating, publisher, publishedDate, category, pageCount, customerReviews}: Book)
+export default function BookDetails({ISBN, bookimage, title, description, rating, publisher, publishedDate, category, pageCount, customerReviews}: Book)
 {
     console.log(bookimage);
     return(
@@ -60,6 +60,9 @@ export default function BookDetails({bookimage, title, description, rating, publ
                          &quot;{title}&quot;
                     </Typography>
                     <Rating name="read-only" value={rating} readOnly sx={{mb:1,mt:1}}/>
+                    <Typography variant="body1" letterSpacing={0} sx={{fontWeight:"bold", mt:2}}> 
+                        ISBN: {ISBN}
+                    </Typography>
                     <Typography variant="body1" letterSpacing={0} sx={{fontWeight:"bold", mt:2}}> 
                         Description of the book: {description}
                     </Typography>

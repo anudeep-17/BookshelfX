@@ -1,4 +1,5 @@
 export interface Book {
+    ISBN: string;
     bookimage: string;
     title: string;
     description: string;

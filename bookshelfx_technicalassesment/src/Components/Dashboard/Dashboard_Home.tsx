@@ -28,6 +28,7 @@ export default function Dashboard_Home()
             <Navbar/>
             {isBookSelected? 
                 <BookDetails
+                    ISBN={selectedBook?.ISBN || ""}
                     bookimage={selectedBook?.bookimage || ""}
                     title={selectedBook?.title || ""}
                     description={selectedBook?.description || ""}
