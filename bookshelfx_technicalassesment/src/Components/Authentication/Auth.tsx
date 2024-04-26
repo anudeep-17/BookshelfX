@@ -25,7 +25,7 @@ export default function Auth()
                     <Box sx={{
                             position: 'relative', // make this box positioned
                             width: ['100%', '50%'], // full width on small screens, half width on larger screens
-                            minHeight: ['25vh','98vh'], 
+                            minHeight: ['25vh','100vh'], 
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',

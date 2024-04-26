@@ -9,9 +9,15 @@ import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { red } from '@mui/material/colors';
 
 export default function Login_Signup() {
     const [isregister, setisregister] = React.useState(false);
+    const [Email, setEmail] = React.useState('');
+    const [Password, setPassword] = React.useState('');
+    const [Name, setName] = React.useState('');
+    const [ConfirmPassword, setConfirmPassword] = React.useState('');
+    const [passwordMatch, setpasswordMatch] = React.useState(false);
     const [Role, setRole] = React.useState('');
 
     const handleRegisterRequest = () => {
@@ -21,6 +27,16 @@ export default function Login_Signup() {
     const handleRoleChange = (event: SelectChangeEvent) => {
         setRole(event.target.value as string);
     }
+
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
+        setpasswordMatch(e.target.value === ConfirmPassword);
+    };
+    
+    const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setConfirmPassword(e.target.value);
+        setpasswordMatch(Password === e.target.value);
+    };
 
     return (
         <ThemeProvider theme={theme}>
@@ -62,6 +78,7 @@ export default function Login_Signup() {
                                 label="Name"
                                 variant="standard"
                                 sx={{ mb: 2 }}
+                                onChange={(e) => setName(e.target.value)}
                             />
                             <TextField
                                 required
@@ -69,6 +86,7 @@ export default function Login_Signup() {
                                 label="Email"
                                 variant="standard"
                                 sx={{ mb: 2 }}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                             <TextField
                                 required
@@ -76,7 +94,8 @@ export default function Login_Signup() {
                                 label="Pasword"
                                 variant="standard"
                                 type="password"
-                                sx={{ mb: 2 }}
+                                sx={{ mb: 2, ...(passwordMatch ? {} : { color: red[500], '& .MuiInput-underline:after': { borderBottomColor: red[500] } }) }}
+                                onChange={handlePasswordChange}
                             />
                             <TextField
                                 required
@@ -84,7 +103,8 @@ export default function Login_Signup() {
                                 label="Confirm Pasword"
                                 variant="standard"
                                 type="password"
-                                sx={{ mb: 2 }}
+                                sx={{ mb: 2, ...(passwordMatch ? {} : { color: red[500], '& .MuiInput-underline:after': { borderBottomColor: red[500] } }) }}
+                                onChange={handleConfirmPasswordChange}
                             />
                              <FormControl fullWidth sx={{mt:1}}>
                                 <InputLabel id="demo-simple-select-label">Role</InputLabel>

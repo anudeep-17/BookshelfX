@@ -6,8 +6,8 @@ export default function Home() {
   return (
     <div>
         {/* <Navbar /> */}
-        {/* <Auth /> */}
-        <Dashboard_Home />
+        <Auth />
+        {/* <Dashboard_Home /> */}
     </div>
   );
 }
