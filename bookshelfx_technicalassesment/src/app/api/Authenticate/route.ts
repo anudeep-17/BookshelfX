@@ -12,7 +12,6 @@ export async function POST(req:Request) {
                 email
             }
         })
-        console.log(user)
         if (!user) {
             return NextResponse.json({ message: "Invalid email or password" }, {status: 401});
         }

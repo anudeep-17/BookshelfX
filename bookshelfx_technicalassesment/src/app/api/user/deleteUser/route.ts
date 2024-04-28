@@ -6,7 +6,7 @@ export async function DELETE(req: NextApiRequest)
 {
     const url = new URL(req.url || '');
     const ID = url.searchParams.get('id');
-    console.log(ID);
+
     try{
         const user = await database.user.findUnique({
             where: {id: Number(ID)}

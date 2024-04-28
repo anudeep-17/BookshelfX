@@ -6,7 +6,6 @@ import bcrypt from 'bcrypt';
 export async function PATCH(req:Request) 
 {
     const {id, password } = await req.json();   
-    console.log(id, password);
     const hashedpassword = await bcrypt.hash(password, 10);
 
     try{
