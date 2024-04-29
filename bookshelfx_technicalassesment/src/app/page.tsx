@@ -7,7 +7,9 @@ import { Snackbar } from "@mui/material";
 import { Alert } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { AuthProvider } from "@/Components/Context/AuthContext";
+import { AuthContext } from "@/Components/Context/AuthContext";
+import Cookies from 'js-cookie';
+
 
 const Dashboard_Home = dynamic(() => import('@/Components/Dashboard/Dashboard_Home'), {})
 const Auth = dynamic(() => import('@/Components/Authentication/Auth'), {} )
@@ -17,20 +19,33 @@ export default function Home() {
   const [isLoading, setIsLoading] = React.useState(true);
 
   useEffect(() => {
-    const user = sessionStorage.getItem('user');
-    if (user) {
-      setIsAuthenticated(true);
+    try {
+      const user = Cookies.get('user');
+      if (user) {
+        setIsAuthenticated(true);
+      }
+    } catch (error) {
+      
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
-  }, []);
-
+  }, [setIsAuthenticated]);
+    
   if (isLoading) {
-    return null; // or return a loading spinner
+    return null; // replace with your actual loading component
   }
-  
+
   return (
-    <AuthProvider>
-      {isAuthenticated ? <Dashboard_Home /> : <Auth />}
-    </AuthProvider>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+      <div>
+        {isAuthenticated ? (
+          <>
+           <Dashboard_Home />
+          </>
+        ) : (
+          <Auth />
+        )}
+      </div>
+    </AuthContext.Provider>
   );
 }

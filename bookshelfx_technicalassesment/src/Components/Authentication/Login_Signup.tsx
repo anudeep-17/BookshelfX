@@ -10,12 +10,14 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { red } from '@mui/material/colors';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Create, Visibility, VisibilityOff } from '@mui/icons-material';
 import { AuthContext } from '../Context/AuthContext';
-import { Authentication } from '@/Services/UserRoutines';
+import { Authentication, RegisterUser } from '@/Services/UserRoutines';
 import {User} from '../interfaceModels';
 import { UserContext } from '../Context/UserContext';
 import Snackbar from '@mui/material/Snackbar';
+import Cookies from 'js-cookie';
+
 
 export default function Login_Signup() {
     const [isregister, setisregister] = React.useState(false);
@@ -71,6 +73,34 @@ export default function Login_Signup() {
             }
             setUser(user);
             sessionStorage.setItem('user', JSON.stringify(user));
+            Cookies.set('user', JSON.stringify(user));
+            setShowAuthenticationSuccess(true);
+            setIsAuthenticated(true);
+        }
+        else
+        {
+            setShowAuthenticationFailed(true);
+        }
+    }
+    
+    const handleRegister = async () => {
+        const Registerdetails = {
+            name: Name,
+            email: Email,
+            password: Password,
+            role: Role
+        }
+        const register = await RegisterUser(Registerdetails);
+        if(register.success)
+        {
+            const user: User = {
+                id: register.user.id,
+                email: register.user.email,
+                name:  register.user.name,
+                role:  register.user.role,
+            }
+            setUser(user);
+            sessionStorage.setItem('user', JSON.stringify(user));
             setShowAuthenticationSuccess(true);
             setIsAuthenticated(true);
         }
@@ -113,7 +143,12 @@ export default function Login_Signup() {
                                 overflowX: 'hidden', // disable horizontal scrolling
                                 overflowY: 'hidden', // disable vertical scrolling
                             }}
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleRegister();
+                            }}
                         >
+                            
                             <TextField
                                 required
                                 id="standard-required"
@@ -170,7 +205,8 @@ export default function Login_Signup() {
                                     mt: 2,
                                     mb: 2,
                                 }}
-                                onClick={handleRegisterRequest}
+                                onClick={handleRegister}
+                                type='submit'
                             >
                                 Register
                             </Button>
@@ -213,6 +249,10 @@ export default function Login_Signup() {
                                 overflowX: 'hidden', // disable horizontal scrolling
                                 overflowY: 'hidden', // disable vertical scrolling
                             }}
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleAuthentication();
+                            }}
                         >
                             <TextField
                                 required
@@ -253,6 +293,7 @@ export default function Login_Signup() {
                                 onClick={() => {
                                     handleAuthentication();
                                 }}
+                                type='submit'
                             >
                                 Login
                             </Button>

@@ -11,7 +11,7 @@ export async function POST(req: Request)
         });
     
         if(existingUserByEmail){
-            return NextResponse.json({user: null, essage: "User already exists"}, {status: 409});
+            return NextResponse.json({success:false, user: null, essage: "User already exists"}, {status: 409});
         }
         const saltRounds = 10;
         const hashedpassword = await bcrypt.hash(password, saltRounds);
@@ -26,9 +26,9 @@ export async function POST(req: Request)
         });
         const {password:newUserPassword, ...user} = newuser;
 
-        return NextResponse.json({message:"User created successfully", user:user}, {status: 200});
+        return NextResponse.json({success: true, message:"User created successfully", user:user}, {status: 200});
     }
     catch(e){
-        return NextResponse.json({message: "An error occured"}, {status: 500});
+        return NextResponse.json({success:false , message: "An error occured"}, {status: 500});
     }
 }

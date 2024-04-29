@@ -1,6 +1,6 @@
 import { User } from '../Components/interfaceModels';
 
-export async function CreateUser({email, password, name, role}: User)
+export async function RegisterUser({email, password, name, role}: User)
 {
     const response = await fetch('/api/user/createUser', {
         method: 'POST',
