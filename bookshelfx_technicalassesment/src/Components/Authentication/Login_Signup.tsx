@@ -28,8 +28,6 @@ export default function Login_Signup() {
     const [ConfirmPassword, setConfirmPassword] = React.useState('');
     const [passwordMatch, setpasswordMatch] = React.useState(false);
     const [Role, setRole] = React.useState('');
-
-    const [showAuthenticationSuccess, setShowAuthenticationSuccess] = React.useState(false);
     const [showAuthenticationFailed, setShowAuthenticationFailed] = React.useState(false);
 
     const { setIsAuthenticated } = React.useContext(AuthContext);
@@ -73,7 +71,6 @@ export default function Login_Signup() {
             }
             setUser(user);
             Cookies.set('user', JSON.stringify(user));
-            setShowAuthenticationSuccess(true);
             setIsAuthenticated(true);
         }
         else
@@ -100,7 +97,6 @@ export default function Login_Signup() {
             }
             setUser(user);
             Cookies.set('user', JSON.stringify(user));
-            setShowAuthenticationSuccess(true);
             setIsAuthenticated(true);
         }
         else
