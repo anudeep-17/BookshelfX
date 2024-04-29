@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import { ThemeProvider } from '@mui/material';
 import theme from '../Themes';
-import { BookCardProps } from '../Book';
+import { BookCardProps } from '../interfaceModels';
 
 export default function BookCard({ image, title, description, rating, onLearnMore}: BookCardProps) {
     const [value, setValue] = React.useState<number | null>(rating);

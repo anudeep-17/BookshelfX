@@ -3,22 +3,35 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import theme from '../Themes';
 import { ThemeProvider } from '@mui/material/styles';
-import { FormControl, Typography } from '@mui/material';
+import { Alert, FormControl, IconButton, InputAdornment, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { red } from '@mui/material/colors';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { AuthContext } from '../Context/AuthContext';
+import { Authentication } from '@/Services/UserRoutines';
+import {User} from '../interfaceModels';
+import { UserContext } from '../Context/UserContext';
+import CheckIcon from '@mui/icons-material/Check';
 
 export default function Login_Signup() {
     const [isregister, setisregister] = React.useState(false);
     const [Email, setEmail] = React.useState('');
     const [Password, setPassword] = React.useState('');
+    const [showPassword, setShowPassword] = React.useState(false);
     const [Name, setName] = React.useState('');
     const [ConfirmPassword, setConfirmPassword] = React.useState('');
     const [passwordMatch, setpasswordMatch] = React.useState(false);
     const [Role, setRole] = React.useState('');
+
+    const [showAuthenticationSuccess, setShowAuthenticationSuccess] = React.useState(false);
+    const [showAuthenticationFailed, setShowAuthenticationFailed] = React.useState(false);
+
+    const { setIsAuthenticated } = React.useContext(AuthContext);
+    const { setUser } = React.useContext(UserContext);
 
     const handleRegisterRequest = () => {
         setisregister(true);
@@ -37,6 +50,34 @@ export default function Login_Signup() {
         setConfirmPassword(e.target.value);
         setpasswordMatch(Password === e.target.value);
     };
+
+    const handleClickShowPassword = () => {
+        setShowPassword((prevShowPassword) => !prevShowPassword);
+      };
+
+    const handleAuthentication = async() => {
+        const authenticationdetails = {
+            email: Email,
+            password: Password
+        }
+        const authenticate = await Authentication(authenticationdetails);
+        if(authenticate.success)
+        {
+            const user: User = {
+                id: authenticate.user.id,
+                email: authenticate.user.email,
+                name:  authenticate.user.name,
+                role:  authenticate.user.role,
+            }
+            setUser(user);
+            setShowAuthenticationSuccess(true);
+            setIsAuthenticated(true);
+        }
+        else
+        {
+            setShowAuthenticationFailed(true);
+        }
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -178,14 +219,28 @@ export default function Login_Signup() {
                                 label="Email"
                                 variant="standard"
                                 sx={{ mb: 2 }}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
-                            <TextField
-                                required
-                                id="standard-required"
-                                label="Pasword"
-                                variant="standard"
-                                type="password"
-                                sx={{ mb: 2 }}
+                           <TextField
+                            required
+                            id="standard-required"
+                            label="Password"
+                            variant="standard"
+                            type={showPassword ? 'text' : 'password'}
+                            sx={{ mb: 2 }}
+                            InputProps={{
+                                endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    >
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                                ),
+                            }}
+                            onChange={(e) => setPassword(e.target.value)}
                             />
                             <Button
                                 variant="contained"
@@ -195,7 +250,7 @@ export default function Login_Signup() {
                                     mb: 2,
                                 }}
                                 onClick={() => {
-                                    setisregister(false);
+                                    handleAuthentication();
                                 }}
                             >
                                 Login
@@ -213,6 +268,23 @@ export default function Login_Signup() {
                         </Box>
                     </>
                 )}
+
+                {
+                    showAuthenticationSuccess ? (
+                        <Alert severity="success">
+                            Login Successful
+                        </Alert>
+                    ) : null
+                }
+                {
+                    showAuthenticationFailed ? (
+                        <Alert severity="error">
+                            Login Failed, Please check your credentials
+                        </Alert>
+                    ) : null
+                }
+
+
             </Box>
         </ThemeProvider>
     );

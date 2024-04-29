@@ -19,3 +19,10 @@ export interface BookCardProps {
     onLearnMore?: () => void;
 }
 
+export interface User {
+    id?: number;
+    email: string;
+    name: string;
+    role: string;
+    password?: string; // password is optional as it is not required for all operations
+}

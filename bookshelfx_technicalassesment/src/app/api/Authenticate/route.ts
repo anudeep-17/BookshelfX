@@ -13,17 +13,18 @@ export async function POST(req:Request) {
             }
         })
         if (!user) {
-            return NextResponse.json({ message: "Invalid email or password" }, {status: 401});
+            return NextResponse.json({ success: false, message: "User doesn't exist" }, {status: 401});
         }
 
         if(!await bcrypt.compare(password, user.password))
         {
-            return NextResponse.json({ message: "Invalid email or password" }, {status: 401});
+            return NextResponse.json({ success: false, message: "Invalid email or password" }, {status: 401});
         }
-    
-        return NextResponse.json({ message: "Login successful" }, {status: 200});
+        
+        const {password:HashedPassword, ...userData} = user;
+        return NextResponse.json({success: true, message: "Login successful", user:userData}, {status: 200});
     }
     catch(e){
-        return NextResponse.json({message: "An error occured"}, {status: 500});
+        return NextResponse.json({ success: false, message: "An error occured"}, {status: 500});
     }
 }

@@ -9,8 +9,9 @@ import Navbar from '../Navbar/Navbar';
 import SavedSearchIcon from '@mui/icons-material/SavedSearch';
 import BookCard from './BookCard';
 import BookDetails from '../BookDetails/BookDetails';
-import { Book } from '../Book';
+import { Book } from '../interfaceModels';
 import BooksData from  "../Mock-BookData.json";
+import { motion } from "framer-motion"
 
 export default function Dashboard_Home()
 {
@@ -26,6 +27,11 @@ export default function Dashboard_Home()
     return(
         <ThemeProvider theme={theme}>
             <Navbar/>
+            <motion.div
+                initial={{y:20, opacity:0}}
+                animate={{y:0, opacity:1}}
+                transition={{ease: 'easeInOut', duration:0.5}}
+            >
             {isBookSelected? 
                 <BookDetails
                     ISBN={selectedBook?.ISBN || ""}
@@ -155,11 +161,8 @@ export default function Dashboard_Home()
                     ))}
                 </Box>
             </Box>}
+            </motion.div>
         </ThemeProvider>
     )
-}
-
-function setSelectedBook(book: any) {
-    throw new Error('Function not implemented.');
 }
  

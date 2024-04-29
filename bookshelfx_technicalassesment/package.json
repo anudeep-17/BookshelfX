@@ -21,6 +21,7 @@
     "@prisma/client": "^5.13.0",
     "@vercel/postgres": "^0.8.0",
     "bcrypt": "^5.1.1",
+    "framer-motion": "^11.1.7",
     "next": "14.2.1",
     "pg": "^8.11.5",
     "pg-hstore": "^2.3.4",

@@ -4,14 +4,16 @@ import Typography from '@mui/material/Typography';
 import theme from '../Themes';
 import {ThemeProvider} from '@mui/material/styles';
 import Rating from '@mui/material/Rating';
-import {Book} from '../Book'; 
+import {Book} from '../interfaceModels'; 
 import Image from 'next/image';
+
 
 export default function BookDetails({ISBN, bookimage, title, description, rating, publisher, publishedDate, category, pageCount, customerReviews}: Book)
 {
-    console.log(bookimage);
+ 
     return(
         <ThemeProvider theme={theme}>
+            
             <Box sx={{
                 display: 'flex',
                 flexDirection: ['column', 'row'], // column layout for small screens, row layout for larger screens
@@ -90,6 +92,7 @@ export default function BookDetails({ISBN, bookimage, title, description, rating
                     }
                 </Box>
             </Box>
+           
         </ThemeProvider>
     );
 }
