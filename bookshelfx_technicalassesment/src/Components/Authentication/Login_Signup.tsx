@@ -15,7 +15,7 @@ import { AuthContext } from '../Context/AuthContext';
 import { Authentication } from '@/Services/UserRoutines';
 import {User} from '../interfaceModels';
 import { UserContext } from '../Context/UserContext';
-import CheckIcon from '@mui/icons-material/Check';
+import Snackbar from '@mui/material/Snackbar';
 
 export default function Login_Signup() {
     const [isregister, setisregister] = React.useState(false);
@@ -70,6 +70,7 @@ export default function Login_Signup() {
                 role:  authenticate.user.role,
             }
             setUser(user);
+            sessionStorage.setItem('user', JSON.stringify(user));
             setShowAuthenticationSuccess(true);
             setIsAuthenticated(true);
         }
@@ -268,14 +269,7 @@ export default function Login_Signup() {
                         </Box>
                     </>
                 )}
-
-                {
-                    showAuthenticationSuccess ? (
-                        <Alert severity="success">
-                            Login Successful
-                        </Alert>
-                    ) : null
-                }
+                
                 {
                     showAuthenticationFailed ? (
                         <Alert severity="error">
