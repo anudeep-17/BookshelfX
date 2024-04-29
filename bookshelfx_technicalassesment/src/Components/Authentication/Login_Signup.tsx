@@ -72,7 +72,6 @@ export default function Login_Signup() {
                 role:  authenticate.user.role,
             }
             setUser(user);
-            sessionStorage.setItem('user', JSON.stringify(user));
             Cookies.set('user', JSON.stringify(user));
             setShowAuthenticationSuccess(true);
             setIsAuthenticated(true);
@@ -100,7 +99,7 @@ export default function Login_Signup() {
                 role:  register.user.role,
             }
             setUser(user);
-            sessionStorage.setItem('user', JSON.stringify(user));
+            Cookies.set('user', JSON.stringify(user));
             setShowAuthenticationSuccess(true);
             setIsAuthenticated(true);
         }
