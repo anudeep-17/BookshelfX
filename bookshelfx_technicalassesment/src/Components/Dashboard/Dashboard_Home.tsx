@@ -3,19 +3,13 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import theme from '../Themes';
 import {ThemeProvider} from '@mui/material/styles';
-import DashBoardImage from "../../assets/Dasboard_image1.jpg"
-import { InputAdornment, TextField, Typography } from '@mui/material';
+import {Typography } from '@mui/material';
 import Navbar from '../Navbar/Navbar';
-import SavedSearchIcon from '@mui/icons-material/SavedSearch';
-import BookCard from './BookCard';
-import BookDetails from '../BookDetails/BookDetails';
 import { Book } from '../interfaceModels';
-import BooksData from  "../Mock-BookData.json";
 import { motion } from "framer-motion"
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -23,34 +17,54 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MailIcon from '@mui/icons-material/Mail';
-import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
+import UserDashboardComponent from '@/Components/UserDashboardComponents/UserDashboardComponent'
+import HomeIcon from '@mui/icons-material/Home';
+import CategoryIcon from '@mui/icons-material/Category';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
 
-const drawerWidth = 240;
+const drawerWidth = 210;
 
 interface Props {
-    /**
-     * Injected by the documentation to work in an iframe.
-     * Remove this when copying and pasting into your project.
-     */
     window?: () => Window;
   }
 
 export default function Dashboard_Home(props: Props)
 {
-    const [searchLabel, setSearchLabel] = React.useState("Search for books, authors, genres...");
-    const [isBookSelected, setIsBookSelected] = React.useState(false);
-    const [selectedBook, setSelectedBook] = React.useState<Book | null>(null);
-    
-    const handleLearMoreClick = (book: any) => {
-        setIsBookSelected(true);
-        setSelectedBook(book);    
-    }
-
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
+
+    const UserDrawer = [
+        {
+          text: 'Discover',
+          icon: <HomeIcon/>,
+        },
+        {
+          text: 'Category',
+          icon: <CategoryIcon />,
+        },
+        {
+          text: 'My Library',
+          icon: <MenuBookIcon/>,
+        },
+        {
+          text: 'Favourites',
+          icon: <FavoriteBorderIcon />,
+        },
+        {
+          text: 'Settings',
+          icon: <SettingsIcon/>
+        },
+        {
+          text: 'Logout',
+          icon: <LogoutIcon/>
+        }
+    ]
   
     const handleDrawerClose = () => {
       setIsClosing(true);
@@ -68,60 +82,98 @@ export default function Dashboard_Home(props: Props)
     };
   
     const drawer = (
-      <Box>
-        <Toolbar sx={{
-          mb: 4,
-        }}>
-          <Typography variant="h5">
-            <LocalLibraryIcon sx={{mr:1}}/>
-            BookshelfX
+      <ThemeProvider theme={theme}>
+        <Box sx={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Typography variant="h5" sx={{ color: theme => theme.palette.text.primary }} component="span">
+            Bookshelf
+          </Typography>
+          <Typography variant="h5" sx={{ color: theme => theme.palette.text.secondary }} component="span">
+            X
           </Typography>
         </Toolbar>
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
+          <List>
+            {UserDrawer.slice(0, 4).map((item, index) => (
+              <ListItem key={item.text} disablePadding>
+              <ListItemButton sx={{ 
+                borderRadius: '4px', // Make edges curved
+                m:2,
+                '&:hover': {
+                  backgroundColor: 'transparent',
+                  '& .MuiSvgIcon-root': {
+                    color: '#3f51b5',
+                  },
+                  '& .MuiListItemText-root': {
+                    fontWeight: 'bold',
+                  },
+                },
+                '&.Mui-selected': {
+                  '& .MuiListItemText-root': {
+                    fontWeight: 'bold',
+                  },
+                },
+              }}>
                 <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {item.icon}
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary={item.text} />
               </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Box>
+              </ListItem>
+            ))}
+          </List>
+
+          <Divider variant="middle" />
+          
+          <List>
+            {UserDrawer.slice(4).map((item, index) => (
+              <ListItem key={item.text} disablePadding>
+                <ListItemButton sx={{ 
+                  borderRadius: '4px', // Make edges curved
+                  m:2,
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    '& .MuiSvgIcon-root': {
+                      color: '#3f51b5',
+                    },
+                    '& .MuiListItemText-root': {
+                      fontWeight: 'bold',
+                    },
+                  },
+                  '&.Mui-selected': {
+                    '& .MuiListItemText-root': {
+                      fontWeight: 'bold',
+                    },
+                  },
+                }}>
+                  <ListItemIcon>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+        </ThemeProvider>
     );
 
     const container = window !== undefined ? () => window().document.body : undefined;
 
     return(
         <ThemeProvider theme={theme}>
-            <motion.div
+            {/* <motion.div
                 initial={{y:20, opacity:0}}
                 animate={{y:0, opacity:1}}
-                transition={{ease: 'easeInOut', duration:0.5}}
-            >
+                transition={{ease: 'easeInOut', duration:0.3}}
+            > */}
+            <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
                 <Navbar/>
                 <Box
                     component="nav"
                     sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-                    aria-label="mailbox folders"
+
                 >
-                {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
                 <Drawer
                 container={container}
                 variant="temporary"
@@ -149,7 +201,15 @@ export default function Dashboard_Home(props: Props)
                 {drawer}
                 </Drawer>
             </Box>
-            </motion.div>
+            <Box
+              component="main"
+              sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+            >
+              <Toolbar />
+              <UserDashboardComponent/>
+            </Box>
+          </Box>
+            {/* </motion.div> */}
         </ThemeProvider>
     )
 }

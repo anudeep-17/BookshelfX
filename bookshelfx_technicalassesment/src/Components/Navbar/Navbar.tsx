@@ -22,7 +22,7 @@ import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 export default function Navbar()
 {
