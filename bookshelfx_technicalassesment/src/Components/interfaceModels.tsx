@@ -12,6 +12,7 @@ export interface Book {
 }
 
 export interface BookCardProps {
+    id?: number;
     image: string;
     title: string;
     description: string;
