@@ -20,9 +20,9 @@ import MenuItem from '@mui/material/MenuItem';
 import '@fontsource/caveat-brush';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { DashboardSize } from '../DashboardSize';
 
-
-const drawerWidth = 200;
+const drawerWidth = DashboardSize;
 
 export default function Navbar()
 {

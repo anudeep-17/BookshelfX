@@ -5,12 +5,9 @@ import theme from '../Themes';
 import {ThemeProvider} from '@mui/material/styles';
 import {Typography } from '@mui/material';
 import Navbar from '../Navbar/Navbar';
-import { Book } from '../interfaceModels';
-import { motion } from "framer-motion"
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -26,8 +23,9 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { DashboardSize } from '../DashboardSize';
 
-const drawerWidth = 210;
+const drawerWidth = DashboardSize;
 
 interface Props {
     window?: () => Window;
@@ -161,18 +159,14 @@ export default function Dashboard_Home(props: Props)
 
     return(
         <ThemeProvider theme={theme}>
-            {/* <motion.div
-                initial={{y:20, opacity:0}}
-                animate={{y:0, opacity:1}}
-                transition={{ease: 'easeInOut', duration:0.3}}
-            > */}
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{ 
+                      display: 'flex',
+                    }}>
                 <CssBaseline />
                 <Navbar/>
                 <Box
                     component="nav"
                     sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-
                 >
                 <Drawer
                 container={container}
@@ -209,7 +203,6 @@ export default function Dashboard_Home(props: Props)
               <UserDashboardComponent/>
             </Box>
           </Box>
-            {/* </motion.div> */}
         </ThemeProvider>
     )
 }

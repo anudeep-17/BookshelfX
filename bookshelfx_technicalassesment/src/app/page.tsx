@@ -1,12 +1,6 @@
 "use client"
-import Navbar from "@/Components/Navbar/Navbar";
 import React, { useEffect } from "react";
-import Grow from '@mui/material/Grow';
 import dynamic from 'next/dynamic'
-import { Snackbar } from "@mui/material";
-import { Alert } from "@mui/material";
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import { AuthContext } from "@/Components/Context/AuthContext";
 import Cookies from 'js-cookie';
 
