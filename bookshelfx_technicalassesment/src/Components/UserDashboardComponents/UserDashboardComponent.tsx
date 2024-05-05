@@ -45,7 +45,6 @@ export default function UserDashboardComponent() {
                                 overflow: 'hidden',
                                 backgroundColor: 'white',
                                 width: {xs:'100%', sm:'71.5%'},
-                                background: 'white',
                                 mt: 2,
                                 mb: 2
                             }

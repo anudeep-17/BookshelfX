@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import theme from '../Themes';
 import {ThemeProvider} from '@mui/material/styles';
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { Button, CssBaseline, Divider, Drawer, useMediaQuery } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
@@ -33,16 +32,18 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-import CloseIcon from '@mui/icons-material/Close';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import { useRouter } from 'next/navigation';
+
 
 const drawerWidth = DashboardSize;
 
-export default function Navbar( )
+export default function Navbar()
 {
-    const user: User | null = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+    const router = useRouter();
 
+    const user: User | null = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [open, setOpen] = React.useState(false);
     
@@ -61,6 +62,11 @@ export default function Navbar( )
     const handleClose = () => {
       setAnchorEl(null);
     };
+
+    const handleLogout = () => {
+      Cookies.remove('user');
+      router.push('/');
+    }
 
     const Search = styled('div')(({ theme }) => ({
         position: 'relative',
@@ -310,7 +316,7 @@ export default function Navbar( )
               >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
                 <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
 
             </Toolbar>
