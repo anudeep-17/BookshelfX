@@ -117,7 +117,12 @@ export default function Navbar()
           icon: <HomeIcon/>,
         },
         {
-          text: 'Category',
+          text: 'Featured Books',
+          path: '/category',
+          icon: <CategoryIcon />,
+        },
+        {
+          text: 'All Categories',
           path: '/category',
           icon: <CategoryIcon />,
         },
@@ -127,7 +132,7 @@ export default function Navbar()
           icon: <MenuBookIcon/>,
         },
         {
-          text: 'Favourites',
+          text: 'My Favourites',
           path: '/favourites',
           icon: <FavoriteBorderIcon />,
         },
@@ -164,7 +169,7 @@ export default function Navbar()
             
           </Toolbar>
             <List>
-              {UserDrawer.slice(0, 4).map((item, index) => (
+              {UserDrawer.slice(0, 5).map((item, index) => (
                 <ListItem key={item.text} disablePadding>
                 <ListItemButton 
                 selected={usePathname() === item.path}
@@ -198,7 +203,7 @@ export default function Navbar()
             <Divider variant="middle" />
             
             <List>
-              {UserDrawer.slice(4).map((item, index) => (
+              {UserDrawer.slice(5).map((item, index) => (
                 <ListItem key={item.text} disablePadding>
                   <ListItemButton sx={{ 
                     borderRadius: '4px', // Make edges curved
