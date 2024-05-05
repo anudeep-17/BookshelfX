@@ -38,7 +38,7 @@ export default function Dashboard_Home()
                 <Navbar/>
                   <Box
                     component="main"
-                    sx={{p: 3, width: { sm: `calc(100% - ${drawerWidth}px)`} }}
+                    sx={{width: { sm: `calc(100% - ${drawerWidth}px)`} }}
                   >
                     <Toolbar />
                     <UserDashboardComponent/>
