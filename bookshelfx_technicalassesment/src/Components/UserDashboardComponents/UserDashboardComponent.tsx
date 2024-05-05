@@ -10,11 +10,12 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import BookCategory from "../Mock-BookCategory.json";
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
- 
+import CategoryWiseBook from '@/Components/Mock-CategoryWiseBookData.json'
+import ImageCard from './ImageCard';
 
 export default function UserDashboardComponent() {
     const [categories, setCategories] = React.useState(BookCategory.bookCategories.slice(0, 7));
-
+    const [selectedCategory, setSelectedCategory] = React.useState(categories[0]);
     const sortCategories = () => {
         const sortedCategories = [...categories].sort();
         setCategories(sortedCategories);
@@ -28,12 +29,12 @@ export default function UserDashboardComponent() {
                     {
                         overflow: 'hidden',
                         backgroundColor: 'white',
-                        width: '71%'
+                        width: {xs:'100%', sm:'71%'}
                     }
                 }
             >
                 <Grid container spacing={2} >
-                    <Grid item xs={6} md={15}>
+                    <Grid item xs={15} md={15}>
                     <Paper elevation={6} square={false} sx={{ backgroundColor: '#ffffff' }}>
                             <Box
                                 sx={{
@@ -83,6 +84,10 @@ export default function UserDashboardComponent() {
                                     flexDirection: 'row',
                                     justifyContent: 'flex-start',
                                     alignItems: 'flex-start',
+                                    flexWrap: {
+                                        xs: 'wrap',
+                                        sm: 'nowrap',
+                                    },
                                     pl:1,
                                     pr:2,
                                     mb:2,
@@ -105,15 +110,15 @@ export default function UserDashboardComponent() {
                     
                     
                     {/* category where we display all categories if the library available books. */}
-                    <Grid item xs={6} md={15}>
+                    <Grid item xs={15} md={15}>
                         <Paper elevation={8} square={false} sx={{ backgroundColor: '#ffffff' }}>
                             <Box
                                 sx={{
                                     display: 'flex',
                                     flexDirection: 'column',
                                     justifyContent: 'flex-start',
-                                    alignItems: 'flex-start',
-                                    pl:2,
+                                    alignItems: 'flex-start', 
+                                    pl:1
                                 }}
                             >
                                 <Box
@@ -152,40 +157,57 @@ export default function UserDashboardComponent() {
                                     </Button>
                                 </Box>
 
+                                <Stack direction="row" spacing={1} sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'flex-start',
+                                    pt:1,
+                                    flexWrap: {
+                                        xs: 'wrap',
+                                        sm: 'nowrap',
+                                    },
+                                    gap: 1,
+                                }}>
+                                    {categories.map((category, index) => (
+                                        <Chip
+                                            key={index}  
+                                            label={category}
+                                            color="primary"
+                                            variant={category === selectedCategory ? "filled" : "outlined"}
+                                            sx={{
+                                                minWidth: 'max-content',  
+                                                boxShadow: '0 3px 5px 2px transparent',  
+                                                ':hover': {
+                                                    boxShadow: '0 3px 5px 2px rgba(63, 81, 181, .3)', // Changes the shadow on hover
+                                                },
+                                            }}
+                                            onClick={() => setSelectedCategory(category)}
+                                            clickable
+                                        />
+                                    ))}
+                                </Stack>
+                              
+
                                 <Box
                                     sx={{
                                         display: 'flex',
                                         flexDirection: 'row',
-                                        justifyContent: 'flex-start',
-                                        alignItems: 'flex-start',
+                                        justifyContent: 'space-between', // Change this line
+                                        alignItems: 'center', // Change this line
+                                        alignContent: 'center',
+                                        pt:1,
                                         pl:1,
                                         pr:2,
-                                        mb:2,
-                                        pt:1,
-                                        gap: 0.99,  
-                                        overflowX: 'auto', // This makes only the categories scrollable
-                                        maxHeight: '200px', // You might not need this anymore
+                                        flexWrap: 'wrap',
+                                        width: '100%',
                                     }}
                                 >
-                                    {
-                                        categories.slice(0, 7).map((category, index) => (
-                                            <Stack direction="row" spacing={0} key={index}>
-                                                <Chip
-                                                    label={category}
-                                                    color="primary"
-                                                    variant="outlined"
-                                                    sx={{
-                                                        transition: '0.5s', // Add transition for smooth elevation
-                                                        ':hover': {
-                                                            boxShadow: '0 3px 5px 2px rgba(63, 81, 181, .3)',
-                                                            transform: 'translateY(-5px)', // Moves the Chip up on hover
-                                                        },
-                                                    }}
-                                                />
-                                            </Stack>
-                                        ))
-                                    }
+                                    {selectedCategory !== "All Books" ? CategoryWiseBook[selectedCategory as keyof typeof CategoryWiseBook].map((book, index) => (
+                                        <ImageCard key={index} image={book.bookimage} rating={book.rating} title={book.title}/>
+                                    )) : "No books available in this category."}
                                 </Box>
+                            
                             </Box>
                         </Paper>
                     </Grid>

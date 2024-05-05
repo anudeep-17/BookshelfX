@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import theme from '../Themes';
 import {ThemeProvider} from '@mui/material/styles';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import { Button, CssBaseline } from '@mui/material';
+import { Button, CssBaseline, Divider, Drawer, useMediaQuery } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
@@ -21,14 +21,38 @@ import '@fontsource/caveat-brush';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { DashboardSize } from '../DashboardSize';
+import MenuIcon from '@mui/icons-material/Menu';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import HomeIcon from '@mui/icons-material/Home';
+import CategoryIcon from '@mui/icons-material/Category';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
+import CloseIcon from '@mui/icons-material/Close';
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 
 const drawerWidth = DashboardSize;
 
-export default function Navbar()
+export default function Navbar( )
 {
     const user: User | null = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
-    
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [open, setOpen] = React.useState(false);
+    
+    const handleDrawerOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleDrawerClose = () => {
+      setOpen(false);
+    };
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       setAnchorEl(event.currentTarget);
@@ -38,11 +62,6 @@ export default function Navbar()
       setAnchorEl(null);
     };
 
-    const options = {
-      "Profile": 0,
-      "Logout": 1,
-    }
-    
     const Search = styled('div')(({ theme }) => ({
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
@@ -85,20 +104,141 @@ export default function Navbar()
         },
       }));
 
+      const UserDrawer = [
+        {
+          text: 'Discover',
+          icon: <HomeIcon/>,
+        },
+        {
+          text: 'Category',
+          icon: <CategoryIcon />,
+        },
+        {
+          text: 'My Library',
+          icon: <MenuBookIcon/>,
+        },
+        {
+          text: 'Favourites',
+          icon: <FavoriteBorderIcon />,
+        },
+        {
+          text: 'Settings',
+          icon: <SettingsIcon/>
+        },
+        {
+          text: 'Logout',
+          icon: <LogoutIcon/>
+        }
+    ]
+  
+      const drawer = (
+        <ThemeProvider theme={theme}>
+          <Box sx={{ alignItems: 'center', justifyContent: 'center' }}>
+            {
+            isXs? <Toolbar sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <IconButton onClick={handleDrawerClose }>
+                <ArrowLeftIcon sx={{
+                  fontSize:'2rem' 
+                }}/>
+                <Typography variant="body1">Close</Typography>
+              </IconButton>
+            </Toolbar>: null
+            }
+          <Toolbar sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Typography variant="h5" sx={{ color: theme => theme.palette.text.primary }} component="span">
+              Bookshelf
+            </Typography>
+            <Typography variant="h5" sx={{ color: theme => theme.palette.text.secondary }} component="span">
+              X
+            </Typography>
+            
+          </Toolbar>
+            <List>
+              {UserDrawer.slice(0, 4).map((item, index) => (
+                <ListItem key={item.text} disablePadding>
+                <ListItemButton sx={{ 
+                  borderRadius: '4px', // Make edges curved
+                  m:2,
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    '& .MuiSvgIcon-root': {
+                      color: '#3f51b5',
+                    },
+                    '& .MuiListItemText-root': {
+                      fontWeight: 'bold',
+                    },
+                  },
+                  '&.Mui-selected': {
+                    '& .MuiListItemText-root': {
+                      fontWeight: 'bold',
+                    },
+                  },
+                }}>
+                  <ListItemIcon>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+  
+            <Divider variant="middle" />
+            
+            <List>
+              {UserDrawer.slice(4).map((item, index) => (
+                <ListItem key={item.text} disablePadding>
+                  <ListItemButton sx={{ 
+                    borderRadius: '4px', // Make edges curved
+                    m:2,
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                      '& .MuiSvgIcon-root': {
+                        color: '#3f51b5',
+                      },
+                      '& .MuiListItemText-root': {
+                        fontWeight: 'bold',
+                      },
+                    },
+                    '&.Mui-selected': {
+                      '& .MuiListItemText-root': {
+                        fontWeight: 'bold',
+                      },
+                    },
+                  }}>
+                    <ListItemIcon>
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={item.text} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+          </ThemeProvider>
+      );
 
-
-    console.log(user ? user.name.charAt(0).toUpperCase() + user.name.slice(1).toLowerCase() : "Guest");
     return(
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <AppBar
                 position="fixed"
                 sx={{
-                width: { sm: `calc(100% - ${drawerWidth}px)` },
-                ml: { sm: `calc(${drawerWidth}px)` },
+                  width: { xs: '100%', sm: `calc(100% - ${drawerWidth}px)` },
+                  ml: { xs: '0px', sm: `calc(${drawerWidth}px)` },
                 }}
             >
             <Toolbar>
+              {isXs?<IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                sx={{ mr: 2, ...(open && { display: 'none' }) }}
+              >
+                <MenuIcon />
+              </IconButton>:null}
+
               <Search>
                 <SearchIconWrapper>
                   <SearchIcon />
@@ -111,10 +251,13 @@ export default function Navbar()
               
               <Box sx={{ flexGrow: 1 }} />
               
-              <IconButton color="inherit">
+              <IconButton color="inherit" sx={{
+                ml: { xs: 2, sm: 0 },
+              }}>
                 <Badge badgeContent={0} color="error">
                   <NotificationsIcon 
                     sx={{ 
+                      
                       borderRadius: '50%', // Make it circular
                       transition: 'background-color 0.3s', // Smooth transition
                       '&:hover': {
@@ -128,7 +271,7 @@ export default function Navbar()
               <Button 
                 variant="text"
                 sx={{ 
-                  ml: 'auto', 
+                  ml: { xs: 0, sm: 'auto' }, 
                   color:'white',
                   fontFamily: "'Caveat Brush', cursive",
                   '&:hover': {
@@ -139,7 +282,7 @@ export default function Navbar()
                 onClick={handleClick}
               >
                 <Typography 
-                  variant="h6" 
+                  variant="body2" 
                   noWrap 
                   component="div" 
                   letterSpacing={3} 
@@ -153,9 +296,9 @@ export default function Navbar()
                     fontWeight: '400'
                   }}
                 >
-                  {user ? user.name.charAt(0).toUpperCase() + user.name.slice(1).toLowerCase() : "Guest"}
+                  {user ? (isXs ? user.name.charAt(0).toUpperCase() : user.name.charAt(0).toUpperCase() + user.name.slice(1).toLowerCase()) : (isXs? "G" :" Guest")}
                   <ArrowDropDownIcon sx={{
-                    fontSize: '1.5rem',
+                    fontSize: { xs: '1rem', sm: '1.5rem' },
                     ml: 0.5
                   }}/>
                 </Typography>
@@ -172,6 +315,25 @@ export default function Navbar()
 
             </Toolbar>
             </AppBar>
+
+            <Drawer
+              sx={{
+                  width: drawerWidth,
+                  flexShrink: 0,
+                  '& .MuiDrawer-paper': {
+                      width: drawerWidth,
+                      boxSizing: 'border-box',
+                  },
+              }}
+              variant={isXs ? 'temporary' : 'persistent'}
+              anchor="left"
+              open={isXs? open: !isXs}
+              disableEnforceFocus
+              disableAutoFocus
+            >
+              {drawer}
+            </Drawer>
+
       </ThemeProvider>
     );
 }

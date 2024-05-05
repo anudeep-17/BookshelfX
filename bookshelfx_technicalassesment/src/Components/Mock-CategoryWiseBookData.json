@@ -1,0 +1,483 @@
+{
+    "Fantasy": [
+      {
+        "ISBN": "9780345803631",
+        "bookimage": "https://www.subtraction.com/wp-content/uploads/2015/03/2015-03-23-random-book-covers-03.png",
+        "title": "The Name of the Wind",
+        "description": "A captivating fantasy novel about a young man's journey to become a powerful wizard.",
+        "rating": 4.7,
+        "publisher": "DAW Books",
+        "publishedDate": "2007-03-27",
+        "pageCount": 662,
+        "customerReviews": [
+          "Absolutely spellbinding!",
+          "A must-read for any fantasy enthusiast."
+        ]
+      }
+    ],
+    "Science Fiction": [
+      {
+        "ISBN": "9781524742089",
+        "bookimage": "https://www.subtraction.com/wp-content/uploads/2015/03/2015-03-23-random-book-covers-03.png",
+        "title": "Project Hail Mary",
+        "description": "A thrilling science fiction adventure following a lone astronaut's mission to save humanity.",
+        "rating": 4.8,
+        "publisher": "Ballantine Books",
+        "publishedDate": "2021-05-04",
+        "pageCount": 496,
+        "customerReviews": [
+          "Mind-blowing!",
+          "Couldn't put it down until the very end."
+        ]
+      }
+    ],
+    "Mystery Fiction": [
+      {
+        "ISBN": "9780316513197",
+        "bookimage": "https://www.subtraction.com/wp-content/uploads/2015/03/2015-03-23-random-book-covers-03.png",
+        "title": "The Silent Patient",
+        "description": "A gripping psychological thriller about a woman who stops speaking after a mysterious event.",
+        "rating": 4.2,
+        "publisher": "Celadon Books",
+        "publishedDate": "2019-02-05",
+        "pageCount": 336,
+        "customerReviews": [
+          "Keeps you guessing until the very end!",
+          "Twists and turns you won't see coming."
+        ]
+      }
+    ],
+    "Horror Fiction": [
+      {
+        "ISBN": "9780345803631",
+        "bookimage": "https://www.subtraction.com/wp-content/uploads/2015/03/2015-03-23-random-book-covers-03.png",
+        "title": "Pet Sematary",
+        "description": "A chilling horror novel about a burial ground with the power to bring the dead back to life.",
+        "rating": 4.3,
+        "publisher": "Doubleday",
+        "publishedDate": "1983-11-14",
+        "pageCount": 416,
+        "customerReviews": [
+          "Terrifying!",
+          "Stephen King at his best."
+        ]
+        }
+    ],
+    "Historical Fiction": [
+        {
+          "ISBN": "9780345803631",
+          "bookimage": "https://www.subtraction.com/wp-content/uploads/2015/03/2015-03-23-random-book-covers-03.png",
+          "title": "The Nightingale",
+          "description": "A heart-wrenching historical fiction novel set in France during World War II, following the lives of two sisters.",
+          "rating": 4.8,
+          "publisher": "St. Martin's Press",
+          "publishedDate": "2015-02-03",
+          "pageCount": 448,
+          "customerReviews": [
+            "Absolutely beautiful!",
+            "A must-read for fans of historical fiction."
+          ]
+        }
+      ],
+      "Women's Fiction": [
+        {
+          "ISBN": "9780525559733",
+          "bookimage": "https://www.subtraction.com/wp-content/uploads/2015/03/2015-03-23-random-book-covers-03.png",
+          "title": "Big Little Lies",
+          "description": "A gripping women's fiction novel that delves into the secrets and lies of a seemingly perfect community.",
+          "rating": 4.4,
+          "publisher": "Berkley",
+          "publishedDate": "2014-07-29",
+          "pageCount": 460,
+          "customerReviews": [
+            "Couldn't put it down!",
+            "Absolutely captivating."
+          ]
+        }
+      ],
+      "Literary Fiction": [
+        {
+          "ISBN": "9781400033416",
+          "bookimage": "https://www.subtraction.com/wp-content/uploads/2015/03/2015-03-23-random-book-covers-03.png",
+          "title": "The Kite Runner",
+          "description": "A powerful literary fiction novel exploring themes of friendship, betrayal, and redemption in Afghanistan.",
+          "rating": 4.6,
+          "publisher": "Riverhead Books",
+          "publishedDate": "2003-06-02",
+          "pageCount": 371,
+          "customerReviews": [
+            "Absolutely breathtaking!",
+            "Will stay with you long after you finish."
+          ]
+        }
+      ],
+      "Magic Realism": [
+        {
+          "ISBN": "9780061120091",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/61Gf%2B6HxwJL.jpg",
+          "title": "One Hundred Years of Solitude",
+          "description": "A mesmerizing magic realism novel chronicling the Buendía family through generations in the fictional town of Macondo.",
+          "rating": 4.2,
+          "publisher": "Harper & Row",
+          "publishedDate": "1970-05-30",
+          "pageCount": 417,
+          "customerReviews": [
+            "A true masterpiece!",
+            "Magical and unforgettable."
+          ]
+        }
+      ],
+      "Graphic Novel": [
+        {
+          "ISBN": "9781401258182",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/91rQFvh9R7L.jpg",
+          "title": "Watchmen",
+          "description": "A groundbreaking graphic novel that explores complex themes of power, morality, and identity in a world of masked vigilantes.",
+          "rating": 4.7,
+          "publisher": "DC Comics",
+          "publishedDate": "1987-09-01",
+          "pageCount": 416,
+          "customerReviews": [
+            "A must-read for graphic novel enthusiasts!",
+            "Incredible storytelling and artwork."
+          ]
+        }
+      ],
+      "Short Story": [
+        {
+          "ISBN": "9780486296015",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/61xYdNqJx1L.jpg",
+          "title": "Selected Stories of Anton Chekhov",
+          "description": "A collection of masterfully crafted short stories by the renowned Russian author, Anton Chekhov.",
+          "rating": 4.5,
+          "publisher": "Dover Publications",
+          "publishedDate": "1998-05-22",
+          "pageCount": 464,
+          "customerReviews": [
+            "Absolutely brilliant!",
+            "Chekhov's stories are timeless."
+          ]
+        }
+      ],
+      "Young Adult Fiction": [
+        {
+          "ISBN": "9781407109075",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/51F0D8%2B86PL.jpg",
+          "title": "The Hunger Games",
+          "description": "An action-packed young adult dystopian novel set in a future where teenagers are forced to fight to the death in a televised event.",
+          "rating": 4.7,
+          "publisher": "Scholastic Press",
+          "publishedDate": "2008-09-14",
+          "pageCount": 454,
+          "customerReviews": [
+            "Absolutely riveting!",
+            "Couldn't put it down."
+          ]
+        }
+      ],
+      "New Adult Fiction": [
+        {
+          "ISBN": "9781501104004",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/61NCS7RjPiL.jpg",
+          "title": "Beautiful Disaster",
+          "description": "A steamy new adult romance novel about love, passion, and second chances.",
+          "rating": 4.1,
+          "publisher": "Atria Books",
+          "publishedDate": "2012-07-12",
+          "pageCount": 432,
+          "customerReviews": [
+            "Sizzling!",
+            "A rollercoaster of emotions."
+          ]
+        }
+      ],
+      "Biography": [
+        {
+          "ISBN": "9781400069996",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/71AQ4sYP0mL.jpg",
+          "title": "Steve Jobs",
+          "description": "An insightful biography of the visionary co-founder of Apple, Steve Jobs.",
+          "rating": 4.6,
+          "publisher": "Simon & Schuster",
+          "publishedDate": "2011-10-24",
+          "pageCount": 656,
+          "customerReviews": [
+            "Absolutely fascinating!",
+            "A must-read for anyone interested in technology."
+          ]
+        }
+      ],
+      "Self-help": [
+        {
+          "ISBN": "9780062315007",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/81s1CUzziWL.jpg",
+          "title": "The Subtle Art of Not Giving a F*ck",
+          "description": "A no-nonsense self-help book that encourages readers to embrace life's challenges and focus on what truly matters.",
+          "rating": 4.6,
+          "publisher": "HarperOne",
+          "publishedDate": "2016-09-13",
+          "pageCount": 224,
+          "customerReviews": [
+            "Life-changing!",
+            "A refreshing take on self-improvement."
+          ]
+        }
+      ],
+      "History": [
+        {
+          "ISBN": "9781419727016",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/71pJpK7L4lL.jpg",
+          "title": "Sapiens: A Brief History of Humankind",
+          "description": "A fascinating journey through the history of Homo sapiens, from the emergence of our species to the present day.",
+          "rating": 4.7,
+          "publisher": "Harper",
+          "publishedDate": "2015-02-10",
+          "pageCount": 464,
+          "customerReviews": [
+            "Absolutely brilliant!",
+            "A must-read for anyone interested in history."
+          ]
+        }
+      ],
+      "True Crime": [
+        {
+          "ISBN": "9780679745587",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/71Mz5Lc0PgL.jpg",
+          "title": "In Cold Blood",
+          "description": "A chilling true crime masterpiece that recounts the brutal murder of the Clutter family in rural Kansas.",
+          "rating": 4.5,
+          "publisher": "Vintage",
+          "publishedDate": "1966-01-17",
+          "pageCount": 343,
+          "customerReviews": [
+            "Riveting!",
+            "Truly haunting."
+          ]
+        }
+      ],
+      "Essay": [
+        {
+          "ISBN": "9780374528221",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/71qyliyaM1L.jpg",
+          "title": "Slouching Towards Bethlehem",
+          "description": "A collection of essays by Joan Didion that offers poignant reflections on American life in the 1960s.",
+          "rating": 4.4,
+          "publisher": "Farrar, Straus and Giroux",
+          "publishedDate": "1968-01-01",
+          "pageCount": 238,
+          "customerReviews": [
+            "Absolutely brilliant!",
+            "Didion's writing is unparalleled."
+          ]
+        }
+      ],
+      "Dystopian": [
+        {
+          "ISBN": "9780452284240",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/71zJf4LJfDL.jpg",
+          "title": "1984",
+          "description": "A dystopian classic that explores themes of totalitarianism, surveillance, and individual freedom.",
+          "rating": 4.7,
+          "publisher": "Signet Classic",
+          "publishedDate": "1950-06-08",
+          "pageCount": 328,
+          "customerReviews": [
+            "Absolutely chilling!",
+            "A must-read for any dystopian fan."
+          ]
+        }
+      ],
+      "Action & Adventure": [
+        {
+          "ISBN": "9780062024039",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/81V1bxsKQaL.jpg",
+          "title": "Jurassic Park",
+          "description": "An action-packed adventure novel about a theme park filled with genetically engineered dinosaurs.",
+          "rating": 4.6,
+          "publisher": "HarperCollins",
+          "publishedDate": "1991-11-20",
+          "pageCount": 448,
+          "customerReviews": [
+            "Absolutely thrilling!",
+            "Couldn't put it down."
+          ]
+        }
+      ],
+      "Thriller & Suspense": [
+        {
+          "ISBN": "9781101967690",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/71V8D6gC3fL.jpg",
+          "title": "The Girl on the Train",
+          "description": "A gripping psychological thriller about a woman who becomes entangled in a missing persons investigation.",
+          "rating": 4.1,
+          "publisher": "Riverhead Books",
+          "publishedDate": "2015-01-13",
+          "pageCount": 336,
+          "customerReviews": [
+            "Absolutely captivating!",
+            "Keeps you guessing until the very end."
+          ]
+        }
+      ],
+      "Romance Novel": [
+        {
+          "ISBN": "9780062103179",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/91oNul%2BmjDL.jpg",
+          "title": "Outlander",
+          "description": "A captivating historical romance novel that follows the passionate love story of a World War II nurse and a Scottish Highlander.",
+          "rating": 4.4,
+          "publisher": "Delacorte Press",
+          "publishedDate": "1991-06-01",
+          "pageCount": 896,
+          "customerReviews": [
+            "Absolutely breathtaking!",
+            "Romance at its finest."
+          ]
+        }
+      ],
+      "LGBTQ+": [
+        {
+          "ISBN": "9780061981691",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/81OWzx-7e9L.jpg",
+          "title": "Call Me by Your Name",
+          "description": "A poignant LGBTQ+ romance novel set in Italy during the 1980s, exploring themes of love, desire, and self-discovery.",
+          "rating": 4.3,
+          "publisher": "Picador",
+          "publishedDate": "2007-01-23",
+          "pageCount": 256,
+          "customerReviews": [
+            "Absolutely beautiful!",
+            "Touches your heart."
+          ]
+        }
+      ],
+      "Contemporary Fiction": [
+        {
+          "ISBN": "9780735224308",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/51F0F+HlgaL.jpg",
+          "title": "Little Fires Everywhere",
+          "description": "A compelling contemporary fiction novel that explores race, privilege, and motherhood in suburban America.",
+          "rating": 4.2,
+          "publisher": "Penguin Press",
+          "publishedDate": "2017-09-12",
+          "pageCount": 352,
+          "customerReviews": [
+            "Absolutely gripping!",
+            "A must-read for book clubs."
+          ]
+        }
+      ],
+      "Children's": [
+        {
+          "ISBN": "9780061124266",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/81WbQU4WBhL.jpg",
+          "title": "Where the Wild Things Are",
+          "description": "A beloved children's picture book about a young boy's imaginative journey to an island inhabited by wild creatures.",
+          "rating": 4.8,
+          "publisher": "HarperCollins",
+          "publishedDate": "1963-04-19",
+          "pageCount": 48,
+          "customerReviews": [
+            "Absolutely enchanting!",
+            "A classic for all ages."
+          ]
+        }
+      ],
+      "Memoir & Autobiography": [
+        {
+          "ISBN": "9780062562852",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/81dWecVVoyL.jpg",
+          "title": "Becoming",
+          "description": "An inspiring memoir by former First Lady Michelle Obama, chronicling her journey from a childhood on the South Side of Chicago to the White House.",
+          "rating": 4.8,
+          "publisher": "Crown Publishing Group",
+          "publishedDate": "2018-11-13",
+          "pageCount": 448,
+          "customerReviews": [
+            "Absolutely captivating!",
+            "An empowering read."
+          ]
+        }
+      ],
+      "Food & Drink": [
+        {
+          "ISBN": "9780307408860",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/71P2hKg3q1L.jpg",
+          "title": "The Joy of Cooking",
+          "description": "A classic cookbook that offers comprehensive instructions on cooking techniques and a wide range of recipes.",
+          "rating": 4.8,
+          "publisher": "Scribner",
+          "publishedDate": "2006-11-14",
+          "pageCount": 1152,
+          "customerReviews": [
+            "Absolutely essential!",
+            "A kitchen staple."
+          ]
+        }
+      ],
+      "Art & Photography": [
+        {
+          "ISBN": "9780500203495",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/71L-OyPOzgL.jpg",
+          "title": "The Story of Art",
+          "description": "An accessible and comprehensive introduction to the history of art, from prehistoric times to the present day.",
+          "rating": 4.7,
+          "publisher": "Thames & Hudson",
+          "publishedDate": "1995-05-01",
+          "pageCount": 688,
+          "customerReviews": [
+            "Absolutely stunning!",
+            "A must-read for art enthusiasts."
+          ]
+        }
+      ],
+      "Travel": [
+        {
+          "ISBN": "9780143038580",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/81nNt4vMW9L.jpg",
+          "title": "The Alchemist",
+          "description": "A captivating travelogue by Paulo Coelho, following the journey of a young shepherd named Santiago as he searches for treasure in Egypt.",
+          "rating": 4.7,
+          "publisher": "HarperOne",
+          "publishedDate": "2006-04-25",
+          "pageCount": 197,
+          "customerReviews": [
+            "Absolutely inspiring!",
+            "A life-changing read."
+          ]
+        }
+      ],
+      "Humor": [
+        {
+          "ISBN": "9780307886278",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/71gjfd5lsML.jpg",
+          "title": "Bossypants",
+          "description": "A hilarious memoir by comedian Tina Fey, offering insights into her life and career in comedy.",
+          "rating": 4.3,
+          "publisher": "Reagan Arthur Books",
+          "publishedDate": "2011-04-05",
+          "pageCount": 288,
+          "customerReviews": [
+            "Absolutely hilarious!",
+            "A must-read for fans of Tina Fey."
+          ]
+        }
+      ],
+      "Guide / How-to": [
+        {
+          "ISBN": "9780143118756",
+          "bookimage": "https://images-na.ssl-images-amazon.com/images/I/91WpYfRNYvL.jpg",
+          "title": "The Life-Changing Magic of Tidying Up",
+          "description": "A practical guide to decluttering and organizing your home by renowned tidying expert Marie Kondo.",
+          "rating": 4.3,
+          "publisher": "Ten Speed Press",
+          "publishedDate": "2014-10-14",
+          "pageCount": 224,
+          "customerReviews": [
+            "Absolutely life-changing!",
+            "Transformed my living space."
+          ]
+        }
+      ]
+  }
+  

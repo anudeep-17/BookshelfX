@@ -20,6 +20,12 @@ export interface BookCardProps {
     onLearnMore?: () => void;
 }
 
+export interface ImageCardProps {
+    image: string;
+    title: string;
+    rating: number;
+}
+
 export interface User {
     id?: number;
     email: string;
