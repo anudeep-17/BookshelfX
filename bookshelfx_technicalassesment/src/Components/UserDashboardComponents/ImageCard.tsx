@@ -3,7 +3,7 @@ import { Box, CssBaseline, Rating, ThemeProvider } from '@mui/material';
 import theme from '../Themes';
 import { ImageCardProps } from '../interfaceModels';
 
-export default function ImageCard({image, rating, title}: ImageCardProps) 
+export default function ImageCard({image, rating, title, onMouseEnter}: ImageCardProps) 
 {
     const [value, setValue] = React.useState<number | null>(rating);
     console.log(image);
@@ -25,7 +25,9 @@ export default function ImageCard({image, rating, title}: ImageCardProps)
                 ':hover div': { // Add this
                     opacity: 1,
                 },
-            }}>
+            }}
+            onMouseEnter={onMouseEnter}
+            >
                 <Box sx={{
                     position: 'absolute',
                     top: 0,

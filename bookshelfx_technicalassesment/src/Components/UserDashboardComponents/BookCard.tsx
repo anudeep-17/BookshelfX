@@ -9,7 +9,7 @@ import theme from '../Themes';
 import { BookCardProps } from '../interfaceModels';
 
 
-export default function BookCard({ id, image, title, description, rating, onLearnMore}: BookCardProps) {
+export default function BookCard({ id, image, title, description, rating, onLearnMore, onMouseEnter}: BookCardProps) {
     const [value, setValue] = React.useState<number | null>(rating);
 
     return(
@@ -25,7 +25,9 @@ export default function BookCard({ id, image, title, description, rating, onLear
                 ':hover': {
                     transform: 'translateY(-8px)', // Elevate the card on hover
                 },
-            }}>
+            }}
+            onMouseEnter={onMouseEnter}
+            >
                 <Box sx={{ 
                     height: 230, // Increased size
                     backgroundImage: `url(${image})`,

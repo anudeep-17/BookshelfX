@@ -3,6 +3,7 @@ export interface Book {
     bookimage: string;
     title: string;
     description: string;
+    author: string;
     rating: number;
     publisher: string;
     publishedDate: string;
@@ -16,14 +17,17 @@ export interface BookCardProps {
     image: string;
     title: string;
     description: string;
+    author: string;
     rating: number;
     onLearnMore?: () => void;
+    onMouseEnter?: () => void;
 }
 
 export interface ImageCardProps {
     image: string;
     title: string;
     rating: number;
+    onMouseEnter?: () => void;
 }
 
 export interface User {

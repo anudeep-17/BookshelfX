@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, CssBaseline, Divider, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CssBaseline, Divider, Rating, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid';
 import theme from '../Themes';
@@ -12,6 +12,10 @@ import BookCategory from "../Mock-BookCategory.json";
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import CategoryWiseBook from '@/Components/Mock-CategoryWiseBookData.json'
 import ImageCard from './ImageCard';
+import {Book} from '@/Components/interfaceModels';
+import dynamic from 'next/dynamic';
+
+const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false });
 
 export default function UserDashboardComponent() {
     const [categories, setCategories] = React.useState(BookCategory.bookCategories.slice(0, 7));
@@ -20,6 +24,8 @@ export default function UserDashboardComponent() {
         const sortedCategories = [...categories].sort();
         setCategories(sortedCategories);
     };
+
+    const [book, setBook] = React.useState({} as Book);
 
     return (
         <ThemeProvider theme={theme}>
@@ -111,15 +117,17 @@ export default function UserDashboardComponent() {
                                             gap: 1.35,  
                                         }}
                                         >
-                                        {BooksData.slice(0, 5).map((book, index) => (
-                                            <BookCard
-                                                key={index}
-                                                image={book.bookimage}
-                                                title={book.title}
-                                                description={book.description}
-                                                rating={book.rating}
-                                            />
-                                        ))}
+                                            {BooksData.slice(0, 5).map((book, index) => (
+                                                    <BookCard
+                                                        key={index}
+                                                        image={book.bookimage}
+                                                        title={book.title}
+                                                        description={book.description}
+                                                        rating={book.rating} 
+                                                        author={book.author}
+                                                        onMouseEnter={() => setBook(book)}
+                                                    />
+                                            ))}
                                         </Box>
                                     </Box>
                                 </Paper>
@@ -221,7 +229,9 @@ export default function UserDashboardComponent() {
                                             }}
                                         >
                                             {selectedCategory !== "All Books" ? CategoryWiseBook[selectedCategory as keyof typeof CategoryWiseBook].map((book, index) => (
-                                                <ImageCard key={index} image={book.bookimage} rating={book.rating} title={book.title}/>
+                                                <ImageCard key={index} image={book.bookimage} rating={book.rating} title={book.title} 
+                                                            onMouseEnter={() => setBook(book as Book)}
+                                                />
                                             )) : "No books available in this category."}
                                         </Box>
                                     
@@ -230,19 +240,23 @@ export default function UserDashboardComponent() {
                             </Grid>
                         </Grid>
                     </Box>
+
                     <Box
                         sx={{
                             overflow: 'hidden',
-                            backgroundColor: 'white',
                             width: {xs:'100%', sm:'27%'},
                             minHeight: '92.2vh',
-                            background: 'purple',
                             ml:1,
-                            top:0
+                            top:0,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
                         }}
-                    >
-                        
+                    >                         
+                         {book? <BookDetails book={book}/> : <BookDetails/> }
                     </Box>
+
                 </Box>
         </ThemeProvider>
         )
