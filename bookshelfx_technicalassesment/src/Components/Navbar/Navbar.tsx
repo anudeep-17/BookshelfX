@@ -122,8 +122,8 @@ export default function Navbar()
           icon: <CategoryIcon />,
         },
         {
-          text: 'Library',
-          path: '/library',
+          text: 'All Books',
+          path: '/allbooks',
           icon: <MenuBookIcon/>,
         },
         {

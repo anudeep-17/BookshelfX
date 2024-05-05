@@ -56,7 +56,7 @@ export default function BookDetails({ book }: { book?: Book })
                     <Typography variant="body2" sx={{
                         color: theme.palette.text.secondary
                     }}>
-                        books
+                        Pages
                     </Typography>
                 </Box>
                 
@@ -78,7 +78,7 @@ export default function BookDetails({ book }: { book?: Book })
                     <Typography variant="body2" sx={{
                         color: theme.palette.text.secondary
                     }}>
-                        readers
+                       Ratings
                     </Typography>
                 </Box>
 
@@ -100,7 +100,7 @@ export default function BookDetails({ book }: { book?: Book })
                     <Typography variant="body2" sx={{
                         color: theme.palette.text.secondary
                     }}>
-                        reviews
+                        Reviews
                     </Typography>
                 </Box>
             </Box>
@@ -108,7 +108,9 @@ export default function BookDetails({ book }: { book?: Book })
             <Typography variant="body2" sx={{
                 textAlign: 'center',
                 fontSize: 12,
-                p:1
+                p:1,
+                height: '100px', // Set a fixed height
+                overflow: 'auto' // Add a scrollbar if the content is too long
             }}>
                 {book?.description}
             </Typography>
