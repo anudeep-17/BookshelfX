@@ -34,7 +34,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { useRouter } from 'next/navigation';
-
+import { usePathname } from 'next/navigation'
 
 const drawerWidth = DashboardSize;
 
@@ -113,18 +113,22 @@ export default function Navbar()
       const UserDrawer = [
         {
           text: 'Discover',
+          path: '/home',
           icon: <HomeIcon/>,
         },
         {
           text: 'Category',
+          path: '/category',
           icon: <CategoryIcon />,
         },
         {
-          text: 'My Library',
+          text: 'Library',
+          path: '/library',
           icon: <MenuBookIcon/>,
         },
         {
           text: 'Favourites',
+          path: '/favourites',
           icon: <FavoriteBorderIcon />,
         },
         {
@@ -162,7 +166,9 @@ export default function Navbar()
             <List>
               {UserDrawer.slice(0, 4).map((item, index) => (
                 <ListItem key={item.text} disablePadding>
-                <ListItemButton sx={{ 
+                <ListItemButton 
+                selected={usePathname() === item.path}
+                sx={{ 
                   borderRadius: '4px', // Make edges curved
                   m:2,
                   '&:hover': {
@@ -302,7 +308,15 @@ export default function Navbar()
                     fontWeight: '400'
                   }}
                 >
-                  {user ? (isXs ? user.name.charAt(0).toUpperCase() : user.name.charAt(0).toUpperCase() + user.name.slice(1).toLowerCase()) : (isXs? "G" :" Guest")}
+                   {user 
+                      ? (isXs 
+                        ? user.name.charAt(0).toUpperCase() 
+                        : (user.name.length > 7 
+                          ? user.name.charAt(0).toUpperCase() + user.name.slice(1, 7).toLowerCase() + "..." 
+                          : user.name.charAt(0).toUpperCase() + user.name.slice(1).toLowerCase())
+                        ) 
+                      : (isXs? "G" :" Guest")
+                    }
                   <ArrowDropDownIcon sx={{
                     fontSize: { xs: '1rem', sm: '1.5rem' },
                     ml: 0.5

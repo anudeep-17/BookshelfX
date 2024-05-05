@@ -43,6 +43,7 @@ export default function Auth()
                     alignItems: 'center',
                     alignContent: 'center',
                     flexDirection: ['column', 'column'], // column layout for small screens, row layout for larger screens
+                    p:{xs:2,sm:0}
                     }}>
                         <Box sx={{
                             flexDirection: 'row', // column layout for small screens, row layout for larger screens
@@ -50,7 +51,7 @@ export default function Auth()
                         }}>
                             <Typography variant="h3" letterSpacing={4}
                                 sx={{
-                                    mb:4,
+                                    mb:{xs:2, sm:4},
                                     fontFamily: 'Sedan, serif',
                                     color: theme.palette.text.disabled,
                                     display: 'inline' // Add this to keep them on the same line
@@ -60,7 +61,7 @@ export default function Auth()
                             </Typography>
                             <Typography variant="h2" letterSpacing={4}
                                 sx={{
-                                    mb:4,
+                                    mb:{xs:2, sm:4},
                                     fontFamily: 'Roboto, sans-serif',
                                     color: theme.palette.text.secondary, // Change this to the color you want for "X"
                                     display: 'inline' // Add this to keep them on the same line
