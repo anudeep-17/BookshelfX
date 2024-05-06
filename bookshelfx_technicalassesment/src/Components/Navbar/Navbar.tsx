@@ -35,6 +35,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation'
+import FlagIcon from '@mui/icons-material/Flag';
 
 const drawerWidth = DashboardSize;
 
@@ -42,6 +43,7 @@ export default function Navbar()
 {
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const router = useRouter();
+    const pathname = usePathname();
 
     const user: User | null = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -67,6 +69,8 @@ export default function Navbar()
       Cookies.remove('user');
       router.push('/');
     }
+
+    
 
     const Search = styled('div')(({ theme }) => ({
         position: 'relative',
@@ -118,8 +122,8 @@ export default function Navbar()
         },
         {
           text: 'Featured Books',
-          path: '/category',
-          icon: <CategoryIcon />,
+          path: '/featuredbooks',
+          icon: <FlagIcon />,
         },
         {
           text: 'All Categories',
@@ -172,7 +176,7 @@ export default function Navbar()
               {UserDrawer.slice(0, 5).map((item, index) => (
                 <ListItem key={item.text} disablePadding>
                 <ListItemButton 
-                selected={usePathname() === item.path}
+                selected={pathname === item.path}
                 sx={{ 
                   borderRadius: '4px', // Make edges curved
                   m:2,
@@ -190,7 +194,9 @@ export default function Navbar()
                       fontWeight: 'bold',
                     },
                   },
-                }}>
+                }}
+                onClick={() => item.path && router.push(item.path)}
+                >
                   <ListItemIcon>
                     {item.icon}
                   </ListItemIcon>

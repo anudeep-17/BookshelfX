@@ -1,7 +1,4 @@
 import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import { Box, ThemeProvider } from '@mui/material';
@@ -9,28 +6,27 @@ import theme from '../Themes';
 import { BookCardProps } from '../interfaceModels';
 
 
-export default function BookCard({image, title, rating, onMouseEnter}: BookCardProps) {
-    const [value, setValue] = React.useState<number | null>(rating);
+export default function DetailedBookCard({bookimage, title, description, rating}: BookCardProps) {
+    const [value, setValue] = React.useState<number | null>(rating || null);
 
     return(
         <ThemeProvider theme={theme}>
           <Box sx={{ 
                 display: 'flex',
                 flexDirection: 'column',
-                minWidth: '21%', // Increased size
-                maxWidth: '40%', // Increased size
-                minHeight: 300, // Increased size
-                maxHeight: 300, // Increased size
+                minWidth: '20%', // Increased size
+                maxWidth: '30%', // Increased size
+                minHeight: 550, // Increased size
+                maxHeight: 550, // Increased size
                 transition: '0.5s', // Add transition for smooth elevation
                 ':hover': {
                     transform: 'translateY(-8px)', // Elevate the card on hover
                 },
             }}
-            onMouseEnter={onMouseEnter}
             >
                 <Box sx={{ 
-                    height: 230, // Increased size
-                    backgroundImage: `url(${image})`,
+                    height: 400, // Increased size
+                    backgroundImage: `url(${bookimage})`,
                     backgroundSize: 'cover', // Add this to fit the image
                     backgroundPosition: 'center', // Add this to center the image
                     borderRadius: '10px 10px 0 0', // Make top borders curved
@@ -40,11 +36,25 @@ export default function BookCard({image, title, rating, onMouseEnter}: BookCardP
                     boxShadow: '0 0.9px 0.8px 0.2px rgba(0, 0, 0, .3)', // Reduced shadow to create less elevation effect
                     borderRadius: '0 0 10px 10px',
                 }}>
-                    <Typography variant="body1" component="div">
-                        {title.length > 10 ? `${title.substring(0, 10)}...` : title}
+                    <Typography variant="h6" component="div">
+                        {title.length > 30 ? `${title.substring(0, 30)}...` : title}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body1" color="text.secondary" sx={{
+                        mb:0.5
+                    }}>
                         Jhon Greesham 
+                    </Typography>
+                    
+                    <Rating name="read-only" value={value} readOnly sx={{
+                        mb:1
+                    }}/>
+                    
+                    <Typography variant="body2" color="text.secondary" sx={{
+                        mb:1,
+                        minHeight: '80px',
+                        textAlign: 'justify',
+                    }}>
+                        {description.length > 100 ? `${description.substring(0, 100)}...` : description}
                     </Typography>
                 </Box>
             </Box>
