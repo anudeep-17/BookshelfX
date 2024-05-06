@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, CssBaseline, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CssBaseline, Divider, Drawer, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid';
 import theme from '../Themes';
@@ -7,11 +7,13 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import Slider from '@mui/material/Slider';
+import Checkbox from '@mui/material/Checkbox';
 
 import BooksData from  "../Mock-BookData.json";
 import BookCategory from "../Mock-BookCategory.json";
 import CategoryWiseBook from '@/Components/Mock-CategoryWiseBookData.json'
-import {Book, BookCardProps} from '@/Components/interfaceModels';
+import {BookCardProps} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
  
 const DetailedBookCard = dynamic(() => import('@/Components/BookList/DetailedBookCard'), { ssr: false });
@@ -22,12 +24,20 @@ export default function BookList()
     
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
+
     const handleSortClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       setAnchorEl(event.currentTarget);
     };
     
     const handleSortClose = () => {
       setAnchorEl(null);
+    };
+
+
+    const toggleDrawer = (newOpen: boolean) => () => 
+    {
+        setFilterDrawerOpen(newOpen);
     };
 
     function handleSort(sortBy: string){
@@ -42,6 +52,15 @@ export default function BookList()
         handleSortClose();
     }
 
+
+    function slidervaluetext_forDays(value: number) {
+        return `${value} days`;
+    }
+
+    function valuetext_forAlphabet(value: number) {
+        return String.fromCharCode(65 + value); 
+        }
+
     function sortBooksByTitle(books: BookCardProps[]) {
         return [...books].sort((a, b) => a.title.localeCompare(b.title));
     }
@@ -50,6 +69,111 @@ export default function BookList()
         return [...books].sort((a, b) => a.author.localeCompare(b.author));
     }
     
+
+    const DrawerList = (
+        <Box sx={{ width: 250 }} role="presentation">
+            <Typography variant="h5" sx={{ mt: 2, mb: 2, ml: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <FilterAltIcon sx={{ color: 'primary.main' }} />
+                Filter Books
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', alignContent: 'center', ml: 2, mr: 2 }}>
+                <Typography variant="body2" sx={{ mt: 2}}>
+                    Filter by availability
+                </Typography>
+                <Stack direction="column" spacing={1} sx={{ mt: 2, mb: 2}}>
+                    <Stack direction="row" spacing={1}>
+                        <Chip label="Available" variant='outlined'/>
+                        <Chip label="Not Available" variant='outlined'/>
+                    </Stack>
+                    <Typography variant="body2" sx={{ mt: 2}}>
+                        Available Within
+                    </Typography>
+                    <Slider
+                        defaultValue={4}
+                        getAriaValueText={slidervaluetext_forDays}
+                        valueLabelDisplay="auto"
+                        shiftStep={1}
+                        step={1}
+                        marks
+                        min={1}
+                        max={10}
+                    />
+                </Stack>
+            </Box>
+            
+            <Divider sx={{ml:2, mr:2}}/>
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', alignContent: 'center', ml: 2, mr: 2 }}>
+                <Typography variant="body2" sx={{ mt: 2}}>
+                    Filter by Author
+                </Typography>
+                <Stack direction="row" spacing={0} sx={{ mt: 2, mb: 2, display:'flex', flexWrap:'wrap'}}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            alignContent: 'center',
+                            mr:1
+                        }}
+                    >
+                        <Checkbox/>
+                        <Typography variant="body2">
+                            Author 1
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            alignContent: 'center',
+                        }}
+                    >
+                        <Checkbox/>
+                        <Typography variant="body2">
+                            Author 2
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            alignContent: 'center',
+                            mr:1
+                        }}
+                    >
+                        <Checkbox/>
+                        <Typography variant="body2">
+                            Author 3
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            alignContent: 'center',
+                        }}
+                    >
+                        <Checkbox/>
+                        <Typography variant="body2">
+                            Author 4
+                        </Typography>
+                    </Box>
+                </Stack>
+            </Box>
+
+            <Divider sx={{ml:2, mr:2}}/>
+
+        </Box>
+    );
+
 
     return(
         <ThemeProvider theme={theme}>
@@ -161,16 +285,22 @@ export default function BookList()
                                                 </Tooltip>
                                                 
                                                 <Tooltip title="Filter" placement="top" arrow>
-                                                <Button
-                                                    sx={{
-                                                    boxShadow: '0 3px 5px 2px rgba(63, 81, 181, .3)',
-                                                    ':hover': {
-                                                        boxShadow: '0 6px 10px 4px rgba(63, 81, 181, .5)',
-                                                    },
-                                                    }}
-                                                >
-                                                    <FilterAltIcon sx={{ color: 'primary.main' }} />
-                                                </Button>
+                                                    <>
+                                                        <Button
+                                                            sx={{
+                                                            boxShadow: '0 3px 5px 2px rgba(63, 81, 181, .3)',
+                                                            ':hover': {
+                                                                boxShadow: '0 6px 10px 4px rgba(63, 81, 181, .5)',
+                                                            },
+                                                            }}
+                                                            onClick={toggleDrawer(true)}
+                                                        >
+                                                            <FilterAltIcon sx={{ color: 'primary.main' }} />
+                                                        </Button>
+                                                        <Drawer anchor='right' open={filterdraweropen} onClose={toggleDrawer(false)}>
+                                                            {DrawerList}
+                                                        </Drawer>
+                                                    </>
                                                 </Tooltip>
                                             </Box>
                                         </Box>                        
