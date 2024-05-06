@@ -15,6 +15,7 @@ import ImageCard from './ImageCard';
 import {Book} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 
+
 const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false });
 
 export default function UserDashboardComponent() {
@@ -118,15 +119,21 @@ export default function UserDashboardComponent() {
                                         }}
                                         >
                                             {BooksData.slice(0, 5).map((book, index) => (
-                                                    <BookCard
-                                                        key={index}
-                                                        image={book.bookimage}
-                                                        title={book.title}
-                                                        description={book.description}
-                                                        rating={book.rating} 
-                                                        author={book.author}
-                                                        onMouseEnter={() => setBook(book)}
-                                                    />
+                                                <BookCard
+                                                    key={index}
+                                                    bookimage={book.bookimage}
+                                                    title={book.title}
+                                                    description={book.description}
+                                                    rating={book.rating} 
+                                                    author={book.author}
+                                                    onMouseEnter={() => setBook({
+                                                        id: 0, // Change the type to number
+                                                        availability: true,
+                                                        pagecount: 0,
+                                                        ...book,
+                                                        publishedDate: new Date(book.publishedDate) // Convert the publishedDate to Date type
+                                                    })}
+                                                />
                                             ))}
                                         </Box>
                                     </Box>
@@ -230,7 +237,7 @@ export default function UserDashboardComponent() {
                                         >
                                             {selectedCategory !== "All Books" ? CategoryWiseBook[selectedCategory as keyof typeof CategoryWiseBook].map((book, index) => (
                                                 <ImageCard key={index} image={book.bookimage} rating={book.rating} title={book.title} 
-                                                            onMouseEnter={() => setBook(book as Book)}
+                                                    onMouseEnter={() => setBook(book as unknown as Book)}
                                                 />
                                             )) : "No books available in this category."}
                                         </Box>
@@ -246,12 +253,12 @@ export default function UserDashboardComponent() {
                             overflow: 'hidden',
                             width: {xs:'100%', sm:'27%'},
                             minHeight: '92.2vh',
-                            ml:1,
                             top:0,
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'center',
                             alignItems: 'center',
+                            background: '-webkit-linear-gradient(90deg, hsla(0, 0%, 100%, 1) 0%, hsla(222, 36%, 95%, 1) 100%)',
                         }}
                     >                         
                          {book? <BookDetails book={book}/> : <BookDetails/> }

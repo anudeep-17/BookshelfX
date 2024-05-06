@@ -1,24 +1,28 @@
 export interface Book {
+    id: number;
     ISBN: string;
     bookimage: string;
     title: string;
-    description: string;
     author: string;
-    rating: number;
-    publisher: string;
-    publishedDate: string;
+    availability: boolean;
+    description: string;
     category: string;
-    pageCount: number;
+    publisher: string;
+    publishedDate: Date;
+    pagecount: number;
+    rating: number;
     customerReviews: string[];
+   
 }
 
 export interface BookCardProps {
     id?: number;
-    image: string;
+    bookimage: string;
     title: string;
     description: string;
     author: string;
-    rating: number;
+    rating?: number;
+    availability?: boolean;
     onLearnMore?: () => void;
     onMouseEnter?: () => void;
 }
