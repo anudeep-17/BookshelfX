@@ -20,10 +20,9 @@ export default function BookDisplayComponent() {
                   display: 'flex',
                 }}>
             <CssBaseline />
-            <Navbar/>
               <Box
                 component="main"
-                sx={{width: { sm: `calc(100% - ${drawerWidth}px)`} }}
+                sx={{width: { sm: `calc(100% - ${drawerWidth}px)`}, marginLeft: { sm: `${drawerWidth}px` }, }}
               >
                 <Toolbar />
                 <BookList/>

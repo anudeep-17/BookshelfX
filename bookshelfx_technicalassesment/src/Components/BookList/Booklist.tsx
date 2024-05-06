@@ -17,6 +17,7 @@ import {BookCardProps} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { ChevronLeft } from '@mui/icons-material';
 import { usePathname } from 'next/navigation';
+import { motion } from 'framer-motion';
 
 const DetailedBookCard = dynamic(() => import('@/Components/BookList/DetailedBookCard'), { ssr: false });
 
@@ -213,205 +214,216 @@ export default function BookList()
     return(
         <ThemeProvider theme={theme}>
             <CssBaseline/>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                    alignContent: 'center',
-                    flexWrap: 'wrap',
-                    ml:2,
-                    mr:{
-                        xs:2,
-                        sm:2
-                    },
-                }}
+            <motion.div
+                initial={{ opacity: 0 }} // Set the initial state to 0
+                animate={{ opacity: 1 }} // Animate to 1
+                exit={{ opacity: 0 }} // Set the exit to 0
+                transition={{  ease: "easeInOut",
+                            duration: 1,
+                            x: { duration: 1 } }}
             >
-                    <Box
-                        sx={
-                            {
-                                overflow: 'hidden',
-                                backgroundColor: 'white',
-                                width: {xs:'100%', sm:'100%'},
-                                mt: 2,
-                                mb: 2
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        alignContent: 'center',
+                        flexWrap: 'wrap',
+                        ml:2,
+                        mr:{
+                            xs:2,
+                            sm:2
+                        },
+                    }}
+                >
+                        <Box
+                            sx={
+                                {
+                                    overflow: 'hidden',
+                                    backgroundColor: 'white',
+                                    width: {xs:'100%', sm:'100%'},
+                                    mt: 2,
+                                    mb: 2
+                                }
                             }
-                        }
-                    >
-                     <Grid container spacing={2} >
-                            <Grid item xs={15} md={15}>
-                                {/* <Paper elevation={6} square={false} sx={{ backgroundColor: '#ffffff' }}> */}
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, display: 'inline' }}>
-                                                {pathname === "/allcategory" ? "Category Wise " : pathname === "/allbooks" ? "All " : "Featured "}
-                                                <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
-                                                    Books
-                                                </Typography>
-                                        </Typography>
-                                    </Box>
-
+                        >
+                        <Grid container spacing={2} >
+                                <Grid item xs={15} md={15}>
+                                    {/* <Paper elevation={6} square={false} sx={{ backgroundColor: '#ffffff' }}> */}
                                         <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            justifyContent: 'space-between', 
-                                            alignItems: 'center',  
-                                            alignContent: 'center',
-                                            ml:1,
-                                            mr:1,
-                                        }}
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}
                                         >
-                                            <Typography variant="body1" sx={{ mt: 2, mb: 1, display: 'inline', mr:2 }}>
-                                                &quot;Checkout our books Where Every Book is a{" "}
-                                                <Typography variant="body1" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
-                                                    New Horizon
-                                                </Typography>
-                                                &quot;
+                                            <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, display: 'inline' }}>
+                                                    {pathname === "/allcategory" ? "Category Wise " : pathname === "/allbooks" ? "All " : "Featured "}
+                                                    <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
+                                                        Books
+                                                    </Typography>
                                             </Typography>
-                                            <Typography variant="body2" sx={{ mt:1, mb:1 }}>
-                                            
-                                            </Typography>
+                                        </Box>
 
                                             <Box
-                                                sx={{
+                                            sx={{
                                                 display: 'flex',
                                                 flexDirection: 'row',
-                                                justifyContent: 'center',  
+                                                justifyContent: 'space-between', 
                                                 alignItems: 'center',  
-                                                mt:1,
-                                                mb:1,
-                                                }}
+                                                alignContent: 'center',
+                                                ml:1,
+                                                mr:1,
+                                            }}
                                             >
-                                                <Tooltip title="Sort by Alphabetical Order" placement="top" arrow>
-                                                    <>
-                                                    <Button
-                                                        sx={{
-                                                        mr:1,
-                                                        boxShadow: '0 3px 5px 2px rgba(63, 81, 181, .3)',
-                                                        ':hover': {
-                                                            boxShadow: '0 6px 10px 4px rgba(63, 81, 181, .5)',
-                                                        },
-                                                        }}
-                                                        onClick={handleSortClick}
-                                                    >
-                                                        <SortByAlphaIcon/>
-                                                    </Button>
-                                                    <Menu
-                                                        id="basic-menu"
-                                                        anchorEl={anchorEl}
-                                                        open={open}
-                                                        onClose={handleSortClose}
-                                                        MenuListProps={{
-                                                        'aria-labelledby': 'basic-button',
-                                                        }}
-                                                    >
-                                                        <MenuItem onClick={() => handleSort("title")}>Sort by book titles</MenuItem>
-                                                        <MenuItem onClick={() => handleSort("author")}>Sort by book Author</MenuItem>
-                                                        {pathname === "/allcategory" || pathname === "/allbooks" ? <MenuItem onClick={() => handleSort("Category")}>Sort all Categories</MenuItem> : null}
-                                                    </Menu>
-                                                    </>
-                                                </Tooltip>
+                                                <Typography variant="body1" sx={{ mt: 2, mb: 1, display: 'inline', mr:2 }}>
+                                                    &quot;Checkout our books Where Every Book is a{" "}
+                                                    <Typography variant="body1" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
+                                                        New Horizon
+                                                    </Typography>
+                                                    &quot;
+                                                </Typography>
+                                                <Typography variant="body2" sx={{ mt:1, mb:1 }}>
                                                 
-                                                <Tooltip title="Filter" placement="top" arrow>
-                                                    <>
+                                                </Typography>
+
+                                                <Box
+                                                    sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    justifyContent: 'center',  
+                                                    alignItems: 'center',  
+                                                    mt:1,
+                                                    mb:1,
+                                                    }}
+                                                >
+                                                    <Tooltip title="Sort by Alphabetical Order" placement="top" arrow>
+                                                        <>
                                                         <Button
                                                             sx={{
+                                                            mr:1,
                                                             boxShadow: '0 3px 5px 2px rgba(63, 81, 181, .3)',
                                                             ':hover': {
                                                                 boxShadow: '0 6px 10px 4px rgba(63, 81, 181, .5)',
                                                             },
                                                             }}
-                                                            onClick={toggleDrawer(true)}
+                                                            onClick={handleSortClick}
                                                         >
-                                                            <FilterAltIcon sx={{ color: 'primary.main' }} />
+                                                            <SortByAlphaIcon/>
                                                         </Button>
-                                                        <Drawer anchor='right' open={filterdraweropen} onClose={toggleDrawer(false)}>
-                                                            {DrawerList}
-                                                        </Drawer>
-                                                    </>
-                                                </Tooltip>
-                                            </Box>
-                                        </Box>                        
-                                {/* </Paper> */}
-                                </Grid>
+                                                        <Menu
+                                                            id="basic-menu"
+                                                            anchorEl={anchorEl}
+                                                            open={open}
+                                                            onClose={handleSortClose}
+                                                            MenuListProps={{
+                                                            'aria-labelledby': 'basic-button',
+                                                            }}
+                                                        >
+                                                            <MenuItem onClick={() => handleSort("title")}>Sort by book titles</MenuItem>
+                                                            <MenuItem onClick={() => handleSort("author")}>Sort by book Author</MenuItem>
+                                                            {pathname === "/allcategory" || pathname === "/allbooks" ? <MenuItem onClick={() => handleSort("Category")}>Sort all Categories</MenuItem> : null}
+                                                        </Menu>
+                                                        </>
+                                                    </Tooltip>
+                                                    
+                                                    <Tooltip title="Filter" placement="top" arrow>
+                                                        <>
+                                                            <Button
+                                                                sx={{
+                                                                boxShadow: '0 3px 5px 2px rgba(63, 81, 181, .3)',
+                                                                ':hover': {
+                                                                    boxShadow: '0 6px 10px 4px rgba(63, 81, 181, .5)',
+                                                                },
+                                                                }}
+                                                                onClick={toggleDrawer(true)}
+                                                            >
+                                                                <FilterAltIcon sx={{ color: 'primary.main' }} />
+                                                            </Button>
+                                                            <Drawer anchor='right' open={filterdraweropen} onClose={toggleDrawer(false)}>
+                                                                {DrawerList}
+                                                            </Drawer>
+                                                        </>
+                                                    </Tooltip>
+                                                </Box>
+                                            </Box>                        
+                                    {/* </Paper> */}
+                                    </Grid>
 
-                                {pathname === "/allcategory" || pathname === "/allbooks"?
-                                <Grid item xs={15} md={15}>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            justifyContent: 'center',
-                                            alignItems: 'flex-start',
-                                            alignContent: 'flex-start',
-                                            
-                                        }}
-                                    >
-                                        <Stack direction="row" spacing={1} sx={{
-                                            display: 'flex',
-                                            flexWrap: 'wrap',
-                                            ml:2,
-                                            mr:3,
-                                            gap:1,
-                                        }}>
-                                        {
-                                            BookCategory.bookCategories.map((category: string) => {
-                                                return (
-                                                    <Chip
-                                                        label={category}
-                                                        color="primary"
-                                                        variant={selectedChip === category ? 'filled' : 'outlined'}
-                                                        clickable
-                                                        onClick={() => setSelectedChip(category)}
-                                                    />
-                                                );
-                                            })
-                                        }
-                                        </Stack>
-                                    </Box>
-                                </Grid>:null}
-
-                                <Grid item xs={15} md={15}>
+                                    {pathname === "/allcategory" || pathname === "/allbooks"?
+                                    <Grid item xs={15} md={15}>
                                         <Box
                                             sx={{
                                                 display: 'flex',
                                                 flexDirection: 'row',
                                                 justifyContent: 'center',
-                                                alignItems: 'center',
-                                                alignContent: 'center',
-                                                flexWrap: 'wrap',
-                                                ml:1,
-                                                mr:1,
-                                                gap:2, 
-                                                mb:2,
+                                                alignItems: 'flex-start',
+                                                alignContent: 'flex-start',
+                                                
                                             }}
                                         >
+                                            <Stack direction="row" spacing={1} sx={{
+                                                display: 'flex',
+                                                flexWrap: 'wrap',
+                                                ml:2,
+                                                mr:3,
+                                                gap:1,
+                                            }}>
                                             {
-                                                books.map((book: BookCardProps) => {
+                                                BookCategory.bookCategories.map((category: string, index: number) => {
                                                     return (
-                                                        <DetailedBookCard
-                                                            bookimage={book.bookimage}
-                                                            title={book.title}
-                                                            description={book.description}
-                                                            rating={book.rating}
-                                                            author={book.author}
-                                                            availability={Boolean(true)}
+                                                        <Chip
+                                                            key={index}
+                                                            label={category}
+                                                            color="primary"
+                                                            variant={selectedChip === category ? 'filled' : 'outlined'}
+                                                            clickable
+                                                            onClick={() => setSelectedChip(category)}
                                                         />
                                                     );
                                                 })
                                             }
-                                          </Box>
+                                            </Stack>
+                                        </Box>
+                                    </Grid>:null}
+
+                                    <Grid item xs={15} md={15}>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    alignContent: 'center',
+                                                    flexWrap: 'wrap',
+                                                    ml:1,
+                                                    mr:1,
+                                                    gap:2, 
+                                                    mb:2,
+                                                }}
+                                            >
+                                                {
+                                                    books.map((book: BookCardProps) => {
+                                                        return (
+                                                            <DetailedBookCard
+                                                                key={book.id}
+                                                                bookimage={book.bookimage}
+                                                                title={book.title}
+                                                                description={book.description}
+                                                                rating={book.rating}
+                                                                author={book.author}
+                                                                availability={Boolean(true)}
+                                                            />
+                                                        );
+                                                    })
+                                                }
+                                            </Box>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
+                        </Box>
                     </Box>
-                </Box>
+                </motion.div>
         </ThemeProvider>
     )
 }

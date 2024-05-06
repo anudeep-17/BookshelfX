@@ -2,7 +2,7 @@ import { Box, Button, CssBaseline, Divider, Rating, ThemeProvider, Tooltip, Typo
 import {Book} from '../interfaceModels';
 import LibraryImage from "@/assets/Library.png";
 import theme from '../Themes';
-import { NUMBER } from 'sequelize';
+ 
 
 export default function BookDetails({ book }: { book?: Book }) 
 {
