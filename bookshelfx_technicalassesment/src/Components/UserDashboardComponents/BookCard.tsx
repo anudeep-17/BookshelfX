@@ -9,16 +9,16 @@ import theme from '../Themes';
 import { BookCardProps } from '../interfaceModels';
 
 
-export default function BookCard({image, title, rating, onMouseEnter}: BookCardProps) {
-    const [value, setValue] = React.useState<number | null>(rating);
+export default function BookCard({bookimage, title, rating, onMouseEnter}: BookCardProps) {
+    const [value, setValue] = React.useState<number | null>(rating || null);
 
     return(
         <ThemeProvider theme={theme}>
           <Box sx={{ 
                 display: 'flex',
                 flexDirection: 'column',
-                minWidth: '21%', // Increased size
-                maxWidth: '40%', // Increased size
+                minWidth: {xs:'45%', sm:'21%'}, // Increased size
+                maxWidth: {xs:'100%', sm:'40%'}, // Increased size
                 minHeight: 300, // Increased size
                 maxHeight: 300, // Increased size
                 transition: '0.5s', // Add transition for smooth elevation
@@ -30,7 +30,7 @@ export default function BookCard({image, title, rating, onMouseEnter}: BookCardP
             >
                 <Box sx={{ 
                     height: 230, // Increased size
-                    backgroundImage: `url(${image})`,
+                    backgroundImage: `url(${bookimage})`,
                     backgroundSize: 'cover', // Add this to fit the image
                     backgroundPosition: 'center', // Add this to center the image
                     borderRadius: '10px 10px 0 0', // Make top borders curved

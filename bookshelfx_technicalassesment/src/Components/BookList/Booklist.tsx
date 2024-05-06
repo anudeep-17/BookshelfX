@@ -21,7 +21,8 @@ const DetailedBookCard = dynamic(() => import('@/Components/BookList/DetailedBoo
 export default function BookList() 
 {
     const [books, setBook] = React.useState((BooksData as unknown as BookCardProps[]))
-    
+    const [selectedChip, setSelectedChip] =  React.useState<string | null>(null);
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
@@ -82,14 +83,26 @@ export default function BookList()
                 </Typography>
                 <Stack direction="column" spacing={1} sx={{ mt: 2, mb: 2}}>
                     <Stack direction="row" spacing={1}>
-                        <Chip label="Available" variant='outlined'/>
-                        <Chip label="Not Available" variant='outlined'/>
+                        <Chip
+                            color="primary"
+                            label="Available"
+                            variant={selectedChip === 'Available' ? 'filled' : 'outlined'}
+                            clickable
+                            onClick={() => setSelectedChip('Available')}
+                        />
+                        <Chip
+                            color="primary"
+                            label="Not Available"
+                            variant={selectedChip === 'Not Available' ? 'filled' : 'outlined'}
+                            clickable
+                            onClick={() => setSelectedChip('Not Available')}
+                        />
                     </Stack>
                     <Typography variant="body2" sx={{ mt: 2}}>
                         Available Within
                     </Typography>
                     <Slider
-                        defaultValue={4}
+                        defaultValue={1}
                         getAriaValueText={slidervaluetext_forDays}
                         valueLabelDisplay="auto"
                         shiftStep={1}
@@ -170,7 +183,19 @@ export default function BookList()
             </Box>
 
             <Divider sx={{ml:2, mr:2}}/>
-
+            
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: 'center', ml: 2, mr: 2, mt:2}}>
+                <Button variant="contained" sx={{mr:1}}>
+                    <Typography variant="body2" >
+                        Apply Filters
+                    </Typography>
+                </Button>
+                <Button variant="outlined">
+                    <Typography variant="body2">
+                        Clear Filters
+                    </Typography>
+                </Button>
+            </Box>
         </Box>
     );
 
@@ -233,7 +258,7 @@ export default function BookList()
                                             mr:1,
                                         }}
                                         >
-                                            <Typography variant="body1" sx={{ mt: 2, mb: 1, display: 'inline' }}>
+                                            <Typography variant="body1" sx={{ mt: 2, mb: 1, display: 'inline', mr:2 }}>
                                                 &quot;Checkout our featured books Where Every Book is a{" "}
                                                 <Typography variant="body1" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
                                                     New Horizon

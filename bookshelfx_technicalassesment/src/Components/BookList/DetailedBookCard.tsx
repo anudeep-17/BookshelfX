@@ -14,8 +14,8 @@ export default function DetailedBookCard({bookimage, title, description, rating,
             <Box sx={{ 
                     display: 'flex',
                     flexDirection: 'column',
-                    minWidth: '20%', // Increased size
-                    maxWidth: '30%', // Increased size
+                    minWidth: {xs:'35%', sm:'20%'}, // Increased size
+                    maxWidth: {xs:'100%', sm:'30%'}, // Increased size
                     minHeight: 600, // Increased size
                     maxHeight: 600, // Increased size
                     transition: '0.5s', // Add transition for smooth elevation

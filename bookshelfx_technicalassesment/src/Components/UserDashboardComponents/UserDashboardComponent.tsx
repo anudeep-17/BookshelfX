@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, CssBaseline, Divider, Rating, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CssBaseline, Divider, Rating, ThemeProvider, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid';
 import theme from '../Themes';
@@ -25,6 +25,8 @@ export default function UserDashboardComponent() {
         const sortedCategories = [...categories].sort();
         setCategories(sortedCategories);
     };
+
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [book, setBook] = React.useState({} as Book);
 
@@ -261,7 +263,7 @@ export default function UserDashboardComponent() {
                             background: '-webkit-linear-gradient(90deg, hsla(0, 0%, 100%, 1) 0%, hsla(222, 36%, 95%, 1) 100%)',
                         }}
                     >                         
-                         {book? <BookDetails book={book}/> : <BookDetails/> }
+                         { !isXs && book ? <BookDetails book={book}/> : <BookDetails/> }
                     </Box>
 
                 </Box>
