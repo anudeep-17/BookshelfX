@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, CssBaseline, Divider, Drawer, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid';
 import theme from '../Themes';
@@ -15,11 +15,14 @@ import BookCategory from "../Mock-BookCategory.json";
 import CategoryWiseBook from '@/Components/Mock-CategoryWiseBookData.json'
 import {BookCardProps} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
- 
+import { ChevronLeft } from '@mui/icons-material';
+import { usePathname } from 'next/navigation';
+
 const DetailedBookCard = dynamic(() => import('@/Components/BookList/DetailedBookCard'), { ssr: false });
 
 export default function BookList() 
 {
+    const pathname = usePathname();
     const [books, setBook] = React.useState((BooksData as unknown as BookCardProps[]))
     const [selectedChip, setSelectedChip] =  React.useState<string | null>(null);
 
@@ -58,10 +61,6 @@ export default function BookList()
         return `${value} days`;
     }
 
-    function valuetext_forAlphabet(value: number) {
-        return String.fromCharCode(65 + value); 
-        }
-
     function sortBooksByTitle(books: BookCardProps[]) {
         return [...books].sort((a, b) => a.title.localeCompare(b.title));
     }
@@ -73,6 +72,11 @@ export default function BookList()
 
     const DrawerList = (
         <Box sx={{ width: 250 }} role="presentation">
+            <IconButton
+                onClick={toggleDrawer(false)}
+            >
+                <ChevronLeft sx={{fontSize: '2rem'}} />
+            </IconButton>
             <Typography variant="h5" sx={{ mt: 2, mb: 2, ml: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                 <FilterAltIcon sx={{ color: 'primary.main' }} />
                 Filter Books
@@ -240,7 +244,7 @@ export default function BookList()
                                         }}
                                     >
                                         <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, display: 'inline' }}>
-                                                Featured{" "}
+                                                {pathname === "/allcategory" ? "Category Wise " : pathname === "/allbooks" ? "All " : "Featured "}
                                                 <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
                                                     Books
                                                 </Typography>
@@ -259,7 +263,7 @@ export default function BookList()
                                         }}
                                         >
                                             <Typography variant="body1" sx={{ mt: 2, mb: 1, display: 'inline', mr:2 }}>
-                                                &quot;Checkout our featured books Where Every Book is a{" "}
+                                                &quot;Checkout our books Where Every Book is a{" "}
                                                 <Typography variant="body1" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
                                                     New Horizon
                                                 </Typography>
@@ -331,6 +335,43 @@ export default function BookList()
                                         </Box>                        
                                 {/* </Paper> */}
                                 </Grid>
+
+                                {pathname === "/allcategory" || pathname === "/allbooks"?
+                                <Grid item xs={15} md={15}>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                            alignItems: 'flex-start',
+                                            alignContent: 'flex-start',
+                                            
+                                        }}
+                                    >
+                                        <Stack direction="row" spacing={1} sx={{
+                                            display: 'flex',
+                                            flexWrap: 'wrap',
+                                            ml:2,
+                                            mr:3,
+                                            gap:1,
+                                        }}>
+                                        {
+                                            BookCategory.bookCategories.map((category: string) => {
+                                                return (
+                                                    <Chip
+                                                        label={category}
+                                                        color="primary"
+                                                        variant={selectedChip === category ? 'filled' : 'outlined'}
+                                                        clickable
+                                                        onClick={() => setSelectedChip(category)}
+                                                    />
+                                                );
+                                            })
+                                        }
+                                        </Stack>
+                                    </Box>
+                                </Grid>:null}
+
                                 <Grid item xs={15} md={15}>
                                         <Box
                                             sx={{

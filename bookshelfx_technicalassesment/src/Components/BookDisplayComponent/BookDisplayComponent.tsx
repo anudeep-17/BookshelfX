@@ -13,7 +13,7 @@ const drawerWidth = DashboardSize;
 
 const BookList = dynamic(() => import('@/Components/BookList/Booklist'), { ssr: false });
 
-export default function FeaturedBookComponent() {
+export default function BookDisplayComponent() {
     return (
         <ThemeProvider theme={theme}>
         <Box sx={{ 

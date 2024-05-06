@@ -127,7 +127,7 @@ export default function Navbar()
         },
         {
           text: 'All Categories',
-          path: '/category',
+          path: '/allcategory',
           icon: <CategoryIcon />,
         },
         {
