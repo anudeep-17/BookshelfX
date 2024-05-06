@@ -25,6 +25,8 @@ export default function BookList()
     const pathname = usePathname();
     const [books, setBook] = React.useState((BooksData as unknown as BookCardProps[]))
     const [selectedChip, setSelectedChip] =  React.useState<string | null>(null);
+    const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
+    const [allCategory, setCategory] = React.useState((BookCategory.bookCategories as string[]));
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -52,6 +54,10 @@ export default function BookList()
         else if(sortBy === 'author')
         {
             setBook(sortBooksByAuthor(books as BookCardProps[]));
+        }
+        else if(sortBy === 'Category')
+        {
+            setCategory(allCategory.sort());
         }
         handleSortClose();
     }
@@ -296,7 +302,6 @@ export default function BookList()
                                                         onClick={handleSortClick}
                                                     >
                                                         <SortByAlphaIcon/>
-                                                    
                                                     </Button>
                                                     <Menu
                                                         id="basic-menu"
@@ -309,6 +314,7 @@ export default function BookList()
                                                     >
                                                         <MenuItem onClick={() => handleSort("title")}>Sort by book titles</MenuItem>
                                                         <MenuItem onClick={() => handleSort("author")}>Sort by book Author</MenuItem>
+                                                        {pathname === "/allcategory" || pathname === "/allbooks" ? <MenuItem onClick={() => handleSort("Category")}>Sort all Categories</MenuItem> : null}
                                                     </Menu>
                                                     </>
                                                 </Tooltip>
