@@ -24,7 +24,7 @@ model BookDetails{
   ISBN            String
   coverimage      String
   title           String
-  author          String
+  authors         String[]
   description     String
   availability    Boolean
   category        String
