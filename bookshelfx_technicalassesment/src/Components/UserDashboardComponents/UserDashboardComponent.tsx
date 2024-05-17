@@ -132,8 +132,10 @@ export default function UserDashboardComponent() {
                                                         id: 0, // Change the type to number
                                                         availability: true,
                                                         pagecount: 0,
+                                                        coverimage: '',
                                                         ...book,
-                                                        publishedDate: new Date(book.publishedDate) // Convert the publishedDate to Date type
+                                                        publishedDate: new Date(book.publishedDate), // Convert the publishedDate to Date type
+                                                        authors: [] // Add the 'authors' property
                                                     })}
                                                 />
                                             ))}

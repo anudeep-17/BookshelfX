@@ -5,20 +5,21 @@ import { database } from "../../prismaConfig";
 export async function POST(req: Request) 
 {
     
-        const { title, author, description, ISBN, coverimage, availability, category, publisher, publishedDate, pagecount, rating, customerReviews } = await req.json();
-
-        if(!title || !author || !description || !ISBN || !coverimage || !availability || !category || !publisher || !publishedDate || !pagecount || !rating || !customerReviews)
-        {
-            return NextResponse.json({success: false, message: "All fields are required"}, {status: 400});
-        }
-        
+    const { title, authors, description, ISBN, coverimage, availability, category, publisher, publishedDate, pagecount, rating, customerReviews } = await req.json();
+    
+    if(!title || !authors || !description || !ISBN || !coverimage || !availability || !category || !publisher || !publishedDate || !pagecount || !rating || !customerReviews)
+    {
+            
+        return NextResponse.json({success: false, message: "All fields are required"}, {status: 400});
+    }
+    
     try{
         const newBook = await database.bookDetails.create({
             data: {
                 ISBN,
                 coverimage,
                 title,
-                author,
+                authors,
                 description,
                 availability,
                 category,
@@ -34,6 +35,7 @@ export async function POST(req: Request)
     }
     catch(err)
     {
+        console.error(err);
         return NextResponse.json({success: false, message: err}, {status: 500});
     }
 }

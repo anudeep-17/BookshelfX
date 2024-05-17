@@ -37,7 +37,7 @@ model BookDetails{
   updatedAt       DateTime @updatedAt
   rentals         BookRentalDetails[]
   reviews         BookReview[]
-}
+} 
 
 model BookRentalDetails {
   id              Int      @id @default(autoincrement())

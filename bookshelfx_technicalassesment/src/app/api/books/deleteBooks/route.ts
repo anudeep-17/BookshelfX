@@ -21,6 +21,7 @@ export async function DELETE(req: Request)
     }
     catch(err)
     {
+        console.error(err);
         return NextResponse.json({success: false, message: err}, {status: 500});
     }
 }
