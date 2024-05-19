@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
-import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid';
 import theme from '../Themes';
 import Chip from '@mui/material/Chip';
@@ -9,25 +8,47 @@ import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import Slider from '@mui/material/Slider';
 import Checkbox from '@mui/material/Checkbox';
-
-import BooksData from  "../Mock-BookData.json";
 import BookCategory from "../Mock-BookCategory.json";
-import CategoryWiseBook from '@/Components/Mock-CategoryWiseBookData.json'
-import {BookCardProps} from '@/Components/interfaceModels';
+import {Book, BookCardProps} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { ChevronLeft } from '@mui/icons-material';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { getBook, getCategories } from '@/Services/BookRoutines';
 
 const DetailedBookCard = dynamic(() => import('@/Components/BookList/DetailedBookCard'), { ssr: false });
 
 export default function BookList() 
 {
     const pathname = usePathname();
-    const [books, setBook] = React.useState((BooksData as unknown as BookCardProps[]))
+    const [books, setBook] = React.useState<Book[]>([])
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const data = await getBook();
+            if (data.success) {
+                setBook(data.data);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+
     const [selectedChip, setSelectedChip] =  React.useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
-    const [allCategory, setCategory] = React.useState((BookCategory.bookCategories as string[]));
+    const [allCategory, setCategory] = React.useState([]);
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const data = await getCategories();
+            if (data.success) {
+                const categories = data.data.map((item: { category: any; }) => item.category);
+                setCategory(categories);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -50,11 +71,11 @@ export default function BookList()
     function handleSort(sortBy: string){
         if(sortBy === 'title')
         {
-            setBook(sortBooksByTitle(books as BookCardProps[]));
+            setBook(sortBooksByTitle(books));
         }
         else if(sortBy === 'author')
         {
-            setBook(sortBooksByAuthor(books as BookCardProps[]));
+            setBook(sortBooksByAuthor(books));
         }
         else if(sortBy === 'Category')
         {
@@ -68,12 +89,28 @@ export default function BookList()
         return `${value} days`;
     }
 
-    function sortBooksByTitle(books: BookCardProps[]) {
+    function sortBooksByTitle(books: Book[]) {
         return [...books].sort((a, b) => a.title.localeCompare(b.title));
     }
 
-    function sortBooksByAuthor(books: BookCardProps[]) {
-        return [...books].sort((a, b) => a.author.localeCompare(b.author));
+    function sortBooksByAuthor(books: Book[]) {
+        return [...books].sort((a, b) => {
+            let comparison = 0;
+            const maxAuthors = Math.max(a.authors.length, b.authors.length);
+    
+            for (let i = 0; i < maxAuthors; i++) {
+                const authorA = a.authors[i] || '';
+                const authorB = b.authors[i] || '';
+                comparison = authorA.localeCompare(authorB);
+    
+                if (comparison !== 0) {
+                    // If the authors at the current index are not the same, break the loop
+                    break;
+                }
+            }
+    
+            return comparison;
+        });
     }
     
 
@@ -399,24 +436,27 @@ export default function BookList()
                                                     flexWrap: 'wrap',
                                                     ml:1,
                                                     mr:1,
-                                                    gap:2, 
+                                                    gap:2.5, 
                                                     mb:2,
                                                 }}
                                             >
                                                 {
-                                                    books.map((book: BookCardProps) => {
+                                                    books.length>0 ? books.map((book: BookCardProps) => {
                                                         return (
                                                             <DetailedBookCard
                                                                 key={book.id}
-                                                                bookimage={book.bookimage}
+                                                                coverimage={book.coverimage}
                                                                 title={book.title}
                                                                 description={book.description}
                                                                 rating={book.rating}
-                                                                author={book.author}
+                                                                authors={book.authors}
                                                                 availability={Boolean(true)}
                                                             />
                                                         );
-                                                    })
+                                                    }) :
+                                                    <Typography variant="h6" sx={{ mt: 2, mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                                            No Books Found
+                                                    </Typography>
                                                 }
                                             </Box>
                                     </Grid>

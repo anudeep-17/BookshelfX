@@ -17,10 +17,10 @@ export interface Book {
 
 export interface BookCardProps {
     id?: number;
-    bookimage: string;
+    coverimage: string;
     title: string;
     description: string;
-    author: string;
+    authors: string[];
     rating?: number;
     availability?: boolean;
     onLearnMore?: () => void;

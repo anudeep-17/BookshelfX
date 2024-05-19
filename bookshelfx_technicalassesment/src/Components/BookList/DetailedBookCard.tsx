@@ -6,7 +6,7 @@ import theme from '../Themes';
 import { BookCardProps } from '../interfaceModels';
 
 
-export default function DetailedBookCard({bookimage, title, description, rating, author, availability}: BookCardProps) {
+export default function DetailedBookCard({coverimage, title, description, rating, authors, availability}: BookCardProps) {
     const [value, setValue] = React.useState<number | null>(rating || null);
 
     return(
@@ -14,7 +14,7 @@ export default function DetailedBookCard({bookimage, title, description, rating,
             <Box sx={{ 
                     display: 'flex',
                     flexDirection: 'column',
-                    minWidth: {xs:'35%', sm:'20%'}, // Increased size
+                    minWidth: {xs:'35%', sm:'30%'}, // Increased size
                     maxWidth: {xs:'100%', sm:'30%'}, // Increased size
                     minHeight: 600, // Increased size
                     maxHeight: 600, // Increased size
@@ -43,10 +43,13 @@ export default function DetailedBookCard({bookimage, title, description, rating,
                   
                     <Box sx={{ 
                         height: 400, // Increased size
-                        backgroundImage: `url(${bookimage})`,
+                        backgroundImage: `url(${coverimage})`,
                         backgroundSize: 'cover', // Add this to fit the image
                         backgroundPosition: 'center', // Add this to center the image
                         borderRadius: '10px 10px 0 0', // Make top borders curved
+                        borderTop: '0.05px solid rgb(169, 169, 169)', // Add border to the top
+                        borderLeft: '0.05px solid rgb(169, 169, 169)', // Add border to the left
+                        borderRight: '0.05px solid rgb(169, 169, 169)', // Add border to the right
                     }}/> 
                     <Box sx={{ 
                         padding: 2, // Add some padding
@@ -59,7 +62,7 @@ export default function DetailedBookCard({bookimage, title, description, rating,
                         <Typography variant="body1" color="text.secondary" sx={{
                             mb:0.5
                         }}>
-                            {author}
+                            {authors.join(", ")}
                         </Typography>
                         
                         <Rating name="read-only" value={value} readOnly sx={{

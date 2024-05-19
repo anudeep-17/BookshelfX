@@ -3,7 +3,6 @@ import { Box, Button, CssBaseline, Divider, Rating, ThemeProvider, Tooltip, Typo
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid';
 import theme from '../Themes';
-import BooksData from  "../Mock-BookData.json";
 import BookCard from './BookCard';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Chip from '@mui/material/Chip';
@@ -14,7 +13,7 @@ import CategoryWiseBook from '@/Components/Mock-CategoryWiseBookData.json'
 import ImageCard from './ImageCard';
 import {Book} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
-
+import { getBook } from '@/Services/BookRoutines';
 
 const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false });
 
@@ -29,6 +28,19 @@ export default function UserDashboardComponent() {
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [book, setBook] = React.useState({} as Book);
+
+    const [BookData, setBookData] = React.useState<Book[]>([]);
+
+    React.useEffect(() => {
+        async function fetchData() {
+          const data = await getBook();
+          setBookData(data.data);
+        }
+    
+        fetchData();
+      }, []);
+
+      console.log(BookData);
 
     return (
         <ThemeProvider theme={theme}>
@@ -120,25 +132,24 @@ export default function UserDashboardComponent() {
                                             gap: 1.35,  
                                         }}
                                         >
-                                            {BooksData.slice(0, 5).map((book, index) => (
+                                            {BookData && BookData.length > 0 ? BookData?.slice(0,5).map((book, index) => (
                                                 <BookCard
                                                     key={index}
-                                                    bookimage={book.bookimage}
-                                                    title={book.title}
-                                                    description={book.description}
-                                                    rating={book.rating} 
-                                                    author={book.author}
+                                                    coverimage={book?.coverimage}
+                                                    title={book?.title}
+                                                    description={book?.description}
+                                                    rating={book?.rating}
+                                                    authors={book?.authors}
                                                     onMouseEnter={() => setBook({
-                                                        id: 0, // Change the type to number
-                                                        availability: true,
-                                                        pagecount: 0,
-                                                        coverimage: '',
-                                                        ...book,
-                                                        publishedDate: new Date(book.publishedDate), // Convert the publishedDate to Date type
-                                                        authors: [] // Add the 'authors' property
+                                                        ...(book || {}),
                                                     })}
                                                 />
-                                            ))}
+                                            ))
+                                            :
+                                            <Typography variant="h6" sx={{pl:1}}>
+                                                No books available in the library.
+                                            </Typography>
+                                            }
                                         </Box>
                                     </Box>
                                 </Paper>
@@ -244,6 +255,7 @@ export default function UserDashboardComponent() {
                                                     onMouseEnter={() => setBook(book as unknown as Book)}
                                                 />
                                             )) : "No books available in this category."}
+                                            
                                         </Box>
                                     
                                     </Box>

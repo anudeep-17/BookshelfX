@@ -9,7 +9,7 @@ import theme from '../Themes';
 import { BookCardProps } from '../interfaceModels';
 
 
-export default function BookCard({bookimage, title, rating, onMouseEnter}: BookCardProps) {
+export default function BookCard({bookimage, title, rating, authors, onMouseEnter}: BookCardProps) {
     const [value, setValue] = React.useState<number | null>(rating || null);
 
     return(
@@ -43,8 +43,16 @@ export default function BookCard({bookimage, title, rating, onMouseEnter}: BookC
                     <Typography variant="body1" component="div">
                         {title.length > 10 ? `${title.substring(0, 10)}...` : title}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Jhon Greesham 
+                    <Typography 
+                        variant="body2" 
+                        color="text.secondary" 
+                        sx={{
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                        }}
+                    >
+                    {authors.join(', ')}
                     </Typography>
                 </Box>
             </Box>

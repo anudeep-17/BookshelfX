@@ -12,7 +12,7 @@ export default function BookDetails({ book }: { book?: Book })
             <>
             <Box 
             component="img" 
-            src={book?.bookimage} 
+            src={book?.coverimage} 
             alt={book?.title} 
             sx={{ 
                 width: 250, 
@@ -26,7 +26,7 @@ export default function BookDetails({ book }: { book?: Book })
                 {book?.title}
             </Typography>
             <Typography variant="body1" sx={{mb:2}} >
-                {book?.author}
+                {book?.authors.join(', ')}
             </Typography>
 
             <Rating name="read-only" value={Number(book?.rating)} readOnly sx={{mb:1}}/>
@@ -51,7 +51,7 @@ export default function BookDetails({ book }: { book?: Book })
                     }}
                 >
                     <Typography variant="body1" >
-                        100
+                        {book?.pagecount}
                     </Typography>
                     <Typography variant="body2" sx={{
                         color: theme.palette.text.secondary
@@ -73,7 +73,7 @@ export default function BookDetails({ book }: { book?: Book })
                     }}
                 >
                     <Typography variant="body1">
-                        643
+                        {book?.rating}
                     </Typography>
                     <Typography variant="body2" sx={{
                         color: theme.palette.text.secondary
@@ -95,7 +95,7 @@ export default function BookDetails({ book }: { book?: Book })
                     }}
                 >
                     <Typography variant="body1">
-                        110
+                        {book?.customerReviews.length}
                     </Typography>
                     <Typography variant="body2" sx={{
                         color: theme.palette.text.secondary

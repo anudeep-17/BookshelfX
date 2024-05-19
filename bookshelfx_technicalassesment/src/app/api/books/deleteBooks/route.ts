@@ -4,20 +4,14 @@ import { database } from "../../prismaConfig";
 export async function DELETE(req: Request) 
 {
     try{
-        const { id } = await req.json();
+        const deleteBooks = await database.bookDetails.deleteMany();
 
-        const deleteBook = await database.bookDetails.delete({
-            where: {
-                id: id
-            }
-        });
-
-        if(!deleteBook)
+        if(!deleteBooks)
         {
-            return NextResponse.json({success: false, message: "Book not found"}, {status: 404});
+            return NextResponse.json({success: false, message: "No books found to delete"}, {status: 404});
         }
 
-        return NextResponse.json({success: true, message:"Book deleted successfully", book:deleteBook}, {status: 200});
+        return NextResponse.json({success: true, message:"All books deleted successfully"}, {status: 200});
     }
     catch(err)
     {
