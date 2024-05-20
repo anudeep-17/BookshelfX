@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { database } from "../../prismaConfig";
+import Cookies from 'js-cookie';
 
 
 export async function POST(req: Request) 
 {
-    
     const { title, authors, description, ISBN, coverimage, availability, category, publisher, publishedDate, pagecount, rating, customerReviews } = await req.json();
     
     if(!title || !authors || !description || !ISBN || !coverimage || !availability || !category || !publisher || !publishedDate || !pagecount || !rating || !customerReviews)

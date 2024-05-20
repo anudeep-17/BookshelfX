@@ -11,13 +11,10 @@ import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { red } from '@mui/material/colors';
 import { Create, Visibility, VisibilityOff } from '@mui/icons-material';
-import { AuthContext } from '../Context/AuthContext';
 import { Authentication, RegisterUser } from '@/Services/UserRoutines';
 import {User} from '../interfaceModels';
-import { UserContext } from '../Context/UserContext';
-import Snackbar from '@mui/material/Snackbar';
 import Cookies from 'js-cookie';
-
+import { AuthContext } from '../Context/AuthContext';
 
 export default function Login_Signup() {
     const [isregister, setisregister] = React.useState(false);
@@ -29,9 +26,7 @@ export default function Login_Signup() {
     const [passwordMatch, setpasswordMatch] = React.useState(false);
     const [Role, setRole] = React.useState('');
     const [showAuthenticationFailed, setShowAuthenticationFailed] = React.useState(false);
-
     const { setIsAuthenticated } = React.useContext(AuthContext);
-    const { setUser } = React.useContext(UserContext);
 
     const handleRegisterRequest = () => {
         setisregister(true);
@@ -69,7 +64,6 @@ export default function Login_Signup() {
                 name:  authenticate.user.name,
                 role:  authenticate.user.role,
             }
-            setUser(user);
             Cookies.set('user', JSON.stringify(user));
             setIsAuthenticated(true);
         }
@@ -95,7 +89,6 @@ export default function Login_Signup() {
                 name:  register.user.name,
                 role:  register.user.role,
             }
-            setUser(user);
             Cookies.set('user', JSON.stringify(user));
             setIsAuthenticated(true);
         }
