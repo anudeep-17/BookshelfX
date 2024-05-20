@@ -17,8 +17,8 @@ export default function BookCard({coverimage, title, rating, authors, onMouseEnt
           <Box sx={{ 
                 display: 'flex',
                 flexDirection: 'column',
-                minWidth: {xs:'45%', sm:'21%'}, // Increased size
-                maxWidth: {xs:'100%', sm:'40%'}, // Increased size
+                minWidth: {xs:'45%', sm:'19%'}, // Increased size
+                maxWidth: {xs:'100%', sm:'20%'}, // Increased size
                 minHeight: 300, // Increased size
                 maxHeight: 300, // Increased size
                 transition: '0.5s', // Add transition for smooth elevation

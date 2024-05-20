@@ -9,17 +9,20 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import BookCategory from "../Mock-BookCategory.json";
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
-import CategoryWiseBook from '@/Components/Mock-CategoryWiseBookData.json'
 import ImageCard from './ImageCard';
 import {Book} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
+import Skeleton from '@mui/material/Skeleton';
 import { getBook, getBooksByCategory } from '@/Services/BookRoutines';
+import { CircularProgress } from '@mui/material';
 
-const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false });
+
+const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false});
 
 export default function UserDashboardComponent() {
     const [categories, setCategories] = React.useState(BookCategory.bookCategories.slice(0, 7));
     const [selectedCategory, setSelectedCategory] = React.useState(categories[0]);
+   
     const sortCategories = () => {
         const sortedCategories = [...categories].sort();
         setCategories(sortedCategories);
@@ -54,6 +57,19 @@ export default function UserDashboardComponent() {
     
         fetchData();
     }, [categories]);
+
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        if(BookData.length > 0 && categoryWiseBookData)
+        {
+            const timer = setTimeout(() => {
+                setLoading(false);
+            }, 150); 
+    
+            return () => clearTimeout(timer); 
+        }
+    }, [BookData, categoryWiseBookData]);
 
     return (
         <ThemeProvider theme={theme}>
@@ -133,8 +149,9 @@ export default function UserDashboardComponent() {
                                         sx={{
                                             display: 'flex',
                                             flexDirection: 'row',
-                                            justifyContent: 'flex-start',
-                                            alignItems: 'flex-start',
+                                            justifyContent: 'space-between', 
+                                            width: '100%',
+
                                             flexWrap: {
                                                 xs: 'wrap',
                                                 sm: 'nowrap',
@@ -142,24 +159,35 @@ export default function UserDashboardComponent() {
                                             pl:1,
                                             pr:2,
                                             mb:2,
-                                            gap: 1.35,  
                                         }}
                                         >
-                                            {BookData && BookData.length > 0 ? BookData?.slice(0,5).map((book, index) => (
-                                                <BookCard
-                                                    key={index}
-                                                    coverimage={book?.coverimage}
-                                                    title={book?.title}
-                                                    description={book?.description}
-                                                    rating={book?.rating}
-                                                    authors={book?.authors}
-                                                    onMouseEnter={() => setBook(book as Book)}
-                                                />
-                                            ))
-                                            :
-                                            <Typography variant="h6" sx={{pl:1}}>
-                                                No books available in the library.
-                                            </Typography>
+                                            {
+                                                loading ?
+                                                Array.from(new Array(5)).map((_, index) => (
+                                                    <Skeleton variant="rectangular" width={150} height={300} key={index} />
+                                                ))
+                                                :
+                                                BookData ?
+                                                (
+                                                    BookData.length > 0 ?
+                                                    BookData.slice(0,5).map((book, index) => (
+                                                        <BookCard
+                                                            key={index}
+                                                            coverimage={book?.coverimage}
+                                                            title={book?.title}
+                                                            description={book?.description}
+                                                            rating={book?.rating}
+                                                            authors={book?.authors}
+                                                            onMouseEnter={() => setBook(book as Book)}
+                                                        />
+                                                    ))
+                                                    :
+                                                    <Typography variant="h6" sx={{pl:1}}>
+                                                        No books available in the library.
+                                                    </Typography>
+                                                )
+                                                :
+                                                null
                                             }
                                         </Box>
                                     </Box>
@@ -259,6 +287,7 @@ export default function UserDashboardComponent() {
                                                 pr:2,
                                                 flexWrap: 'wrap',
                                                 width: '100%',
+                                                
                                             }}
                                         >
                                             {
