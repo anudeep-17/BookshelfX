@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Button, CssBaseline, Divider, Rating, ThemeProvider, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid';
@@ -13,7 +13,7 @@ import CategoryWiseBook from '@/Components/Mock-CategoryWiseBookData.json'
 import ImageCard from './ImageCard';
 import {Book} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
-import { getBook } from '@/Services/BookRoutines';
+import { getBook, getBooksByCategory } from '@/Services/BookRoutines';
 
 const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false });
 
@@ -40,7 +40,20 @@ export default function UserDashboardComponent() {
         fetchData();
       }, []);
 
-      console.log(BookData);
+    const [categoryWiseBookData, setCategoryWiseBookData] = React.useState<{ [key: string]: Book[] }>({});
+
+    useEffect(() => {
+        async function fetchData() {
+            const tempData: { [key: string]: Book[] } = {};
+            for (const category of categories) {
+                const data = await getBooksByCategory(category);
+                tempData[category] = data.books;
+            }
+            setCategoryWiseBookData(tempData);
+        }
+    
+        fetchData();
+    }, [categories]);
 
     return (
         <ThemeProvider theme={theme}>
@@ -140,9 +153,7 @@ export default function UserDashboardComponent() {
                                                     description={book?.description}
                                                     rating={book?.rating}
                                                     authors={book?.authors}
-                                                    onMouseEnter={() => setBook({
-                                                        ...(book || {}),
-                                                    })}
+                                                    onMouseEnter={() => setBook(book as Book)}
                                                 />
                                             ))
                                             :
@@ -250,11 +261,20 @@ export default function UserDashboardComponent() {
                                                 width: '100%',
                                             }}
                                         >
-                                            {selectedCategory !== "All Books" ? CategoryWiseBook[selectedCategory as keyof typeof CategoryWiseBook].map((book, index) => (
-                                                <ImageCard key={index} image={book.bookimage} rating={book.rating} title={book.title} 
-                                                    onMouseEnter={() => setBook(book as unknown as Book)}
-                                                />
-                                            )) : "No books available in this category."}
+                                            {
+                                                selectedCategory !== "All Books" && categoryWiseBookData[selectedCategory] ?
+                                                categoryWiseBookData[selectedCategory].map((book, index) => (
+                                                    <ImageCard 
+                                                        key={index} 
+                                                        image={book.coverimage} 
+                                                        rating={book.rating} 
+                                                        title={book.title} 
+                                                        onMouseEnter={() => setBook(book as Book)}
+                                                    />
+                                                ))
+                                                : 
+                                                "No books available in this category."
+                                            }
                                             
                                         </Box>
                                     

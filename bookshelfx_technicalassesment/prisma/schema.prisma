@@ -37,6 +37,8 @@ model BookDetails{
   updatedAt       DateTime @updatedAt
   rentals         BookRentalDetails[]
   reviews         BookReview[]
+
+  @@unique([title, authors])
 } 
 
 model BookRentalDetails {

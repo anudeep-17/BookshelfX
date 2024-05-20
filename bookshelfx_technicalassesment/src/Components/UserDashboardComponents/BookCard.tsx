@@ -9,7 +9,7 @@ import theme from '../Themes';
 import { BookCardProps } from '../interfaceModels';
 
 
-export default function BookCard({bookimage, title, rating, authors, onMouseEnter}: BookCardProps) {
+export default function BookCard({coverimage, title, rating, authors, onMouseEnter}: BookCardProps) {
     const [value, setValue] = React.useState<number | null>(rating || null);
 
     return(
@@ -30,7 +30,7 @@ export default function BookCard({bookimage, title, rating, authors, onMouseEnte
             >
                 <Box sx={{ 
                     height: 230, // Increased size
-                    backgroundImage: `url(${bookimage})`,
+                    backgroundImage: `url(${coverimage})`,
                     backgroundSize: 'cover', // Add this to fit the image
                     backgroundPosition: 'center', // Add this to center the image
                     borderRadius: '10px 10px 0 0', // Make top borders curved

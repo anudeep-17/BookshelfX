@@ -11,3 +11,10 @@ export async function getCategories()
     const data = await response.json();
     return data;
 }
+
+export async function getBooksByCategory(category: string)
+{
+    const response = await fetch(`/api/books/getBooksByCategory?category=${category}`);
+    const data = await response.json();
+    return data;
+}

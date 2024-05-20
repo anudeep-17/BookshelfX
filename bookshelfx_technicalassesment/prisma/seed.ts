@@ -18,7 +18,7 @@ async function main()
 
     //inserting books for each category 
     BookCategories.bookCategories.map(async (bookCategory: string) => {
-        const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${bookCategory}&maxResults=4&key=${process.env.GOOGLE_BOOKS_API_KEY}`,{
+        const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${bookCategory}&maxResults=6&key=${process.env.GOOGLE_BOOKS_API_KEY}`,{
             method: 'GET'
         });        
         const data = await response.json();
@@ -39,9 +39,17 @@ async function main()
                 availability: true,  
             }
 
+            try {
             const bookDataResponse = await prisma.bookDetails.create({
                 data: bookData
-            });
+                });
+            } catch (error: any) {
+                if (error.code === 'P2002') {
+                    console.log(`Skipping book with title "${bookData.title}" and authors "${bookData.authors}" because it already exists in the database.`);
+                } else {
+                    console.error(error);
+                }
+            }
         })
     })
 }

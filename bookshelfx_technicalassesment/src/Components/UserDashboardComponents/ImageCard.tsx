@@ -5,8 +5,6 @@ import { ImageCardProps } from '../interfaceModels';
 
 export default function ImageCard({image, rating, title, onMouseEnter}: ImageCardProps) 
 {
-    const [value, setValue] = React.useState<number | null>(rating);
-    console.log(image);
     return(
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -16,7 +14,7 @@ export default function ImageCard({image, rating, title, onMouseEnter}: ImageCar
                 backgroundImage: `url(${image})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
- 
+                mb:2,
                 transition: 'transform .3s',  
                 position: 'relative', // Add this
                 ':hover': {
@@ -30,10 +28,10 @@ export default function ImageCard({image, rating, title, onMouseEnter}: ImageCar
             >
                 <Box sx={{
                     position: 'absolute',
-                    top: 0,
+                    top: -10,
                     left: 0,
                     right: 0,
-                    bottom: 0,
+                    bottom: -10,
                     mt:1.5,
                     mb:1.5,
                     backgroundColor: 'rgba(0, 0, 0, 0.7)', // Adjust color and opacity as needed
@@ -46,7 +44,7 @@ export default function ImageCard({image, rating, title, onMouseEnter}: ImageCar
                     transition: 'opacity .3s',
                 }}>
                     <Box sx={{ alignSelf: 'center' }}>
-                        ★ {value}  
+                        ★ {rating}  
                     </Box>
                     {title?.length > 8 ? `${title.substring(0, 8)}...` : title}
                 </Box>

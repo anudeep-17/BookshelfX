@@ -5,7 +5,7 @@ import theme from '../Themes';
  
 
 export default function BookDetails({ book }: { book?: Book }) 
-{
+{   
     return(
         <ThemeProvider theme={theme}>
         {book?.title !== undefined?
