@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Box, CssBaseline, Rating, ThemeProvider } from '@mui/material';
-import theme from '../Themes';
-import { ImageCardProps } from '../interfaceModels';
+import theme from '../../Themes';
+import { ImageCardProps } from '../../interfaceModels';
 
 export default function ImageCard({image, rating, title, onMouseEnter}: ImageCardProps) 
 {

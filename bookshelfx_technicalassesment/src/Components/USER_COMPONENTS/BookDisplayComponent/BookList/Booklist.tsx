@@ -1,14 +1,14 @@
 import React from 'react';
 import { Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import theme from '../Themes';
+import theme from '../../../Themes';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import Slider from '@mui/material/Slider';
 import Checkbox from '@mui/material/Checkbox';
-import BookCategory from "../Mock-BookCategory.json";
+import BookCategory from "../../../Mock-BookCategory.json";
 import {Book, BookCardProps} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { ChevronLeft } from '@mui/icons-material';
@@ -16,7 +16,7 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { getBook, getCategories } from '@/Services/BookRoutines';
 
-const DetailedBookCard = dynamic(() => import('@/Components/BookList/DetailedBookCard'), { ssr: false });
+const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 
 export default function BookList() 
 {

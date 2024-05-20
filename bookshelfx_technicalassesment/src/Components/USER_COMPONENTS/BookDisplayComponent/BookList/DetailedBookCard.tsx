@@ -2,8 +2,8 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import { Box, Button, ThemeProvider, Tooltip } from '@mui/material';
-import theme from '../Themes';
-import { BookCardProps } from '../interfaceModels';
+import theme from '../../../Themes';
+import { BookCardProps } from '../../../interfaceModels';
 
 
 export default function DetailedBookCard({coverimage, title, description, rating, authors, availability}: BookCardProps) {

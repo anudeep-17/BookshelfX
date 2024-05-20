@@ -9,7 +9,7 @@ import Toolbar from '@mui/material/Toolbar';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 
-const UserDashboardComponent = dynamic(() => import('@/Components/UserDashboardComponents/UserDashboardComponent'), { ssr: false });
+const UserDashboardComponent = dynamic(() => import('@/Components/USER_COMPONENTS/UserDashboardComponents/UserDashboardComponent'), { ssr: false });
 
 import { DashboardSize } from '../DashboardSize';
 

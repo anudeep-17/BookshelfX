@@ -5,8 +5,8 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import { Box, ThemeProvider } from '@mui/material';
-import theme from '../Themes';
-import { BookCardProps } from '../interfaceModels';
+import theme from '../../Themes';
+import { BookCardProps } from '../../interfaceModels';
 
 
 export default function BookCard({coverimage, title, rating, authors, onMouseEnter}: BookCardProps) {

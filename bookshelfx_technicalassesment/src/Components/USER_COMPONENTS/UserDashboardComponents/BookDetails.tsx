@@ -1,7 +1,7 @@
 import { Box, Button, CssBaseline, Divider, Rating, ThemeProvider, Tooltip, Typography } from '@mui/material';
-import {Book} from '../interfaceModels';
+import {Book} from '../../interfaceModels';
 import LibraryImage from "@/assets/Library.png";
-import theme from '../Themes';
+import theme from '../../Themes';
  
 
 export default function BookDetails({ book }: { book?: Book }) 

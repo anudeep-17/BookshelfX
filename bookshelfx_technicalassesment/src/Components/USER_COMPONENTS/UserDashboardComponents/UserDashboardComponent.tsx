@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { Box, Button, CssBaseline, Divider, Rating, ThemeProvider, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid';
-import theme from '../Themes';
+import theme from '../../Themes';
 import BookCard from './BookCard';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import BookCategory from "../Mock-BookCategory.json";
+import BookCategory from "../../Mock-BookCategory.json";
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import ImageCard from './ImageCard';
 import {Book} from '@/Components/interfaceModels';
@@ -19,6 +19,10 @@ import { CircularProgress } from '@mui/material';
 
 const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false});
 
+/**
+ * UserDashboardComponent is a component that displays the user dashboard.
+ * It fetches book data and displays featured books and categories.
+ */
 export default function UserDashboardComponent() {
     const [categories, setCategories] = React.useState(BookCategory.bookCategories.slice(0, 7));
     const [selectedCategory, setSelectedCategory] = React.useState(categories[0]);
