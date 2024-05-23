@@ -15,12 +15,14 @@ import { ChevronLeft } from '@mui/icons-material';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { getBook, getCategories } from '@/Services/BookRoutines';
-
+import { useRouter } from 'next/navigation';
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 
 export default function BookList() 
 {
     const pathname = usePathname();
+    const router = useRouter();
+
     const [books, setBook] = React.useState<Book[]>([])
     React.useEffect(() => {
         const fetchData = async () => {
@@ -113,6 +115,9 @@ export default function BookList()
         });
     }
     
+    function handleBookClick(id: number) {
+        router.push(`/book/${id}`);
+    }
 
     const DrawerList = (
         <Box sx={{ width: 250 }} role="presentation">
@@ -451,6 +456,7 @@ export default function BookList()
                                                                 rating={book.rating}
                                                                 authors={book.authors}
                                                                 availability={Boolean(true)}
+                                                                onClick= {() => handleBookClick(book.id as number)}
                                                             />
                                                         );
                                                     }) :

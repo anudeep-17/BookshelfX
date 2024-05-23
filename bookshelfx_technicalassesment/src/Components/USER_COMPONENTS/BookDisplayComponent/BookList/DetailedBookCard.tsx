@@ -6,7 +6,7 @@ import theme from '../../../Themes';
 import { BookCardProps } from '../../../interfaceModels';
 
 
-export default function DetailedBookCard({coverimage, title, description, rating, authors, availability}: BookCardProps) {
+export default function DetailedBookCard({coverimage, title, description, rating, authors, availability, onClick}: BookCardProps) {
     const [value, setValue] = React.useState<number | null>(rating || null);
 
     return(
@@ -25,6 +25,7 @@ export default function DetailedBookCard({coverimage, title, description, rating
                     backgroundColor: availability ? 'initial' : '#cccccc',
                     borderRadius: '10px 10px 10px 10px', // Make top borders curved
                 }}
+                onClick={onClick}
                 >
                    
                    {!availability? <Box sx={{

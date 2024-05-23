@@ -12,7 +12,6 @@ export interface Book {
     pagecount: number;
     rating: number;
     customerReviews: string[];
-   
 }
 
 export interface BookCardProps {
@@ -25,6 +24,7 @@ export interface BookCardProps {
     availability?: boolean;
     onLearnMore?: () => void;
     onMouseEnter?: () => void;
+    onClick?: () => void;
 }
 
 export interface ImageCardProps {
@@ -32,6 +32,7 @@ export interface ImageCardProps {
     title: string;
     rating: number;
     onMouseEnter?: () => void;
+    onClick?: () => void;
 }
 
 export interface User {

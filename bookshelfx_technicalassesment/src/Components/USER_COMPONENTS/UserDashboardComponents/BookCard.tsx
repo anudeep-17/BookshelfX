@@ -9,7 +9,7 @@ import theme from '../../Themes';
 import { BookCardProps } from '../../interfaceModels';
 
 
-export default function BookCard({coverimage, title, rating, authors, onMouseEnter}: BookCardProps) {
+export default function BookCard({coverimage, title, rating, authors, onMouseEnter, onClick}: BookCardProps) {
     const [value, setValue] = React.useState<number | null>(rating || null);
 
     return(
@@ -24,9 +24,14 @@ export default function BookCard({coverimage, title, rating, authors, onMouseEnt
                 transition: '0.5s', // Add transition for smooth elevation
                 ':hover': {
                     transform: 'translateY(-8px)', // Elevate the card on hover
+                    boxShadow: '0 3px 10px #3f51b5',
+                    borderRadius: '10px 10px 10px 10px',
+                    cursor: 'pointer',
                 },
+                borderRadius: '10px 10px 10px 10px',
             }}
             onMouseEnter={onMouseEnter}
+            onClick={onClick}
             >
                 <Box sx={{ 
                     height: 230, // Increased size

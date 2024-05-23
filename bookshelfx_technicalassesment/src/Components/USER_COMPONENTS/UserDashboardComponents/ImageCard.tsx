@@ -3,7 +3,7 @@ import { Box, CssBaseline, Rating, ThemeProvider } from '@mui/material';
 import theme from '../../Themes';
 import { ImageCardProps } from '../../interfaceModels';
 
-export default function ImageCard({image, rating, title, onMouseEnter}: ImageCardProps) 
+export default function ImageCard({image, rating, title, onMouseEnter, onClick}: ImageCardProps) 
 {
     return(
         <ThemeProvider theme={theme}>
@@ -25,6 +25,7 @@ export default function ImageCard({image, rating, title, onMouseEnter}: ImageCar
                 },
             }}
             onMouseEnter={onMouseEnter}
+            onClick={onClick}
             >
                 <Box sx={{
                     position: 'absolute',

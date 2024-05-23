@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Button, CssBaseline, Divider, Rating, ThemeProvider, Tooltip, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, CssBaseline, ThemeProvider, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid';
 import theme from '../../Themes';
@@ -14,8 +14,7 @@ import {Book} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import Skeleton from '@mui/material/Skeleton';
 import { getBook, getBooksByCategory } from '@/Services/BookRoutines';
-import { CircularProgress } from '@mui/material';
-
+import { useRouter } from 'next/navigation';
 
 const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false});
 
@@ -26,7 +25,8 @@ const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false});
 export default function UserDashboardComponent() {
     const [categories, setCategories] = React.useState(BookCategory.bookCategories.slice(0, 7));
     const [selectedCategory, setSelectedCategory] = React.useState(categories[0]);
-   
+    const router = useRouter();
+
     const sortCategories = () => {
         const sortedCategories = [...categories].sort();
         setCategories(sortedCategories);
@@ -46,7 +46,7 @@ export default function UserDashboardComponent() {
     
         fetchData();
       }, []);
-
+    
     const [categoryWiseBookData, setCategoryWiseBookData] = React.useState<{ [key: string]: Book[] }>({});
 
     useEffect(() => {
@@ -74,6 +74,10 @@ export default function UserDashboardComponent() {
             return () => clearTimeout(timer); 
         }
     }, [BookData, categoryWiseBookData]);
+
+    const handleBookClick =(id: number) => {
+        router.push(`/book/${id}`);
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -183,6 +187,7 @@ export default function UserDashboardComponent() {
                                                             rating={book?.rating}
                                                             authors={book?.authors}
                                                             onMouseEnter={() => setBook(book as Book)}
+                                                            onClick={() => handleBookClick(book.id as number)}
                                                         />
                                                     ))
                                                     :
@@ -303,6 +308,7 @@ export default function UserDashboardComponent() {
                                                         rating={book.rating} 
                                                         title={book.title} 
                                                         onMouseEnter={() => setBook(book as Book)}
+                                                        onClick={() => handleBookClick(book?.id as number)}
                                                     />
                                                 ))
                                                 : 
