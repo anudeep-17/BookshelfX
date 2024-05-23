@@ -65,11 +65,11 @@ export default function UserDashboardComponent() {
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
-        if(BookData.length > 0 && categoryWiseBookData)
+        if(BookData.length > 0)
         {
             const timer = setTimeout(() => {
                 setLoading(false);
-            }, 250); 
+            }, 500); 
     
             return () => clearTimeout(timer); 
         }

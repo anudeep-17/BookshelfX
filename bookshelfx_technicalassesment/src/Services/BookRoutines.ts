@@ -1,6 +1,6 @@
 export async function getBook()
 {
-    const response = await fetch('/api/books/getBooks');
+    const response = await fetch('/api/books/getAllBooks');
     const data = await response.json();
     return data;
 }

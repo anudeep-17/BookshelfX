@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, CssBaseline, Grid, Paper, Rating, ThemeProvider, Toolbar, Typography } from '@mui/material';
+import { Box, Button, CssBaseline, Grid, Paper, Rating, Skeleton, ThemeProvider, Toolbar, Typography } from '@mui/material';
 import theme from '../../Themes';
 import { Book } from '../../interfaceModels';
 import { getBookByID } from '@/Services/BookRoutines';
@@ -9,8 +9,6 @@ import { EmblaOptionsType } from 'embla-carousel'
 
 const drawerWidth = DashboardSize;
 const OPTIONS: EmblaOptionsType = { loop: true }
-const SLIDE_COUNT = 5
-const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
 
 export default function WholeBookData({id}:{id: string})
 {
@@ -23,8 +21,10 @@ export default function WholeBookData({id}:{id: string})
                 setBook(data.data);
             }
         };
-
-        fetchData();
+    
+        const timeoutId = setTimeout(fetchData, 500); // Delay of 500 milliseconds
+    
+        return () => clearTimeout(timeoutId); // Clean up on component unmount
     }, [id]);
 
     return(
@@ -49,9 +49,8 @@ export default function WholeBookData({id}:{id: string})
                     }}
                 >
                     <Paper elevation={3} sx={{p:2, mb:2}}>
-                        <Grid container spacing={2}>
+                        {book? <Grid container spacing={2}>
                             <Grid item xs={12} sm={4}>
-
                                 <Box 
                                     component="img" 
                                     src={book?.coverimage} 
@@ -130,12 +129,30 @@ export default function WholeBookData({id}:{id: string})
                                 <Typography variant="h5" sx={{mb:1, color: theme.palette.text.secondary}}>
                                     Reader Reviews: 
                                 </Typography>
-                                
                                 <EmblaCarousel slides={book?.customerReviews || []} options={OPTIONS} />
                             </Grid>
-                        </Grid>
-
-       
+                        </Grid>:
+                         <Grid container>
+                         <Grid item xs={12} sm={4}>
+                           <Skeleton variant="rectangular" width={350} height={450} sx={{mb:2}}/>
+                         </Grid>
+                         <Grid item xs={12} sm={8}>
+                           <Skeleton variant="text" sx={{mb:1}}/>
+                           <Skeleton variant="text" sx={{mb:1}}/>
+                           <Skeleton variant="text" sx={{mb:1}}/>
+                           <Skeleton variant="text" sx={{mb:1}}/>
+                           <Skeleton variant="text" sx={{mb:1}}/>
+                           <Skeleton variant="text" sx={{mb:1}}/>
+                           <Skeleton variant="text" sx={{mb:1}}/>
+                           <Skeleton variant="text" sx={{mb:1}}/>
+                           <Skeleton variant="rectangular" width={100} height={40} sx={{mb:2}}/>
+                         </Grid>
+                         <Grid item xs={12} sm={12}>
+                           <Skeleton variant="text" sx={{mb:1}}/>
+                           <Skeleton variant="rectangular" width="74rem" height="13.5rem" />
+                         </Grid>
+                       </Grid>
+                        }
                     </Paper>
                      
                 </Box>
