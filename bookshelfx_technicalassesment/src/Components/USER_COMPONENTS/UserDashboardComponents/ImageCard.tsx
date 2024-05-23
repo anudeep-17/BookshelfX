@@ -10,7 +10,7 @@ export default function ImageCard({image, rating, title, onMouseEnter}: ImageCar
             <CssBaseline />
             <Box sx={{ 
                 minHeight: 180,
-                minWidth: 100,
+                minWidth: 120,
                 backgroundImage: `url(${image})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',

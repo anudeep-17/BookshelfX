@@ -69,7 +69,7 @@ export default function UserDashboardComponent() {
         {
             const timer = setTimeout(() => {
                 setLoading(false);
-            }, 150); 
+            }, 250); 
     
             return () => clearTimeout(timer); 
         }
