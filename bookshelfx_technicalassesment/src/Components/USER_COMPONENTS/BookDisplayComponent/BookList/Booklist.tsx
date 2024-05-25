@@ -14,8 +14,9 @@ import dynamic from 'next/dynamic';
 import { ChevronLeft } from '@mui/icons-material';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { getBook, getCategories } from '@/Services/BookRoutines';
+import { getBook, getCategories, getFavBooksByUser } from '@/Services/BookRoutines';
 import { useRouter } from 'next/navigation';
+import path from 'path';
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 
 export default function BookList() 
@@ -35,6 +36,23 @@ export default function BookList()
         fetchData();
     }, []);
 
+    const [favBooks, setFavBooks] = React.useState([])
+    
+    React.useEffect(() => {
+        const fetchData = async () => {
+            if(pathname === "/favourites")
+            {
+                const data = await getFavBooksByUser(1);
+                if (data.success) {
+                    setFavBooks(data.data);
+                }
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    console.log(favBooks);
 
     const [selectedChip, setSelectedChip] =  React.useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
@@ -446,24 +464,45 @@ export default function BookList()
                                                 }}
                                             >
                                                 {
-                                                    books.length>0 ? books.map((book: BookCardProps) => {
-                                                        return (
-                                                            <DetailedBookCard
-                                                                key={book.id}
-                                                                coverimage={book.coverimage}
-                                                                title={book.title}
-                                                                description={book.description}
-                                                                rating={book.rating}
-                                                                authors={book.authors}
-                                                                availability={Boolean(true)}
-                                                                onClick= {() => handleBookClick(book.id as number)}
-                                                            />
-                                                        );
-                                                    }) :
-                                                    <Typography variant="h6" sx={{ mt: 2, mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                                    pathname === '/favourites' ? (
+                                                        favBooks.length > 0 ? favBooks.map((book: any, index) => {
+                                                            if (book?.book) {
+                                                                return (
+                                                                    <DetailedBookCard
+                                                                        key={index}
+                                                                        coverimage={book.book.coverimage}
+                                                                        title={book.book.title}
+                                                                        description={book.book.description}
+                                                                        rating={book.book.rating}
+                                                                        authors={book.book.authors}
+                                                                        availability={Boolean(true)}
+                                                                        onClick={() => handleBookClick(book.book.id as number)}
+                                                                    />
+                                                                );
+                                                            }
+                                                        })
+                                                        :
+                                                        <Typography variant="h6" sx={{ mt: 2, mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                                            No Favourite Books Found
+                                                        </Typography>
+                                                    ) : (
+                                                        books.length > 0 ? books.map((book: BookCardProps) => (
+                                                        <DetailedBookCard
+                                                            key={book.id}
+                                                            coverimage={book.coverimage}
+                                                            title={book.title}
+                                                            description={book.description}
+                                                            rating={book.rating}
+                                                            authors={book.authors}
+                                                            availability={Boolean(true)}
+                                                            onClick= {() => handleBookClick(book.id as number)}
+                                                        />
+                                                        )) :
+                                                        <Typography variant="h6" sx={{ mt: 2, mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                                                             No Books Found
-                                                    </Typography>
-                                                }
+                                                        </Typography>
+                                                    )
+                                                    }
                                             </Box>
                                     </Grid>
                                 </Grid>

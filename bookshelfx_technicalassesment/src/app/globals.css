@@ -6,7 +6,7 @@
     box-sizing: border-box;
 }
 .embla {
-    max-width: 74rem;
+    max-width: 75rem;
     margin: auto;
     --slide-height: 6rem;
     --slide-spacing: 10rem;
@@ -47,7 +47,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.6rem;
-    align-items: center;
+    align-items: flex-start;
   }
   .embla__button {
     -webkit-tap-highlight-color: #FF5722; 
@@ -75,8 +75,8 @@
     color: var(--detail-high-contrast);
   }
   .embla__button__svg {
-    width: 35%;
-    height: 35%;
+    width: 40%;
+    height: 40%;
   }
   .embla__slide__number {
     backface-visibility: hidden;

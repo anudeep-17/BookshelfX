@@ -21,6 +21,9 @@ export default function DetailedBookCard({coverimage, title, description, rating
                     transition: '0.5s', // Add transition for smooth elevation
                     ':hover': {
                         transform: 'translateY(-8px)', // Elevate the card on hover
+                        boxShadow: '0 3px 10px #3f51b5',
+                        cursor: 'pointer',
+                        
                     },
                     backgroundColor: availability ? 'initial' : '#cccccc',
                     borderRadius: '10px 10px 10px 10px', // Make top borders curved
@@ -81,7 +84,7 @@ export default function DetailedBookCard({coverimage, title, description, rating
                         <Button variant="contained" color="primary" sx={{
                             mb:1
                         }} >
-                            Learn More
+                            Checkout
                         </Button>
                     </Box>
      
