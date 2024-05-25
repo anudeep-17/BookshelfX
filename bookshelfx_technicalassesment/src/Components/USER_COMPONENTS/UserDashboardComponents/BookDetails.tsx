@@ -109,10 +109,11 @@ export default function BookDetails({ book }: { book?: Book })
                 textAlign: 'center',
                 fontSize: 12,
                 p:1,
-                height: '100px', // Set a fixed height
-                overflow: 'auto' // Add a scrollbar if the content is too long
+                height: '120px', // Set a fixed height
+                overflow: 'auto', // Add scroll bar
+        
             }}>
-                {book?.description}
+                {book?.description.length > 290? `${book?.description.substring(0, 290)}...` : book?.description}
             </Typography>
         </>
         :

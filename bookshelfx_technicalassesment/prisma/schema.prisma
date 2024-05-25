@@ -17,6 +17,7 @@ model User {
   updatedAt DateTime @updatedAt
   rentals   BookRentalDetails[]
   reviews   BookReview[]
+  favoriteBooks  FavoriteBook[]
 }
 
 model BookDetails{
@@ -37,6 +38,7 @@ model BookDetails{
   updatedAt       DateTime @updatedAt
   rentals         BookRentalDetails[]
   reviews         BookReview[]
+  favoritedBy     FavoriteBook[]
 
   @@unique([title, authors])
 } 
@@ -64,4 +66,14 @@ model BookReview {
   rating    Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model FavoriteBook {
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int
+  book   BookDetails   @relation(fields: [bookId], references: [id])
+  bookId Int
+
+  @@id([userId, bookId])
+  @@unique([userId, bookId])
 }

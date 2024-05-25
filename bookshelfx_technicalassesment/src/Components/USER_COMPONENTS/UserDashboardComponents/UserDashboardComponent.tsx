@@ -65,7 +65,7 @@ export default function UserDashboardComponent() {
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
-        if(BookData.length > 0)
+        if(BookData.length > 0 && categoryWiseBookData[selectedCategory]?.length > 0)
         {
             const timer = setTimeout(() => {
                 setLoading(false);
@@ -73,7 +73,7 @@ export default function UserDashboardComponent() {
     
             return () => clearTimeout(timer); 
         }
-    }, [BookData, categoryWiseBookData]);
+    }, [BookData, selectedCategory, categoryWiseBookData]);
 
     const handleBookClick =(id: number) => {
         router.push(`/book/${id}`);
@@ -300,19 +300,24 @@ export default function UserDashboardComponent() {
                                             }}
                                         >
                                             {
-                                                selectedCategory !== "All Books" && categoryWiseBookData[selectedCategory] ?
-                                                categoryWiseBookData[selectedCategory].map((book, index) => (
-                                                    <ImageCard 
-                                                        key={index} 
-                                                        image={book.coverimage} 
-                                                        rating={book.rating} 
-                                                        title={book.title} 
-                                                        onMouseEnter={() => setBook(book as Book)}
-                                                        onClick={() => handleBookClick(book?.id as number)}
-                                                    />
+                                                loading ?
+                                                Array.from(new Array(5)).map((_, index) => (
+                                                    <Skeleton variant="rectangular" width={120} height={180} key={index} sx={{mb:2}} />
                                                 ))
-                                                : 
-                                                "No books available in this category."
+                                                :
+                                                categoryWiseBookData[selectedCategory] ?
+                                                    categoryWiseBookData[selectedCategory].map((book, index) => (
+                                                        <ImageCard 
+                                                            key={index} 
+                                                            image={book.coverimage} 
+                                                            rating={book.rating} 
+                                                            title={book.title} 
+                                                            onMouseEnter={() => setBook(book as Book)}
+                                                            onClick={() => handleBookClick(book?.id as number)}
+                                                        />
+                                                    ))
+                                                    : 
+                                                    "No books available in this category."
                                             }
                                             
                                         </Box>

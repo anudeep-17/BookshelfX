@@ -18,7 +18,10 @@ export default function ImageCard({image, rating, title, onMouseEnter, onClick}:
                 transition: 'transform .3s',  
                 position: 'relative', // Add this
                 ':hover': {
-                    transform: 'translateY(-8px)', 
+                    transform: 'translateY(-8px)', // Elevate the card on hover
+                    boxShadow: '0 3px 10px #3f51b5',
+                    borderRadius: '10px 10px 10px 10px',
+                    cursor: 'pointer',
                 },
                 ':hover div': { // Add this
                     opacity: 1,
