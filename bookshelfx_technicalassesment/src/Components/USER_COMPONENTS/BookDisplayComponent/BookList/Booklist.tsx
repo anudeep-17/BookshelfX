@@ -16,7 +16,9 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { getBook, getCategories, getFavBooksByUser } from '@/Services/BookRoutines';
 import { useRouter } from 'next/navigation';
-import path from 'path';
+ 
+
+
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 
 export default function BookList() 

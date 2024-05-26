@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import theme from '../Themes';
 import {ThemeProvider} from '@mui/material/styles';
-import { Button, CssBaseline, Divider, Drawer, useMediaQuery } from '@mui/material';
+import { Button, CssBaseline, Divider, Drawer, InputAdornment, useMediaQuery } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
@@ -36,6 +36,7 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation'
 import FlagIcon from '@mui/icons-material/Flag';
+import TextField from '@mui/material/TextField';
 
 const drawerWidth = DashboardSize;
 
@@ -72,7 +73,7 @@ export default function Navbar()
 
     
 
-    const Search = styled('div')(({ theme }) => ({
+    const Search = styled(Box)(({ theme }) => ({
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
         backgroundColor: alpha(theme.palette.common.white, 0.15),
@@ -87,7 +88,7 @@ export default function Navbar()
         },
       }));
       
-      const SearchIconWrapper = styled('div')(({ theme }) => ({
+      const SearchIconWrapper = styled(Box)(({ theme }) => ({
         padding: theme.spacing(0, 2),
         height: '100%',
         position: 'absolute',
@@ -241,6 +242,9 @@ export default function Navbar()
           </ThemeProvider>
       );
 
+      const [searchInput, setSearchInput] = React.useState('');
+     
+    
     return(
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -262,16 +266,56 @@ export default function Navbar()
                 <MenuIcon />
               </IconButton>:null}
 
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search"
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </Search>
-              
+               
+            <TextField
+              placeholder="Search…"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              sx={{
+                color: 'inherit',
+                width: '20%',
+                transition: 'width 0.35s ease-in-out',
+                backgroundColor: (theme) => alpha(theme.palette.common.white, 0.15),
+                borderRadius: '4px', // Add this line to make the borders curved
+                '&:hover': {
+                  backgroundColor: (theme) => alpha(theme.palette.common.white, 0.25),
+                },
+                '&:focus-within': {
+                  width: '40%',
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: 'transparent', // Change this line to remove the border color
+                  },
+                  '&:hover fieldset': {
+                    borderColor: 'transparent', // Change this line to remove the border color
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: 'transparent', // Change this line to remove the border color
+                  },
+                },
+                '& .MuiInputBase-input': {
+                  padding: (theme) => theme.spacing(1, 1, 1, 0),
+                  paddingLeft: (theme) => `calc(${theme.spacing(2)}px + 1em)`, // Modify this line to adjust the placeholder position
+                  transition: (theme) => theme.transitions.create('width'),
+                  [theme.breakpoints.up('sm')]: {
+                    width: '12ch',
+                    '&:focus': {
+                      width: '20ch',
+                    },
+                  },
+                },
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              variant="outlined"
+            />
+     
               <Box sx={{ flexGrow: 1 }} />
               
               <IconButton color="inherit" sx={{
