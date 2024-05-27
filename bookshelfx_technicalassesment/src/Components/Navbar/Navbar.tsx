@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import theme from '../Themes';
 import {ThemeProvider} from '@mui/material/styles';
-import { Button, CssBaseline, Divider, Drawer, InputAdornment, useMediaQuery } from '@mui/material';
+import { Button, CssBaseline, Divider, Drawer, Icon, InputAdornment, useMediaQuery } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
@@ -37,6 +37,7 @@ import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation'
 import FlagIcon from '@mui/icons-material/Flag';
 import TextField from '@mui/material/TextField';
+import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 
 const drawerWidth = DashboardSize;
 
@@ -49,7 +50,7 @@ export default function Navbar()
     const user: User | null = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [open, setOpen] = React.useState(false);
-    
+
     const handleDrawerOpen = () => {
       setOpen(true);
     };
@@ -243,7 +244,22 @@ export default function Navbar()
       );
 
       const [searchInput, setSearchInput] = React.useState('');
-     
+      const [searchanchorEl , setSearchAnchorEl] = React.useState<null | HTMLElement>(null);
+      const handleSearchClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+        setSearchAnchorEl(event.currentTarget);
+      };
+      
+      const handleSearchOptions = (searchOption: string) => {
+        const regex = /\/(title|author|category|publisher): .+$/;
+        if(regex.test(searchInput))
+        {
+          setSearchInput(searchInput + " " + searchOption);
+        }
+        else
+        {
+          setSearchInput(searchOption);
+        }
+      };
     
     return(
         <ThemeProvider theme={theme}>
@@ -271,9 +287,10 @@ export default function Navbar()
               placeholder="Search…"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
+              onClick={(event) => {if(searchInput === ''){handleSearchClick(event)}}}
               sx={{
                 color: 'inherit',
-                width: '20%',
+                width: searchInput ? '50%' : '20%',
                 transition: 'width 0.35s ease-in-out',
                 backgroundColor: (theme) => alpha(theme.palette.common.white, 0.15),
                 borderRadius: '4px', // Add this line to make the borders curved
@@ -281,7 +298,7 @@ export default function Navbar()
                   backgroundColor: (theme) => alpha(theme.palette.common.white, 0.25),
                 },
                 '&:focus-within': {
-                  width: '40%',
+                  width: '50%',
                 },
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
@@ -299,9 +316,9 @@ export default function Navbar()
                   paddingLeft: (theme) => `calc(${theme.spacing(2)}px + 1em)`, // Modify this line to adjust the placeholder position
                   transition: (theme) => theme.transitions.create('width'),
                   [theme.breakpoints.up('sm')]: {
-                    width: '12ch',
+                    width: searchInput? '100ch': '12ch',
                     '&:focus': {
-                      width: '20ch',
+                      width: '100ch',
                     },
                   },
                 },
@@ -312,9 +329,52 @@ export default function Navbar()
                     <SearchIcon />
                   </InputAdornment>
                 ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {searchInput.length > 0?
+                      <IconButton onClick={handleSearchClick}>
+                        <ArrowDropDownCircleIcon />
+                      </IconButton>
+                      :
+                      null
+                    }
+                  </InputAdornment>
+                ),
               }}
               variant="outlined"
+             
             />
+            <Menu
+              anchorEl={searchanchorEl}
+              open={Boolean(searchanchorEl)}
+              onClose={() => setSearchAnchorEl(null)}
+            >
+              <MenuItem 
+                onClick={() => {handleSearchOptions("/title: "); setSearchAnchorEl(null);}}
+                disabled={searchInput.includes("/title: ")}
+              >
+                Search by title
+              </MenuItem>
+              <MenuItem 
+                onClick={() => {handleSearchOptions("/author: "); setSearchAnchorEl(null);}}
+                disabled={searchInput.includes("/author: ")}
+              >
+                Search by author
+              </MenuItem>
+              <MenuItem 
+                onClick={() => {handleSearchOptions("/category: "); setSearchAnchorEl(null);}}
+                disabled={searchInput.includes("/category: ")}
+              >
+                Search by category
+              </MenuItem>
+              <MenuItem 
+                onClick={() => {handleSearchOptions("/publisher: "); setSearchAnchorEl(null);}}
+                disabled={searchInput.includes("/publisher: ")}
+              >
+                Search by publisher
+              </MenuItem>
+            </Menu>
+
      
               <Box sx={{ flexGrow: 1 }} />
               
