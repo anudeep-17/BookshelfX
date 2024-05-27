@@ -8,12 +8,10 @@ const BookDisplayComponent = dynamic(() => import('@/Components/USER_COMPONENTS/
                                                                                                                                                 transform: 'translate(-50%, -50%)',
                                                                                                                                                 color: 'primary.main'
                                                                                                                                               }}/>  })
-const Navbar = dynamic(() => import('@/Components/Navbar/Navbar'), { ssr: false })
 
 export default function Home() {
     return (
       <>
-        <Navbar/>
         <BookDisplayComponent/>
       </>
     );

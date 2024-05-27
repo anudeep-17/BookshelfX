@@ -148,6 +148,8 @@ export default function UserDashboardComponent() {
                                                 boxShadow: '0 6px 10px 4px rgba(63, 81, 181, .5)',
                                             },
                                             }}
+
+                                            onClick={() => router.push('/featuredbooks')}
                                         >
                                             View All <KeyboardArrowRightIcon sx={{ml:1}}/>
                                         </Button>
