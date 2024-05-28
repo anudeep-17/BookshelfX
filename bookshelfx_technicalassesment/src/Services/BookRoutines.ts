@@ -51,7 +51,6 @@ export async function addFavBooks(userId: number, bookId: number)
 
 export async function getFavBooks(userId: string, bookId: string)
 {
-    console.log(userId, bookId);
     const response = await fetch(`/api/favouriteBook/isFavBook?userId=${userId}&bookId=${bookId}`);
     const data = await response.json();
     return data;

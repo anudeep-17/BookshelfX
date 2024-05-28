@@ -24,6 +24,7 @@ const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/Book
 export default function BookList() 
 {
     const pathname = usePathname();
+    
     const router = useRouter();
 
     const [books, setBook] = React.useState<Book[]>([])
@@ -42,7 +43,7 @@ export default function BookList()
     
     React.useEffect(() => {
         const fetchData = async () => {
-            if(pathname === "/favourites")
+            if(pathname === "/Reader/favourites")
             {
                 const data = await getFavBooksByUser(1);
                 if (data.success) {
@@ -54,7 +55,6 @@ export default function BookList()
         fetchData();
     }, []);
 
-    console.log(favBooks);
 
     const [selectedChip, setSelectedChip] =  React.useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
@@ -136,7 +136,7 @@ export default function BookList()
     }
     
     function handleBookClick(id: number) {
-        router.push(`/book/${id}`);
+        router.push(`/Reader/book/${id}`);
     }
 
     const DrawerList = (
@@ -385,7 +385,7 @@ export default function BookList()
                                                         >
                                                             <MenuItem onClick={() => handleSort("title")}>Sort by book titles</MenuItem>
                                                             <MenuItem onClick={() => handleSort("author")}>Sort by book Author</MenuItem>
-                                                            {pathname === "/allcategory" || pathname === "/allbooks" ? <MenuItem onClick={() => handleSort("Category")}>Sort all Categories</MenuItem> : null}
+                                                            {pathname === "/Reader/allcategory" || pathname === "/Reader/allbooks" ? <MenuItem onClick={() => handleSort("Category")}>Sort all Categories</MenuItem> : null}
                                                         </Menu>
                                                         </>
                                                     </Tooltip>
@@ -413,7 +413,7 @@ export default function BookList()
                                     {/* </Paper> */}
                                     </Grid>
 
-                                    {pathname === "/allcategory" || pathname === "/allbooks"?
+                                    {pathname === "/Reader/allcategory" || pathname === "/Reader/allbooks" ?
                                     <Grid item xs={15} md={15}>
                                         <Box
                                             sx={{
@@ -466,7 +466,7 @@ export default function BookList()
                                                 }}
                                             >
                                                 {
-                                                    pathname === '/favourites' ? (
+                                                    pathname === '/Reader/favourites' ? (
                                                         favBooks.length > 0 ? favBooks.map((book: any, index) => {
                                                             if (book?.book) {
                                                                 return (

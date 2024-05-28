@@ -76,7 +76,7 @@ export default function UserDashboardComponent() {
     }, [BookData, selectedCategory, categoryWiseBookData]);
 
     const handleBookClick =(id: number) => {
-        router.push(`/book/${id}`);
+        router.push(`/Reader/book/${id}`);
     }
 
     return (
@@ -149,7 +149,7 @@ export default function UserDashboardComponent() {
                                             },
                                             }}
 
-                                            onClick={() => router.push('/featuredbooks')}
+                                            onClick={() => router.push('/Reader/featuredbooks')}
                                         >
                                             View All <KeyboardArrowRightIcon sx={{ml:1}}/>
                                         </Button>

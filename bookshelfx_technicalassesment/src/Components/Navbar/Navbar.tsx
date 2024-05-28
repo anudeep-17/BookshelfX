@@ -76,27 +76,27 @@ export default function Navbar()
       const UserDrawer = [
         {
           text: 'Discover',
-          path: '/home',
+          path: '/Reader/home',
           icon: <HomeIcon/>,
         },
         {
           text: 'Featured Books',
-          path: '/featuredbooks',
+          path: '/Reader/featuredbooks',
           icon: <FlagIcon />,
         },
         {
           text: 'All Categories',
-          path: '/allcategory',
+          path: '/Reader/allcategory',
           icon: <CategoryIcon />,
         },
         {
           text: 'All Books',
-          path: '/allbooks',
+          path: '/Reader/allbooks',
           icon: <MenuBookIcon/>,
         },
         {
           text: 'My Favourites',
-          path: '/favourites',
+          path: '/Reader/favourites',
           icon: <FavoriteBorderIcon />,
         },
         {

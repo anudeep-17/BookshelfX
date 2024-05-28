@@ -26,8 +26,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { addFavBooks, getFavBooks, removeFavBooks } from '@/Services/BookRoutines';
 import Cookies from 'js-cookie';
 import { usePathname } from 'next/navigation';
-import path from 'path';
-
+ 
 const drawerWidth = DashboardSize;
 const OPTIONS: EmblaOptionsType = { loop: true }
 
@@ -222,8 +221,9 @@ export default function WholeBookData({id}:{id: string})
         const fetchData = async () => {
             const user = Cookies.get('user');
             const userID = user ? JSON.parse(user).id.toString() : '';
-            const Bookid = pathname.split('/').pop();
-            const response = await getFavBooks(userID || '', Bookid || '');
+            const Bookid = pathname.split('/')[3];
+            console.log(userID, Bookid);
+            const response = await getFavBooks(userID || '', Bookid || '' );
             if(response.success)
             {
                 setIsFav(true);
@@ -236,8 +236,8 @@ export default function WholeBookData({id}:{id: string})
         if(book)
         {
             const user = Cookies.get('user');
-            const userID = user ? Number(JSON.parse(user).id) : 0;
-            const response = await addFavBooks(userID, Number(book?.id) || 0);
+            const userID = user ? JSON.parse(user).id.toString() : '';
+            const response = await addFavBooks(Number(userID) ?? '', Number(book?.id?.toString()) ?? '');
             if(response.success)
             {
                 setAlert({severity: "success", message: "Book added to your favourite list"});
@@ -260,8 +260,8 @@ export default function WholeBookData({id}:{id: string})
         if(book)
         {
             const user = Cookies.get('user');
-            const userID = user ? Number(JSON.parse(user).id) : 0;
-            const response = await removeFavBooks(userID, Number(book?.id) || 0);
+            const userID = user ? JSON.parse(user).id.toString() : '';
+            const response = await removeFavBooks(Number(userID) ?? '', Number(book?.id?.toString()) ?? '');
             if(response.success)
             {
                 setAlert({severity: "success", message: "Book removed from your favourite list"});

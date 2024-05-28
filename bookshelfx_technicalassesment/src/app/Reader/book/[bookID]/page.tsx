@@ -14,7 +14,7 @@ const WholeBookData = dynamic(() => import('@/Components/USER_COMPONENTS/BookCom
 export default function WholeBook()
 {
     const pathname = usePathname();
-    const bookID = pathname.split('/')[2];
+    const bookID = pathname.split('/')[3];
     return(
         <>
             <WholeBookData id={bookID} />
