@@ -38,7 +38,8 @@ import { usePathname } from 'next/navigation'
 import FlagIcon from '@mui/icons-material/Flag';
 import TextField from '@mui/material/TextField';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
- 
+import { SearchContext } from '../Context/SearchContext';
+import SendIcon from '@mui/icons-material/Send';
 
 const drawerWidth = DashboardSize;
 
@@ -47,7 +48,7 @@ export default function Navbar()
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const router = useRouter();
     const pathname = usePathname();
-
+    
     const user: User | null = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [open, setOpen] = React.useState(false);
@@ -200,7 +201,7 @@ export default function Navbar()
           </ThemeProvider>
       );
 
-      const [searchInput, setSearchInput] = React.useState('');
+      const {searchInput, setSearchInput} = React.useContext(SearchContext);
       const [searchanchorEl , setSearchAnchorEl] = React.useState<null | HTMLElement>(null);
       const handleSearchClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
         setSearchAnchorEl(event.currentTarget);
@@ -217,7 +218,17 @@ export default function Navbar()
           setSearchInput(searchOption);
         }
       };
-    
+
+      const handleSearchSubmit = () => {
+        if(searchInput.length > 0)
+        {
+          const queryParams = searchInput.split('/').filter(Boolean).map(item => {
+            const [key, value] = item.split(':');
+            return `${key}=${encodeURIComponent(value.trim())}`;
+          }).join('&');
+          router.push(`/Reader/searchresult?${queryParams}`);
+        }
+      }
     return(
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -245,6 +256,7 @@ export default function Navbar()
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onClick={(event) => {if(searchInput === ''){handleSearchClick(event)}}}
+              onKeyDown={(e) => {if(e.key === 'Enter'){handleSearchSubmit()}}}
               sx={{
                 color: 'inherit',
                 width: searchInput ? '50%' : '20%',
@@ -289,9 +301,15 @@ export default function Navbar()
                 endAdornment: (
                   <InputAdornment position="end">
                     {searchInput.length > 0?
+                    <>
                       <IconButton onClick={handleSearchClick}>
                         <ArrowDropDownCircleIcon />
                       </IconButton>
+                      <IconButton onClick={handleSearchSubmit}>
+                        <SendIcon />
+                      </IconButton>
+                    </>
+                      
                       :
                       null
                     }

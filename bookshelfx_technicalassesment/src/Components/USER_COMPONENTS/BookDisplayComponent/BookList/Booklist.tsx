@@ -12,21 +12,32 @@ import BookCategory from "../../../Mock-BookCategory.json";
 import {Book, BookCardProps} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { ChevronLeft } from '@mui/icons-material';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { getBook, getCategories, getFavBooksByUser } from '@/Services/BookRoutines';
-import { useRouter } from 'next/navigation';
- 
+import { useRouter} from 'next/navigation';
+import { SearchContext } from '@/Components/Context/SearchContext';
 
 
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
-
 export default function BookList() 
 {
     const pathname = usePathname();
-    
     const router = useRouter();
+    const searchParams = useSearchParams()
 
+    const isSearchResult = pathname === '/Reader/searchresult';
+    let myMap = new Map();
+    if(isSearchResult)
+    {
+        searchParams.forEach((value, key) => {
+            myMap.set(key, value);
+            console.log(key, value);
+        });
+    }
+    
+    
+    const { searchInput } = React.useContext(SearchContext);
     const [books, setBook] = React.useState<Book[]>([])
     React.useEffect(() => {
         const fetchData = async () => {
@@ -321,7 +332,7 @@ export default function BookList()
                                             }}
                                         >
                                             <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, display: 'inline' }}>
-                                                    {pathname === "/allcategory" ? "Category Wise " : pathname === "/allbooks" ? "All " : "Featured "}
+                                                    {pathname === "/Reader/allcategory" ? "Category Wise " : pathname === "/Reader/allbooks" ? "All " : pathname ==='/Reader/favourites' ? "My Favourite ": pathname ==='/Reader/searchresult'? " Search Result of " : "Featured "}
                                                     <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
                                                         Books
                                                     </Typography>
@@ -339,16 +350,21 @@ export default function BookList()
                                                 mr:1,
                                             }}
                                             >
-                                                <Typography variant="body1" sx={{ mt: 2, mb: 1, display: 'inline', mr:2 }}>
+                                                {
+                                                    pathname === '/Reader/searchresult' ? 
+                                                    <Typography variant="h6" sx={{ mt: 2, mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', color: theme.palette.primary.main}} >
+                                                       Search Request for:
+                                                    </Typography> :
+                                                    <Typography variant="body1" sx={{ mt: 2, mb: 1, display: 'inline', mr:2 }}>
                                                     &quot;Checkout our books Where Every Book is a{" "}
                                                     <Typography variant="body1" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
                                                         New Horizon
                                                     </Typography>
                                                     &quot;
                                                 </Typography>
-                                                <Typography variant="body2" sx={{ mt:1, mb:1 }}>
-                                                
-                                                </Typography>
+                                                }
+                                              
+                                                 
 
                                                 <Box
                                                     sx={{
@@ -449,6 +465,42 @@ export default function BookList()
                                             </Stack>
                                         </Box>
                                     </Grid>:null}
+                                    
+                                    <Grid item xs={15} md={15}>
+                                        {
+                                            searchInput.length > 0 ? 
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column', 
+                                                    alignItems: 'flex-start', 
+                                                    justifyContent: 'center',
+                                                    ml:1,
+                                                    mr:1,
+                                                    mb:2,
+                                                }}
+                                            >
+                                                <Typography sx={{ mt: 2, mb: 2,}}>
+                                                    {searchInput.split('/').map((item, index) => {
+                                                        const [key, value] = item.split(':');
+                                                        if (['title', 'author', 'category', 'publisher'].includes(key)) {
+                                                        return(
+                                                            <React.Fragment key={index}>
+                                                            <Typography variant= "body1" component="span" sx={{ color: theme.palette.primary.main, mr: 1 }}>
+                                                                {`${key.charAt(0).toUpperCase() + key.slice(1)}:`}
+                                                            </Typography>
+                                                            <Typography variant= "body1" component="span" sx={{ mr: 1 }}>
+                                                                {`${value} `}
+                                                            </Typography>
+                                                            </React.Fragment>
+                                                        )
+                                                        }
+                                                        return null;
+                                                    })}
+                                                </Typography>
+                                            </Box>:null
+                                        }
+                                    </Grid>
 
                                     <Grid item xs={15} md={15}>
                                             <Box
