@@ -28,8 +28,13 @@ export async function getBookByID(id: string)
 
 //---------------------------------------------------------------------------------------------- Search Book ROUTINES-----------------------------------------------------------------------------------------------
 
-export async function searchBook(title: string, author?: string, category?: string, publisher?: string)
+export async function searchBook(title?: string, author?: string, category?: string, publisher?: string)
 {
+    if(!title && !author && !category && !publisher)
+    {
+        return {success: false, message: "Atleast one search parameter is required"};
+    }
+    
     const params = [
         title ? `title=${title}` : null,
         author ? `author=${author}` : null,

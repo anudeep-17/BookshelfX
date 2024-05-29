@@ -9,7 +9,6 @@ import theme from '../Themes';
 import {ThemeProvider} from '@mui/material/styles';
 import { Button, CssBaseline, Divider, Drawer, Icon, InputAdornment, useMediaQuery } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import {User} from "../interfaceModels"
 import Cookies from 'js-cookie';
@@ -33,7 +32,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { usePathname } from 'next/navigation'
 import FlagIcon from '@mui/icons-material/Flag';
 import TextField from '@mui/material/TextField';
@@ -48,6 +47,7 @@ export default function Navbar()
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const router = useRouter();
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     
     const user: User | null = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -201,7 +201,19 @@ export default function Navbar()
           </ThemeProvider>
       );
 
-      const {searchInput, setSearchInput} = React.useContext(SearchContext);
+      const {searchInput, setSearchInput} = React.useContext(SearchContext); 
+
+      React.useEffect(() => {
+        if(searchParams.has('title') || searchParams.has('author') || searchParams.has('category') || searchParams.has('publisher')) //as atleast title is required for search
+        {
+          let tempSearchInput = '';
+          searchParams.forEach((value, key) => {
+            tempSearchInput += `/${key}: ${value}`+" ";
+          });  
+          setSearchInput(tempSearchInput);
+        }
+      }, [searchParams]);
+
       const [searchanchorEl , setSearchAnchorEl] = React.useState<null | HTMLElement>(null);
       const handleSearchClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
         setSearchAnchorEl(event.currentTarget);

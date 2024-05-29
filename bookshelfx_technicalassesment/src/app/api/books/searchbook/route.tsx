@@ -10,18 +10,37 @@ export async function GET(req: NextApiRequest)
     const category = url.searchParams.get('category') ? url.searchParams.get('category') : '';
     const publisher = url.searchParams.get('publisher') ? url.searchParams.get('publisher') : '';
 
+    console.log(`Title: ${title}, Author: ${author}, Category: ${category}, Publisher: ${publisher}`);
+
     try {
         const books = await database.bookDetails.findMany({
-            where: {
-              title: { contains: title as string || '' },
-              category: { contains: category as string || '' },
-              publisher: { contains: publisher as string || '' },
-            },
-          });
+          where: {
+            AND: [
+              {
+                title: {
+                  contains: title as string || '',
+                  mode: 'insensitive'
+                },
+              },
+              {
+                category: {
+                  contains: category as string || '',
+                  mode: 'insensitive'
+                },
+              },
+              {
+                publisher: {
+                  contains: publisher as string || '',
+                  mode: 'insensitive'
+                },
+              },
+            ]
+          },
+        });
+        
         const filteredBooks = books.filter(book => 
-        book.authors.some(a => a.includes(author as string || ''))
+          book.authors.some(a => a.toLowerCase().includes((author as string || '').toLowerCase()))
         );
-
         return NextResponse.json({ success: true, data: filteredBooks }, { status: 200 });
     }
     catch (err) {
