@@ -16,7 +16,7 @@ import Cookies from 'js-cookie';
  
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 
-export default function MyFavouritesComponent()
+export default function MyFavouritesCom()
 {
     const router = useRouter();
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
@@ -44,7 +44,7 @@ export default function MyFavouritesComponent()
         };
 
         fetchData();
-    }, []);
+    }, [userID]);
 
 
 
