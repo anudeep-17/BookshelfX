@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import theme from '../Themes';
 import {ThemeProvider} from '@mui/material/styles';
-import { Button, CssBaseline, Divider, Drawer, Icon, InputAdornment, useMediaQuery } from '@mui/material';
+import { Alert, Button, CssBaseline, Divider, Drawer, Icon, InputAdornment, useMediaQuery } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import {User} from "../interfaceModels"
@@ -39,6 +39,8 @@ import TextField from '@mui/material/TextField';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import { SearchContext } from '../Context/SearchContext';
 import SendIcon from '@mui/icons-material/Send';
+import Snackbar from '@mui/material/Snackbar';
+import CloseIcon from '@mui/icons-material/Close';
 
 const drawerWidth = DashboardSize;
 
@@ -52,6 +54,16 @@ export default function Navbar()
     const user: User | null = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [open, setOpen] = React.useState(false);
+    const [AlertOpen, setAlertOpen] = React.useState(false);
+    const [alertInfo, setAlertInfo] = React.useState<{severity: 'warning' | 'error', message: string}>({severity: 'warning', message: ""});
+
+    const handleAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setAlertOpen(false);
+    };
 
     const handleDrawerOpen = () => {
       setOpen(true);
@@ -217,6 +229,8 @@ export default function Navbar()
       const [searchanchorEl , setSearchAnchorEl] = React.useState<null | HTMLElement>(null);
       const handleSearchClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
         setSearchAnchorEl(event.currentTarget);
+        setAlertOpen(true);
+        setAlertInfo({severity: 'warning', message: 'sorting By authors, please add , after each author name'});
       };
       
       const handleSearchOptions = (searchOption: string) => {
@@ -455,7 +469,12 @@ export default function Navbar()
             >
               {drawer}
             </Drawer>
-
+            
+            <Snackbar open={AlertOpen} autoHideDuration={6000} onClose={handleAlertClose}  anchorOrigin={{ vertical: 'top', horizontal: 'right' }} >
+              <Alert onClose={handleAlertClose} severity={alertInfo?.severity? alertInfo?.severity : 'warning'} sx={{ width: '100%' }}>
+                {alertInfo.message}
+              </Alert>
+            </Snackbar>
       </ThemeProvider>
     );
 }

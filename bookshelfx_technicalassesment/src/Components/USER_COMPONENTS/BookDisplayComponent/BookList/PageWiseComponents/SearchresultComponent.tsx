@@ -30,7 +30,6 @@ export default function Searchresultcomponent()
     let SearchMap = new Map();
     searchParams.forEach((value, key) => {
         SearchMap.set(key, value);
-        console.log(key, value);
     });
 
     React.useEffect(() => {
