@@ -178,7 +178,7 @@ export default function MyFavouritesCom()
                                                             Sort by book titles
                                                         </MenuItem>
                                                         <MenuItem onClick={() => handleSort({sortBy: 'author',  setBook: setFavBooks, books: favBooks, handleSortClose: handleSortClose})}>
-                                                            Sort by book titles
+                                                            Sort by book authors
                                                         </MenuItem>
                                                     </Menu>
                                                     </>

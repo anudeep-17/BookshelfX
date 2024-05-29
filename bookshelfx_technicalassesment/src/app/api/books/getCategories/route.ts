@@ -4,7 +4,7 @@ import { database } from "../../prismaConfig";
 export async function GET() 
 {
     try{
-        const categories = await database.bookDetails.findMany(
+        const result = await database.bookDetails.findMany(
             {
                 select: {
                     category: true
@@ -12,10 +12,15 @@ export async function GET()
             }
         );
 
-        if (categories.length === 0) {
-            return NextResponse.json({success: false, message: "No categories available"}, {status: 404});
+ 
+        const categories = result.map(r => r.category);
+        const uniqueCategories = Array.from(new Set(categories));
+        console.log(uniqueCategories);
+        if (uniqueCategories.length === 0) {
+        return NextResponse.json({success: false, message: "No categories available"}, {status: 404});
         }
-        return NextResponse.json({success: true, data: categories}, {status: 200});
+
+        return NextResponse.json({success: true, data: uniqueCategories}, {status: 200});
     }
     catch(err)
     {

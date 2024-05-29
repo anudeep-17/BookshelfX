@@ -13,6 +13,7 @@ import { getBook, getCategories} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
+import { on } from 'events';
 
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 
@@ -23,7 +24,10 @@ export default function AllCategoryBookListComponent()
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
     const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
     const [allCategory, setCategory] = React.useState<string[]>([]);
+    
     const [books, setBook] = React.useState<Book[]>([])
+    const [categoryWiseBooks, setCategoryWiseBooks] = React.useState<Book[]>([]);
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -42,8 +46,7 @@ export default function AllCategoryBookListComponent()
         const fetchData = async () => {
             const data = await getCategories();
             if (data.success) {
-                const categories = data.data.map((item: { category: any; }) => item.category);
-                setCategory(categories);
+                setCategory(data.data);
             }
         };
 
@@ -67,6 +70,16 @@ export default function AllCategoryBookListComponent()
         setFilterDrawerOpen(newOpen);
     };
 
+    const onCategorySelection = (category: string) => {
+        setSelectedCategory(category);
+        setCategoryWiseBooks(books.filter((book) => book.category === category));
+    }
+
+    if(allCategory.length > 0 && selectedCategory === null)
+    {
+        onCategorySelection(allCategory[0]);
+    }
+    
 
     return(
         <ThemeProvider theme={theme}>
@@ -180,10 +193,10 @@ export default function AllCategoryBookListComponent()
                                                             Sort by book titles
                                                         </MenuItem>
                                                         <MenuItem onClick={() => handleSort({sortBy: 'author', setBook, books, handleSortClose: handleSortClose})}>
-                                                            Sort by book titles
+                                                            Sort by book authors
                                                         </MenuItem>
                                                         <MenuItem onClick={() => handleSort({sortBy: 'Category', setCategory, allCategory, handleSortClose: handleSortClose})}>
-                                                            Sort by book categories
+                                                            Sort book categories
                                                         </MenuItem>
                                                     </Menu>
                                                     </>
@@ -234,12 +247,21 @@ export default function AllCategoryBookListComponent()
                                             gap:1,
                                         }}>
                                         {
-                                            allCategory.map((category: string) => (
+                                            allCategory.map((category: string, index) => (
                                                 <Chip
-                                                    key={category}
+                                                    key={index}  
                                                     label={category}
-                                                    onClick={() => setSelectedCategory(category)}
-                                                    color={selectedCategory === category ? 'primary' : 'default'}
+                                                    color="primary"
+                                                    variant={category === selectedCategory ? "filled" : "outlined"}
+                                                    sx={{
+                                                        minWidth: 'max-content',  
+                                                        boxShadow: '0 3px 5px 2px transparent',  
+                                                        ':hover': {
+                                                            boxShadow: '0 3px 5px 2px rgba(63, 81, 181, .3)', // Changes the shadow on hover
+                                                        },
+                                                    }}
+                                                    onClick={() =>  onCategorySelection(category)}
+                                                    clickable
                                                 />
                                             ))
                                         }
@@ -261,9 +283,11 @@ export default function AllCategoryBookListComponent()
                                             mb:2,
                                         }}
                                     >
-                                        {
-                                            books.length > 0 ? books.map((book: BookCardProps) => (
-                                                <DetailedBookCard
+                                        {   
+                                            selectedCategory !== null 
+                                            ? (categoryWiseBooks.length > 0 
+                                              ? categoryWiseBooks.map((book: Book) => (
+                                                  <DetailedBookCard
                                                     key={book.id}
                                                     coverimage={book.coverimage}
                                                     title={book.title}
@@ -272,11 +296,14 @@ export default function AllCategoryBookListComponent()
                                                     authors={book.authors}
                                                     availability={Boolean(true)}
                                                     onClick= {() => handleBookClick(book.id as number)}
-                                                />
-                                                )) :
-                                                <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
-                                                    No Books Found
-                                                </Typography>
+                                                  />
+                                                ))
+                                              : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
+                                                  No Books Found
+                                                </Typography>)
+                                            : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
+                                                Please select a category
+                                              </Typography>
                                         }
                                     </Box>
                                 </Grid>

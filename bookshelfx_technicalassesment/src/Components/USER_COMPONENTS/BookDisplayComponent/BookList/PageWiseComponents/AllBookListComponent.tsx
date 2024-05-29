@@ -42,8 +42,7 @@ export default function AllBooksListComponent()
         const fetchData = async () => {
             const data = await getCategories();
             if (data.success) {
-                const categories = data.data.map((item: { category: any; }) => item.category);
-                setCategory(categories);
+                setCategory(data.data);
             }
         };
 
@@ -180,10 +179,10 @@ export default function AllBooksListComponent()
                                                             Sort by book titles
                                                         </MenuItem>
                                                         <MenuItem onClick={() => handleSort({sortBy: 'author', setBook, books, handleSortClose: handleSortClose})}>
-                                                            Sort by book titles
+                                                            Sort by book authors
                                                         </MenuItem>
                                                         <MenuItem onClick={() => handleSort({sortBy: 'Category', setCategory, allCategory, handleSortClose: handleSortClose})}>
-                                                            Sort by book categories
+                                                            Sort book categories
                                                         </MenuItem>
                                                     </Menu>
                                                     </>

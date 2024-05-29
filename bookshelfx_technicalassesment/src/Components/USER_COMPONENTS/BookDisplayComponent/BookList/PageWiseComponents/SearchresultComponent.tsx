@@ -178,7 +178,7 @@ export default function Searchresultcomponent()
                                                             Sort by book titles
                                                         </MenuItem>
                                                         <MenuItem onClick={() => handleSort({sortBy: 'author',  setBook: setSearchResultBooks, books: SearchResultBooks, handleSortClose: handleSortClose})}>
-                                                            Sort by book titles
+                                                            Sort by book authors
                                                         </MenuItem>
                                                     </Menu>
                                                     </>

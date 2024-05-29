@@ -100,7 +100,7 @@ export default function FeaturedBookComponent()
                                         }}
                                     >
                                         <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, display: 'inline' }}>
-                                                Category Wise{" "} 
+                                                Featured{" "} 
                                                 <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
                                                     Books
                                                 </Typography>
@@ -165,7 +165,7 @@ export default function FeaturedBookComponent()
                                                             Sort by book titles
                                                         </MenuItem>
                                                         <MenuItem onClick={() => handleSort({sortBy: 'author', setBook, books, handleSortClose: handleSortClose})}>
-                                                            Sort by book titles
+                                                            Sort by book authors
                                                         </MenuItem>
                                                     </Menu>
                                                     </>
