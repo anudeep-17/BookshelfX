@@ -26,7 +26,20 @@ export async function getBookByID(id: string)
     return data;
 }
 
+//---------------------------------------------------------------------------------------------- Search Book ROUTINES-----------------------------------------------------------------------------------------------
 
+export async function searchBook(title: string, author?: string, category?: string, publisher?: string)
+{
+    const params = [
+        title ? `title=${title}` : null,
+        author ? `author=${author}` : null,
+        category ? `category=${category}` : null,
+        publisher ? `publisher=${publisher}` : null,
+      ].filter(Boolean).join('&');
+    const response = await fetch(`/api/books/searchbook?${params}`);
+    const data = await response.json();
+    return data;
+}
 
 //-----------------------------------------------------------------------------------------------FAV BOOK ROUTINES-----------------------------------------------------------------------------------------------
 export async function addFavBooks(userId: number, bookId: number)
