@@ -7,18 +7,17 @@ import { useRouter} from 'next/navigation';
 import Grid from '@mui/material/Grid'; 
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import {Book, BookCardProps} from '@/Components/interfaceModels';
+import {Book} from '@/Components/interfaceModels';
 import { motion } from 'framer-motion';
 import { searchBook } from '@/Services/BookRoutines';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
- 
+
 
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 
 export default function Searchresultcomponent()
 {
-    const pathname = usePathname();
     const router = useRouter();
     const searchParams = useSearchParams()
     const [SearchResultBooks, setSearchResultBooks] = React.useState<Book[]>([]); 
