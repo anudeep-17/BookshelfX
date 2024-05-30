@@ -73,13 +73,7 @@ export default function AllCategoryBookListComponent()
     const onCategorySelection = (category: string) => {
         setSelectedCategory(category);
         setCategoryWiseBooks(books.filter((book) => book.category === category));
-    }
-
-    if(allCategory.length > 0 && selectedCategory === null)
-    {
-        onCategorySelection(allCategory[0]);
-    }
-    
+    }   
 
     return(
         <ThemeProvider theme={theme}>

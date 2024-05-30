@@ -26,7 +26,9 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { addFavBooks, getFavBooks, removeFavBooks } from '@/Services/BookRoutines';
 import Cookies from 'js-cookie';
 import { usePathname } from 'next/navigation';
- 
+import ChatboxComponent from '@/Components/ChatBox/ChatboxComponent';
+
+
 const drawerWidth = DashboardSize;
 const OPTIONS: EmblaOptionsType = { loop: true }
 
@@ -457,6 +459,7 @@ export default function WholeBookData({id}:{id: string})
                     </Alert>
                 </Snackbar>
               </Box>
+              <ChatboxComponent />
         </Box>
         </ThemeProvider>
     )

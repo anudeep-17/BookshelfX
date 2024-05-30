@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CssBaseline, Drawer, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import Chip from '@mui/material/Chip';
@@ -21,9 +21,13 @@ export default function AllBooksListComponent()
     const router = useRouter();
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
+
     const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
     const [allCategory, setCategory] = React.useState<string[]>([]);
+    
     const [books, setBook] = React.useState<Book[]>([])
+    const [categoryWiseBooks, setCategoryWiseBooks] = React.useState<Book[]>([]);
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -42,10 +46,10 @@ export default function AllBooksListComponent()
         const fetchData = async () => {
             const data = await getCategories();
             if (data.success) {
-                setCategory(data.data);
+                setCategory(['All Books', ...data.data]);
             }
         };
-
+    
         fetchData();
     }, []);
 
@@ -66,6 +70,10 @@ export default function AllBooksListComponent()
         setFilterDrawerOpen(newOpen);
     };
 
+    const onCategorySelection = (category: string) => {
+        setSelectedCategory(category);
+        setCategoryWiseBooks(books.filter((book) => book.category === category));
+    }   
 
     return(
         <ThemeProvider theme={theme}>
@@ -136,10 +144,10 @@ export default function AllBooksListComponent()
                                                
                                             <Typography variant="body1" sx={{ mt: 2, mb: 1, display: 'inline', mr:2 }}>
                                                 &quot;Checkout our books Where Every Book is a{" "}
-                                            <Typography variant="body1" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
-                                                New Horizon
-                                            </Typography>
-                                            &quot;
+                                                <Typography variant="body1" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
+                                                    New Horizon
+                                                </Typography>
+                                                &quot;
                                             </Typography>
                                             
                                             <Box
@@ -175,10 +183,10 @@ export default function AllBooksListComponent()
                                                         'aria-labelledby': 'basic-button',
                                                         }}
                                                     >
-                                                        <MenuItem onClick={() => handleSort({sortBy: 'title', setBook, books, handleSortClose: handleSortClose})}>
+                                                        <MenuItem onClick={() => handleSort({sortBy: 'title', setBook: selectedCategory !== null && selectedCategory !== 'All Books' ? setCategoryWiseBooks : setBook, books: selectedCategory !== null && selectedCategory !== 'All Books' ? categoryWiseBooks : books, handleSortClose: handleSortClose})}>
                                                             Sort by book titles
                                                         </MenuItem>
-                                                        <MenuItem onClick={() => handleSort({sortBy: 'author', setBook, books, handleSortClose: handleSortClose})}>
+                                                        <MenuItem onClick={() => handleSort({sortBy: 'author', setBook: selectedCategory !== null && selectedCategory !== 'All Books' ? setCategoryWiseBooks : setBook, books: selectedCategory !== null && selectedCategory !== 'All Books' ? categoryWiseBooks : books, handleSortClose: handleSortClose})}>
                                                             Sort by book authors
                                                         </MenuItem>
                                                         <MenuItem onClick={() => handleSort({sortBy: 'Category', setCategory, allCategory, handleSortClose: handleSortClose})}>
@@ -233,12 +241,21 @@ export default function AllBooksListComponent()
                                             gap:1,
                                         }}>
                                         {
-                                            allCategory.map((category: string) => (
+                                            allCategory.map((category: string, index) => (
                                                 <Chip
-                                                    key={category}
+                                                    key={index}  
                                                     label={category}
-                                                    onClick={() => setSelectedCategory(category)}
-                                                    color={selectedCategory === category ? 'primary' : 'default'}
+                                                    color="primary"
+                                                    variant={category === selectedCategory ? "filled" : "outlined"}
+                                                    sx={{
+                                                        minWidth: 'max-content',  
+                                                        boxShadow: '0 3px 5px 2px transparent',  
+                                                        ':hover': {
+                                                            boxShadow: '0 3px 5px 2px rgba(63, 81, 181, .3)', // Changes the shadow on hover
+                                                        },
+                                                    }}
+                                                    onClick={() =>  onCategorySelection(category)}
+                                                    clickable
                                                 />
                                             ))
                                         }
@@ -261,21 +278,39 @@ export default function AllBooksListComponent()
                                         }}
                                     >
                                         {
-                                            books.length > 0 ? books.map((book: BookCardProps) => (
+                                        selectedCategory === null || selectedCategory === 'All Books'
+                                        ? (books.length > 0 
+                                            ? books.map((book: BookCardProps) => (
                                                 <DetailedBookCard
-                                                    key={book.id}
-                                                    coverimage={book.coverimage}
-                                                    title={book.title}
-                                                    description={book.description}
-                                                    rating={book.rating}
-                                                    authors={book.authors}
-                                                    availability={Boolean(true)}
-                                                    onClick= {() => handleBookClick(book.id as number)}
+                                                key={book.id}
+                                                coverimage={book.coverimage}
+                                                title={book.title}
+                                                description={book.description}
+                                                rating={book.rating}
+                                                authors={book.authors}
+                                                availability={Boolean(true)}
+                                                onClick= {() => handleBookClick(book.id as number)}
                                                 />
-                                                )) :
-                                                <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
-                                                    No Books Found
-                                                </Typography>
+                                            ))
+                                            : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
+                                                No Books Found
+                                            </Typography>)
+                                        : (categoryWiseBooks.length > 0 
+                                            ? categoryWiseBooks.map((book: Book) => (
+                                                <DetailedBookCard
+                                                key={book.id}
+                                                coverimage={book.coverimage}
+                                                title={book.title}
+                                                description={book.description}
+                                                rating={book.rating}
+                                                authors={book.authors}
+                                                availability={Boolean(true)}
+                                                onClick= {() => handleBookClick(book.id as number)}
+                                                />
+                                            ))
+                                            : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
+                                                No Books Found
+                                            </Typography>)
                                         }
                                     </Box>
                                 </Grid>
