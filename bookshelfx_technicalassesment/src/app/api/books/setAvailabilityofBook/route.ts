@@ -5,6 +5,7 @@ export async function POST(req: Request)
 {   
     try{
         const {bookId, availability, userId} = await req.json();
+        console.log(bookId, availability, userId);
         const result = await database.bookDetails.update(
             {
                 where: {
@@ -15,7 +16,7 @@ export async function POST(req: Request)
                 }
             }
         );
-        if(availability)
+        if(!availability)
         {
             let rentalDate = new Date()
             let returnDate = new Date();
@@ -33,19 +34,21 @@ export async function POST(req: Request)
         }
         else
         {
-            const removefromRentals = await database.bookRentalDetails.update({
+            const removefromRentals = await database.bookRentalDetails.updateMany({
                 where: {
-                    id: bookId
+                  bookId: Number(bookId),
+                  userId: Number(userId),  
                 },
                 data: {
-                   returned: !availability
+                  returned: true
                 }
-            })
+              });
             return NextResponse.json({success: true, message: "Availability updated and rental added"}, {status: 200});
         }
     }
     catch(err)
     {
+        console.log(err);
         return NextResponse.json({success: false, message: err}, {status: 500});
     }
 }

@@ -14,9 +14,15 @@ export async function GET(req:Request)
 
         const userRentals = await database.user.findUnique({
             where: {
-                id: Number(userId)
-            },
-            include: { rentals: true },
+                id: Number(userId),
+              },
+              include: {
+                rentals: {
+                  include: {
+                    book: true,
+                  },
+                },
+              },
           });
 
           return NextResponse.json({success: true, data: userRentals}, {status: 200});

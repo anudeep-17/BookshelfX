@@ -7,13 +7,12 @@ import BookCard from './BookCard';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import BookCategory from "../../Mock-BookCategory.json";
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import ImageCard from './ImageCard';
 import {Book} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import Skeleton from '@mui/material/Skeleton';
-import { getBook, getBooksByCategory } from '@/Services/BookRoutines';
+import { getBook, getBooksByCategory, getCategories } from '@/Services/BookRoutines';
 import { useRouter } from 'next/navigation';
 
 const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false});
@@ -23,13 +22,25 @@ const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false});
  * It fetches book data and displays featured books and categories.
  */
 export default function UserDashboardComponent() {
-    const [categories, setCategories] = React.useState(BookCategory.bookCategories.slice(0, 7));
-    const [selectedCategory, setSelectedCategory] = React.useState(categories[0]);
+    const [categories, setCategory] = React.useState<string[]>([]);
+    const [selectedCategory, setSelectedCategory] = React.useState('');
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const data = await getCategories();
+            if (data.success) {
+                setCategory(data.data.slice(0,8));
+            }
+            setSelectedCategory(data.data[0]);
+        };
+        fetchData();
+    }, []);
+
+
     const router = useRouter();
 
     const sortCategories = () => {
         const sortedCategories = [...categories].sort();
-        setCategories(sortedCategories);
+        setCategory(sortedCategories);
     };
 
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
@@ -257,8 +268,9 @@ export default function UserDashboardComponent() {
                                         <Stack direction="row" spacing={1} sx={{
                                             display: 'flex',
                                             flexDirection: 'row',
-                                            justifyContent: 'flex-start',
-                                            alignItems: 'flex-start',
+                                            justifyContent: 'space-between', // Change this line
+                                            alignItems: 'center', // Change this line
+                                            alignContent: 'center',
                                             pt:1,
                                             flexWrap: {
                                                 xs: 'wrap',

@@ -3,7 +3,7 @@ import React from 'react';
 import { Box, Button, CssBaseline, Grid, Paper, Rating, Skeleton, ThemeProvider, Toolbar, Tooltip, Typography } from '@mui/material';
 import theme from '../../Themes';
 import { Book } from '../../interfaceModels';
-import { getBookByID } from '@/Services/BookRoutines';
+import { getBookByID, setAvailabilityofBook } from '@/Services/BookRoutines';
 import { DashboardSize } from "@/Components/DashboardSize";
 import EmblaCarousel from './EmblaCarousel'
 import { EmblaOptionsType } from 'embla-carousel'
@@ -39,8 +39,9 @@ export default function WholeBookData({id}:{id: string})
     const [book, setBook] = React.useState<Book>();
     const [isFav, setIsFav] = React.useState(false);
     const [confetti, setConfetti] = React.useState(false);
-
-
+    const [isBookRented, setIsBookRented] = React.useState(false);
+ 
+    
     React.useEffect(() => {
         const fetchData = async () => {
             const data = await getBookByID(id);
@@ -227,7 +228,6 @@ export default function WholeBookData({id}:{id: string})
             const user = Cookies.get('user');
             const userID = user ? JSON.parse(user).id.toString() : '';
             const Bookid = pathname.split('/')[3];
-            console.log(userID, Bookid);
             const response = await getFavBooks(userID || '', Bookid || '' );
             if(response.success)
             {
@@ -296,6 +296,43 @@ export default function WholeBookData({id}:{id: string})
         {
             handleAddToFav();
             setIsFav(true);
+        }
+    }
+
+    const handleClickonCheckout = async () => {
+        setConfetti(true);
+        const user = Cookies.get('user');
+        const userID = user ? JSON.parse(user).id.toString() : '';
+        const Bookid = pathname.split('/')[3];
+        const result = await setAvailabilityofBook(Number(Bookid), false, Number(userID));
+        if(result.success)
+        {
+            setAlert({severity: "success", message: "Book checked out successfully"});
+            setAlertOpen(true);
+            setIsBookRented(true);
+        }
+        else
+        {
+            setAlert({severity: "error", message: "Failed to checkout book"});
+            setAlertOpen(true);
+        }
+    }
+
+    const handleClickonReturn = async () => {
+        const user = Cookies.get('user');
+        const userID = user ? JSON.parse(user).id.toString() : '';
+        const Bookid = pathname.split('/')[3];
+        const result = await setAvailabilityofBook(Number(Bookid), true, Number(userID));
+        if(result.success)
+        {
+            setAlert({severity: "success", message: "Book returned successfully"});
+            setAlertOpen(true);
+            setIsBookRented(false);
+        }
+        else
+        {
+            setAlert({severity: "error", message: "Failed to return book"});
+            setAlertOpen(true);
         }
     }
 
@@ -421,11 +458,18 @@ export default function WholeBookData({id}:{id: string})
                                 </span>
                                 </Typography>
                                 {
-                                    confetti && <Fireworks autorun={{ speed: 1, duration: 1000}}/>
+                                    isBookRented && confetti && <Fireworks autorun={{ speed: 1, duration: 1000}}/>
                                 }
-                                <Button variant="outlined" color="primary"  sx={{mb:1, mt:1}} onClick={() => {setConfetti(true)}}>
-                                    Checkout Book
-                                </Button>
+                                {
+                                    isBookRented ?
+                                    <Button variant="contained" color="primary"  sx={{mb:1, mt:1}} onClick={handleClickonReturn}>
+                                        Return The Book
+                                    </Button>
+                                    :
+                                    <Button variant="outlined" color="primary"  sx={{mb:1, mt:1}} onClick={handleClickonCheckout}>
+                                        Checkout Book
+                                    </Button>
+                                }
                             </Grid>
                             <Grid item xs={12} sm={12}>
                                 <Typography variant="h5" sx={{mb:1, color: theme.palette.primary.main}}>

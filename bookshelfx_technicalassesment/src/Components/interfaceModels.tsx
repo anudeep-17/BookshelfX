@@ -42,3 +42,16 @@ export interface User {
     role: string;
     password?: string; // password is optional as it is not required for all operations
 }
+
+export interface BookRentalDetails
+{
+    id: number;
+    bookId: number;
+    userId: number;
+    rentalDate: string;
+    returnDate: string;
+    returned: boolean;
+    createdAt: string;
+    updatedAt: string;
+    book: Book;  
+}

@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import {Book, BookCardProps} from '@/Components/interfaceModels';
+import {Book, BookCardProps, BookRentalDetails} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import {  getRentalsofUser} from '@/Services/BookRoutines';
@@ -21,31 +21,38 @@ export default function UserRentalBookComponent()
     const router = useRouter();
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
-    const [RentalBooks, setRentalBooks] = React.useState<Book[]>([])
+    const [RentalBooks, setRentalBooks] = React.useState<Book[]>([]);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     let userID: string | undefined;
     const userCookie = Cookies.get('user');
+    const [currentRentals, setCurrentRentals] = React.useState<Book[]>([]);
+    const [previousRentals, setPreviousRentals] = React.useState<Book[]>([]);
     
     if (userCookie) {
       const user = JSON.parse(userCookie);
       userID = user?.id;
     }
-    
+ 
+
     useEffect(() => {
         const fetchData = async () => {
             const data = await getRentalsofUser(Number(userID));
+            console.log(data.data.rentals);
             if(data.success)
             {
-                setRentalBooks(data.data.rentals);
+                const books = data.data.rentals.map((rental: BookRentalDetails) => rental.book);
+                setRentalBooks(books);
+                setCurrentRentals(books.filter((book: Book) => !book.availability));
+                setPreviousRentals(books.filter((book: Book) => book.availability));
             }
+           
         }
         if(userID)
         {
              fetchData();
         }
     },[])
-
 
 
     function handleBookClick(id: number) {
@@ -211,44 +218,130 @@ export default function UserRentalBookComponent()
                                         </Box>                        
                                 </Grid>
 
-                                <Grid item xs={15} md={15}>
+                                <Grid item xs={12} md={12}>
+                                    <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'center',
+                                        alignItems: 'flex-start',
+                                        ml: 1,
+                                        mr: 1,
+                                        gap: 2.5,
+                                        mb: 2,
+                                    }}
+                                    >
+                                        <Typography variant="h6" sx={{
+                                        mt: 2,
+                                        mb: 2,
+                                        fontWeight: 'bold',
+                                        textAlign: 'start',
+                                        color: 'text.secondary',
+                                        }}>
+                                            Current Rentals:
+                                        </Typography>
+                                   
+                                        {currentRentals && currentRentals.length > 0 ? (
+                                        currentRentals.map((book: Book, index: number) => (
+                                            <Box
+                                                key={index}
+                                                sx={{
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                flexWrap: 'wrap',
+                                                gap: 2.5,
+                                                }}
+                                            >
+                                                <DetailedBookCard
+                                                    id={book.id}
+                                                    coverimage={book.coverimage}
+                                                    title={book.title}
+                                                    description={book.description}
+                                                    authors={book.authors}
+                                                    rating={book.rating}
+                                                    availability={book.availability}
+                                                    onClick={() => handleBookClick(Number(book.id))}
+                                                />
+                                            </Box>
+                                        ))
+                                        ) : (
+                                            <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                width: '100%', // ensure the Box takes up full width
+                                            }}
+                                            >
+                                                <Typography variant="h6">
+                                                    No current rentals
+                                                </Typography>
+                                            </Box>
+                                        )}
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={12} md={12}>
+                                    <Divider flexItem sx={{
+                                        width: '100%',
+                                    }}/>
+                                </Grid>
+                                <Grid item xs={12} md={12}>
                                     <Box
                                         sx={{
                                             display: 'flex',
-                                            flexDirection: 'row',
+                                            flexDirection: 'column',
                                             justifyContent: 'center',
-                                            alignItems: 'center',
-                                            alignContent: 'center',
-                                            flexWrap: 'wrap',
-                                            ml:1,
-                                            mr:1,
-                                            gap:2.5, 
-                                            mb:2,
+                                            alignItems: 'flex-start',
+                                            ml: 1,
+                                            mr: 1,
+                                            gap: 2.5,
+                                            mb: 2,
                                         }}
                                     >
-                                        {
-                                            RentalBooks.length > 0 ? RentalBooks.map((book: any, index) => {
-                                            if (book?.book) {
-                                                return (
-                                                    <DetailedBookCard
-                                                        key={index}
-                                                        coverimage={book.book.coverimage}
-                                                        title={book.book.title}
-                                                        description={book.book.description}
-                                                        rating={book.book.rating}
-                                                        authors={book.book.authors}
-                                                        availability={Boolean(true)}
-                                                        onClick={() => handleBookClick(book.book.id as number)}
-                                                    />
-                                                );
-                                            }
-                                        })
-                                        :
-                                        <Typography variant="h6" sx={{ mt: 2, mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                                            No Rentals Found
-                                        </Typography>
-                                        }
+                                     {previousRentals && previousRentals.length > 0 && (
+                                        <>
+                                            <Typography variant="h6" sx={{
+                                            mt: 2,
+                                            mb: 2,
+                                            fontWeight: 'bold',
+                                            textAlign: 'start',
+                                            color: 'text.secondary',
+                                            }}>
+                                            Previous Rentals:
+                                            </Typography>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    flexWrap: 'wrap',
+                                                    gap: 2.5,
+                                                }}
+                                            >
+                                            {previousRentals.map((book: Book, index: number) => (
+                                                <DetailedBookCard
+                                                key={index}
+                                                id={book.id}
+                                                coverimage={book.coverimage}
+                                                title={book.title}
+                                                description={book.description}
+                                                authors={book.authors}
+                                                rating={book.rating}
+                                                availability={book.availability}
+                                                onClick={() => handleBookClick(Number(book.id))}
+                                                />
+                                            ))}
+                                            </Box>
+                                        </>
+                                        )}
                                     </Box>
+
+                                    {(currentRentals && currentRentals.length === 0 && previousRentals.length === 0) && (
+                                    <Typography variant="h6">No rental record</Typography>
+                                    )}
                                 </Grid>
 
                         </Grid>
