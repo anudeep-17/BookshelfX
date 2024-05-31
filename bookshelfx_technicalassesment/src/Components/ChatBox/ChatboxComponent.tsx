@@ -13,8 +13,10 @@ import ChatSystemAvatar from '@/assets/ChatSystemAvtar.png';
 import ReaderAvatar from '@/assets/ReaderAvtar.jpeg';
 import { ChatGPTSupport } from '@/Services/ChatGPTRoutines';
 import Chip from '@mui/material/Chip';
+import Badge from '@mui/material/Badge';
 
 export default function ChatboxComponent({book}: {book: Book}) {
+    
     const [anchorEl, setAnchorEl] = React.useState<EventTarget & HTMLButtonElement | null>(null);
     const [fabOpen, setFabOpen] = React.useState(false);
     const [popoverOpen, setPopoverOpen] = React.useState(false);
@@ -26,6 +28,7 @@ export default function ChatboxComponent({book}: {book: Book}) {
         { role: 'assistant',  content: 'Hi there, This is Monika, I am here to help you improve our reading Journey.' },
         { role: 'assistant', content: `Feel free to ask me anything about ${book.title} by ${book.authors.join(", ")}` },
     ]);
+    const [showBadge, setShowBadge] = React.useState(false);
 
     const preselectedMessages = [
         "What are the benefits of reading this work?",
@@ -45,6 +48,7 @@ export default function ChatboxComponent({book}: {book: Book}) {
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         const currentTarget = event.currentTarget;
+        showBadge && setShowBadge(false);
         setAnchorEl(currentTarget);
         setFabOpen(true);
         setTimeout(() => {
@@ -111,6 +115,15 @@ export default function ChatboxComponent({book}: {book: Book}) {
         }
     }, []);
 
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowBadge(true);
+        }, 1000);
+
+        return () => clearTimeout(timer); // This will clear the timer when the component unmounts
+    }, []);
+    
+    
     return (
         <ThemeProvider theme={theme}>
             <Box sx={{ position: 'fixed', bottom: 16, right: 16 }}>
@@ -119,10 +132,11 @@ export default function ChatboxComponent({book}: {book: Book}) {
                     transition={{ ease: "linear", duration: 0.2 }}
                     variants={fabVariants}
                 >
-                    <Fab color="primary" aria-label="add" onClick={handleClick}>
+                    <Fab color="primary" variant="extended" aria-label="add" onClick={handleClick}>
                         <Tooltip title={<span style={{ fontSize: '1.2em' }}>Chat with Monika, your dedicated literary guide, designed to elevate your reading journey.</span>}>
-                            <AssistantIcon />
+                            <AssistantIcon sx={{mr:1}}/>
                         </Tooltip>
+                        Monika’s Assistance
                     </Fab>
                 </motion.div>
 

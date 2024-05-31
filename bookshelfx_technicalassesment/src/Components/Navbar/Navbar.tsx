@@ -230,7 +230,7 @@ export default function Navbar()
       const handleSearchClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
         setSearchAnchorEl(event.currentTarget);
         setAlertOpen(true);
-        setAlertInfo({severity: 'warning', message: 'sorting By authors, please add , after each author name'});
+        setAlertInfo({severity: 'warning', message: 'If sorting By authors, please add , after each author name'});
       };
       
       const handleSearchOptions = (searchOption: string) => {
@@ -470,7 +470,7 @@ export default function Navbar()
               {drawer}
             </Drawer>
             
-            <Snackbar open={AlertOpen} autoHideDuration={6000} onClose={handleAlertClose}  anchorOrigin={{ vertical: 'top', horizontal: 'right' }} >
+            <Snackbar open={AlertOpen} autoHideDuration={3000} onClose={handleAlertClose}  anchorOrigin={{ vertical: 'top', horizontal: 'right' }} >
               <Alert onClose={handleAlertClose} severity={alertInfo?.severity? alertInfo?.severity : 'warning'} sx={{ width: '100%' }}>
                 {alertInfo.message}
               </Alert>
