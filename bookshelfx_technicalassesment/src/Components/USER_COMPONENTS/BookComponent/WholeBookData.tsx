@@ -459,7 +459,8 @@ export default function WholeBookData({id}:{id: string})
                     </Alert>
                 </Snackbar>
               </Box>
-              <ChatboxComponent />
+              
+            {book && <ChatboxComponent book={book}/>}
         </Box>
         </ThemeProvider>
     )
