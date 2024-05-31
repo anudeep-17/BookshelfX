@@ -26,6 +26,19 @@ export async function getBookByID(id: string)
     return data;
 }
 
+export async function setAvailabilityofBook(bookId: number, availability: boolean, userId:number)
+{
+    const response = await fetch(`/api/books/setAvailabilityofBook`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({bookId, availability, userId})
+    });
+    const data = await response.json();
+    return data;
+
+}
 //---------------------------------------------------------------------------------------------- Search Book ROUTINES-----------------------------------------------------------------------------------------------
 
 export async function searchBook(title?: string, author?: string, category?: string, publisher?: string)
