@@ -113,7 +113,7 @@ export default function UserRentalBookComponent()
                                         }}
                                     >
                                         <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, display: 'inline' }}>
-                                                Category Wise{" "} 
+                                                Your Rental{" "} 
                                                 <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
                                                     Books
                                                 </Typography>
