@@ -1,5 +1,5 @@
 'use client'
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
@@ -8,7 +8,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {Book, BookCardProps} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { getBook, getCategories, getFavBooksByUser} from '@/Services/BookRoutines';
+import {  getRentalsofUser} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
@@ -16,12 +16,12 @@ import Cookies from 'js-cookie';
  
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 
-export default function MyFavouritesComponent()
+export default function UserRentalBookComponent()
 {
     const router = useRouter();
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
-    const [favBooks, setFavBooks] = React.useState<Book[]>([])
+    const [RentalBooks, setRentalBooks] = React.useState<Book[]>([])
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     let userID: string | undefined;
@@ -31,20 +31,20 @@ export default function MyFavouritesComponent()
       const user = JSON.parse(userCookie);
       userID = user?.id;
     }
-
-    React.useEffect(() => {
+    
+    useEffect(() => {
         const fetchData = async () => {
-            if( userID !== undefined)
+            const data = await getRentalsofUser(Number(userID));
+            if(data.success)
             {
-                const data = await getFavBooksByUser(Number(userID));
-                if (data.success) {
-                    setFavBooks(data.data);
-                }
+                setRentalBooks(data.data.rentals);
             }
-        };
-
-        fetchData();
-    }, [userID]);
+        }
+        if(userID)
+        {
+             fetchData();
+        }
+    },[])
 
 
 
@@ -174,10 +174,10 @@ export default function MyFavouritesComponent()
                                                         'aria-labelledby': 'basic-button',
                                                         }}
                                                     >
-                                                        <MenuItem onClick={() => handleSort({sortBy: 'title', setBook: setFavBooks, books: favBooks, handleSortClose: handleSortClose})}>
+                                                        <MenuItem onClick={() => handleSort({sortBy: 'title', setBook: setRentalBooks, books: RentalBooks, handleSortClose: handleSortClose})}>
                                                             Sort by book titles
                                                         </MenuItem>
-                                                        <MenuItem onClick={() => handleSort({sortBy: 'author',  setBook: setFavBooks, books: favBooks, handleSortClose: handleSortClose})}>
+                                                        <MenuItem onClick={() => handleSort({sortBy: 'author',  setBook: setRentalBooks, books:  RentalBooks, handleSortClose: handleSortClose})}>
                                                             Sort by book authors
                                                         </MenuItem>
                                                     </Menu>
@@ -227,7 +227,7 @@ export default function MyFavouritesComponent()
                                         }}
                                     >
                                         {
-                                          favBooks.length > 0 ? favBooks.map((book: any, index) => {
+                                            RentalBooks.length > 0 ? RentalBooks.map((book: any, index) => {
                                             if (book?.book) {
                                                 return (
                                                     <DetailedBookCard
@@ -245,7 +245,7 @@ export default function MyFavouritesComponent()
                                         })
                                         :
                                         <Typography variant="h6" sx={{ mt: 2, mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                                            No Favourite Books Found
+                                            No Rentals Found
                                         </Typography>
                                         }
                                     </Box>

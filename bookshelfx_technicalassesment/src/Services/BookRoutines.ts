@@ -39,6 +39,14 @@ export async function setAvailabilityofBook(bookId: number, availability: boolea
     return data;
 
 }
+
+export async function getRentalsofUser(userID: number)
+{
+    const response = await fetch(`/api/books/getRentalsofUser?userId=${userID}`);
+    const data = await response.json();
+    return data;
+}
+
 //---------------------------------------------------------------------------------------------- Search Book ROUTINES-----------------------------------------------------------------------------------------------
 
 export async function searchBook(title?: string, author?: string, category?: string, publisher?: string)

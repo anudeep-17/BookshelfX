@@ -27,6 +27,7 @@ import { addFavBooks, getFavBooks, removeFavBooks } from '@/Services/BookRoutine
 import Cookies from 'js-cookie';
 import { usePathname } from 'next/navigation';
 import ChatboxComponent from '@/Components/ChatBox/ChatboxComponent';
+import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
 
 const drawerWidth = DashboardSize;
@@ -37,7 +38,9 @@ export default function WholeBookData({id}:{id: string})
     const pathname = usePathname();
     const [book, setBook] = React.useState<Book>();
     const [isFav, setIsFav] = React.useState(false);
-   
+    const [confetti, setConfetti] = React.useState(false);
+
+
     React.useEffect(() => {
         const fetchData = async () => {
             const data = await getBookByID(id);
@@ -414,10 +417,13 @@ export default function WholeBookData({id}:{id: string})
                                     <Typography component="span" sx={{color: theme.palette.primary.main}} noWrap>
                                     Availability: {" "}
                                     </Typography>
-                                    {book?.availability ? 'Yes 🎉' : 'No 😔'}
+                                    {book?.availability ? 'Yes, Available for checkout' : 'No, currently unavailable for checkout'}
                                 </span>
                                 </Typography>
-                                <Button variant="outlined" color="primary"  sx={{mb:1, mt:1}}>
+                                {
+                                    confetti && <Fireworks autorun={{ speed: 1, duration: 1000}}/>
+                                }
+                                <Button variant="outlined" color="primary"  sx={{mb:1, mt:1}} onClick={() => {setConfetti(true)}}>
                                     Checkout Book
                                 </Button>
                             </Grid>
@@ -461,6 +467,7 @@ export default function WholeBookData({id}:{id: string})
               </Box>
               
             {book && <ChatboxComponent book={book}/>}
+                        
         </Box>
         </ThemeProvider>
     )

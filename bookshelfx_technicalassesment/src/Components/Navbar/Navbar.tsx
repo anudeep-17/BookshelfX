@@ -41,6 +41,7 @@ import { SearchContext } from '../Context/SearchContext';
 import SendIcon from '@mui/icons-material/Send';
 import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 
 const drawerWidth = DashboardSize;
 
@@ -113,6 +114,11 @@ export default function Navbar()
           icon: <FavoriteBorderIcon />,
         },
         {
+          text: 'My Rentals',
+          path: '/Reader/myrentals',
+          icon:  <AutoStoriesIcon/>,
+        },
+        {
           text: 'Settings',
           icon: <SettingsIcon/>
         },
@@ -145,7 +151,7 @@ export default function Navbar()
             
           </Toolbar>
             <List>
-              {UserDrawer.slice(0, 5).map((item, index) => (
+              {UserDrawer.slice(0, 6).map((item, index) => (
                 <ListItem key={item.text} disablePadding>
                 <ListItemButton 
                 selected={pathname === item.path}
@@ -181,7 +187,7 @@ export default function Navbar()
             <Divider variant="middle" />
             
             <List>
-              {UserDrawer.slice(5).map((item, index) => (
+              {UserDrawer.slice(6).map((item, index) => (
                 <ListItem key={item.text} disablePadding>
                   <ListItemButton sx={{ 
                     borderRadius: '4px', // Make edges curved
