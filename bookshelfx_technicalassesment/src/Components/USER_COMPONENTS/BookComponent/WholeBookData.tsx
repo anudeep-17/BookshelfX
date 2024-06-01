@@ -40,7 +40,7 @@ export default function WholeBookData({id}:{id: string})
     const [isFav, setIsFav] = React.useState(false);
     const [confetti, setConfetti] = React.useState(false);
     const [isBookRented, setIsBookRented] = React.useState(false);
- 
+    
     
     React.useEffect(() => {
         const fetchData = async () => {
@@ -335,6 +335,7 @@ export default function WholeBookData({id}:{id: string})
             setAlertOpen(true);
         }
     }
+    
 
     return(
         <ThemeProvider theme={theme}>
@@ -461,7 +462,7 @@ export default function WholeBookData({id}:{id: string})
                                     isBookRented && confetti && <Fireworks autorun={{ speed: 1, duration: 1000}}/>
                                 }
                                 {
-                                    isBookRented ?
+                                    isBookRented || !book.availability ?
                                     <Button variant="contained" color="primary"  sx={{mb:1, mt:1}} onClick={handleClickonReturn}>
                                         Return The Book
                                     </Button>
