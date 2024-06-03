@@ -1,19 +1,14 @@
 {
-  "bookCategories": [
+  "bookCategories":[
     "Fantasy",
     "Science Fiction",
     "Mystery Fiction",
-    "Horror Fiction",
     "Historical Fiction",
-    "Women's Fiction",
-    "Literary Fiction",
-    "Short Story",
     "Young Adult Fiction",
     "Biography",
     "Self-help",
     "History",
-    "True Crime",
-    "Essay",
+    "Classics",
     "Dystopian",
     "Action & Adventure",
     "Thriller & Suspense",
@@ -23,6 +18,17 @@
     "Children's",
     "Memoir & Autobiography",
     "Humor",
-    "Guide / How-to"
+    "Guide / How-to",
+    "Poetry",
+    "Cookbooks",
+    "Religion & Spirituality",
+    "Travel",
+    "Art & Photography",
+    "Science & Technology",
+    "Health & Fitness",
+    "Crafts & Hobbies",
+    "Personal Development",
+    "Business & Economics",
+    "Coding & Programming"
   ]
 }

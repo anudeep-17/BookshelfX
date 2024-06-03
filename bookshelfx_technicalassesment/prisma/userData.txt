@@ -1,0 +1,20 @@
+Email: Aurelio.Beahan82@hotmail.com, Name: Dexter Moen, Password: XmFY3dHEHI8Tl84, Role: customer
+Email: Holly89@gmail.com, Name: Warren Prohaska, Password: oaC9Udj_T1TPc4U, Role: customer
+Email: Kirsten_Crooks@hotmail.com, Name: George Schmidt, Password: DnciA2uHyh4X8Xu, Role: librarian
+Email: Rashad_Welch11@hotmail.com, Name: Ruby D'Amore IV, Password: xLG0toLGWrTS_jO, Role: customer
+Email: London.Kiehn@hotmail.com, Name: Franklin Denesik, Password: WPWoJ5YIofp3gQN, Role: customer
+Email: Wilton_Gutmann@hotmail.com, Name: Guadalupe Carroll, Password: mFaLAcUpZwl8whL, Role: librarian
+Email: Kim.Fritsch9@yahoo.com, Name: Maurice Terry, Password: nzkWkPSiHPphoZl, Role: librarian
+Email: Roscoe.Veum37@gmail.com, Name: Dale White, Password: lXMIFMeARWDowvV, Role: librarian
+Email: Arjun72@yahoo.com, Name: Eugene Rice, Password: LZbrHAYB8NJ7D7Y, Role: customer
+Email: Dorothy_Runolfsson84@hotmail.com, Name: Becky Gerlach, Password: fxIDevS96_iSmqs, Role: customer
+Email: Sigurd_Heller10@yahoo.com, Name: Randall Zulauf, Password: hqgQBNgFHo73wdR, Role: customer
+Email: Ona_Yundt@gmail.com, Name: Katrina Stroman, Password: PwZkI00IXynUQk9, Role: customer
+Email: Guillermo_Block-Collier41@hotmail.com, Name: Florence Mueller DVM, Password: iVBOG8Pfj9wyWH5, Role: librarian
+Email: Amira74@hotmail.com, Name: Angel Runolfsdottir DVM, Password: arFJDaqubVmCjkl, Role: librarian
+Email: Zane_Keebler@hotmail.com, Name: Alvin Daniel, Password: Nt7JdJgVRlqQ07L, Role: customer
+Email: Pablo42@gmail.com, Name: Homer Schmeler MD, Password: w2HF8388reZMpsz, Role: librarian
+Email: Adolf.Reinger-Cremin23@yahoo.com, Name: Claudia Wiegand DDS, Password: Y_7jX6BUr30f7ad, Role: librarian
+Email: Rosa80@hotmail.com, Name: May O'Conner, Password: IkqiR223iJD4Svt, Role: customer
+Email: Cristian19@gmail.com, Name: Dr. Roman Cruickshank, Password: fSfu5VVel24mkCp, Role: customer
+Email: Murl_Kassulke@hotmail.com, Name: Susan Stracke, Password: i5aYbhT2WMjSBFk, Role: librarian

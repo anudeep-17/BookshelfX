@@ -15,11 +15,11 @@ model User {
   role      String   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  rentals   BookRentalDetails[]
+  rentals   BookRentalDetails[] @relation("RentedByUser")
+  authorizedRentals BookRentalDetails[] @relation("AuthorizedByLibrarian")
   reviews   BookReview[]
   favoriteBooks  FavoriteBook[]
 }
-
 model BookDetails{
   id              Int      @id @default(autoincrement())
   ISBN            String
@@ -33,7 +33,6 @@ model BookDetails{
   publishedDate   DateTime 
   pagecount       Int
   rating          Float
-  customerReviews String[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   rentals         BookRentalDetails[]
@@ -47,11 +46,14 @@ model BookRentalDetails {
   id              Int      @id @default(autoincrement())
   book            BookDetails @relation(fields: [bookId], references: [id])
   bookId          Int
-  user            User     @relation(fields: [userId], references: [id])
+  user            User     @relation("RentedByUser", fields: [userId], references: [id])
   userId          Int
   rentalDate      DateTime
   returnDate      DateTime
   returned        Boolean
+  isOverdue       Boolean
+  librarian       User?    @relation("AuthorizedByLibrarian", fields: [librarianId], references: [id])
+  librarianId     Int?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }

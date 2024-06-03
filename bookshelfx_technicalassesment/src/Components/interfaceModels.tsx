@@ -11,7 +11,6 @@ export interface Book {
     publishedDate: Date;
     pagecount: number;
     rating: number;
-    customerReviews: string[];
 }
 
 export interface BookCardProps {
@@ -40,7 +39,7 @@ export interface User {
     email: string;
     name: string;
     role: string;
-    password?: string; // password is optional as it is not required for all operations
+    password?: string; 
 }
 
 export interface BookRentalDetails
