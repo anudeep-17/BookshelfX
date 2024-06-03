@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect } from 'react';
-import { Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
@@ -13,7 +13,13 @@ import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
 import Cookies from 'js-cookie';
- 
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 
 export default function UserRentalBookComponent()
@@ -22,13 +28,16 @@ export default function UserRentalBookComponent()
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
     const [RentalBooks, setRentalBooks] = React.useState<Book[]>([]);
+    const [RentalBookWholeDetails, setRentalBookWholeDetails] = React.useState<BookRentalDetails[]>([]);
+    const [openRentals, setOpenRentals] = React.useState<BookRentalDetails[]>([]);
+    const [closedRentals, setClosedRentals] = React.useState<BookRentalDetails[]>([]);
+    const [selectedRentalDates, setSelectedRentalDates] = React.useState<string>();
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     let userID: string | undefined;
     const userCookie = Cookies.get('user');
-    const [currentRentals, setCurrentRentals] = React.useState<Book[]>([]);
-    const [previousRentals, setPreviousRentals] = React.useState<Book[]>([]);
-    
+
     if (userCookie) {
       const user = JSON.parse(userCookie);
       userID = user?.id;
@@ -41,10 +50,9 @@ export default function UserRentalBookComponent()
             console.log(data.data.rentals);
             if(data.success)
             {
-                const books = data.data.rentals.map((rental: BookRentalDetails) => rental.book);
-                setRentalBooks(books);
-                setCurrentRentals(books.filter((book: Book) => !book.availability));
-                setPreviousRentals(books.filter((book: Book) => book.availability));
+                setRentalBookWholeDetails(data.data.rentals);
+                setOpenRentals(data.data.rentals.filter((rental: BookRentalDetails) => rental.returned === false));
+                setClosedRentals(data.data.rentals.filter((rental: BookRentalDetails) => rental.returned === true));
             }
            
         }
@@ -72,6 +80,22 @@ export default function UserRentalBookComponent()
         setFilterDrawerOpen(newOpen);
     };
 
+    const [drawerOpen, setDrawerOpen] = React.useState(true);
+
+    // Add a new function to toggle the drawer
+    const toggleDrawerForRentals = (open:boolean) => () => {
+        setDrawerOpen(open);
+    };
+
+    const handleDateClick = (date: string) => {
+        console.log(date);
+        setSelectedRentalDates(date);
+        const filteredBooks = RentalBookWholeDetails
+        .filter((bookDetail: BookRentalDetails) => new Date(bookDetail.rentalDate).toLocaleDateString() === date)
+        .flatMap((bookDetail: BookRentalDetails) => bookDetail.book);
+        console.log(filteredBooks);
+        setRentalBooks(filteredBooks);
+    }
 
     return(
         <ThemeProvider theme={theme}>
@@ -218,131 +242,226 @@ export default function UserRentalBookComponent()
                                         </Box>                        
                                 </Grid>
 
-                                <Grid item xs={12} md={12}>
-                                    <Box
+                                <Grid item xs={12} md={2}>
+                                <Box
+                                    role="presentation"
                                     sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'center',
-                                        alignItems: 'flex-start',
-                                        ml: 1,
-                                        mr: 1,
-                                        gap: 2.5,
-                                        mb: 2,
+                                        alignItems: 'center', 
+                                        justifyContent: 'center',  
+                                        height: '100%',
                                     }}
-                                    >
-                                        <Typography variant="h6" sx={{
+                                >
+                                    <Typography variant='h6' sx={{
+                                        fontWeight: 'bold',
                                         mt: 2,
                                         mb: 2,
-                                        fontWeight: 'bold',
-                                        textAlign: 'start',
-                                        color: 'text.secondary',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        alignContent: 'center',
+                                        flexWrap: 'wrap',
+                                    }}>
+                                        All Rental Dates
+                                    </Typography>
+                                    <Box 
+                                        sx={{
+                                            mb: 2,
+                                            ml: 2
+                                        }}
+                                    >
+                                        <Accordion defaultExpanded sx={{
                                         }}>
-                                            Current Rentals:
-                                        </Typography>
-                                   
-                                        {currentRentals && currentRentals.length > 0 ? (
-                                        currentRentals.map((book: Book, index: number) => (
-                                            <Box
-                                                key={index}
-                                                sx={{
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                flexWrap: 'wrap',
-                                                gap: 2.5,
-                                                }}
-                                            >
+                                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                                <Typography>Open Rentals</Typography>
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                            {
+                                                openRentals.length > 0 ? (
+                                                    Array.from(new Set(openRentals.map(rental => new Date(rental.rentalDate).toLocaleDateString())))
+                                                    .map((date, index, self) => (
+                                                        <>
+                                                            <ListItem disablePadding>
+                                                                <ListItemButton
+                                                                    selected={selectedRentalDates === date}
+                                                                    sx={{ 
+                                                                        borderRadius: '4px', // Make edges curved
+                                                                        m:2,
+                                                                        display: 'flex', // Add this
+                                                                        justifyContent: 'center', // Add this
+                                                                        '&:hover': {
+                                                                            backgroundColor: 'transparent',
+                                                                            '& .MuiSvgIcon-root': {
+                                                                                color: '#3f51b5',
+                                                                            },
+                                                                            '& .MuiListItemText-root': {
+                                                                                fontWeight: 'bold',
+                                                                            },
+                                                                        },
+                                                                        '&.Mui-selected': {
+                                                                            '& .MuiListItemText-root': {
+                                                                                fontWeight: 'bold',
+                                                                            },
+                                                                        },
+                                                                    }}
+                                                                    onClick = {() => handleDateClick(date)}
+                                                                >
+                                                                    <ListItemIcon>
+                                                                        <DateRangeIcon/>
+                                                                    </ListItemIcon>
+                                                                    <ListItemText primary={date} />
+                                                                </ListItemButton>
+                                                            </ListItem>
+                                                            {index !== self.length - 1 && <Divider sx={{ml:2, mr:2}}/>}
+                                                        </>
+                                                    ))
+                                                ) : (
+                                                    <Typography
+                                                        variant='body1'
+                                                        sx={{
+                                                            display: 'flex',
+                                                            justifyContent: 'center',
+                                                            alignItems: 'center',
+                                                            alignContent: 'center',
+                                                            flexWrap: 'wrap',
+                                                            color: 'text.secondary'
+                                                        }}
+                                                    >
+                                                        No current Rentals
+                                                    </Typography>
+                                                )
+                                            }
+                                            </AccordionDetails>
+                                        </Accordion>
+                                        <Accordion >
+                                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                                <Typography>Closed Rentals</Typography>
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                            {
+                                                closedRentals.length > 0 ? (
+                                                    Array.from(new Set(closedRentals.map(rental => new Date(rental.rentalDate).toLocaleDateString())))
+                                                    .map((date, index, self) => (
+                                                        <>
+                                                            <ListItem disablePadding>
+                                                                <ListItemButton
+                                                                 selected={selectedRentalDates === date}
+                                                                    sx={{ 
+                                                                        borderRadius: '4px', // Make edges curved
+                                                                        display: 'flex', // Add this
+                                                                        justifyContent: 'center', // Add this
+                                                                        '&:hover': {
+                                                                            backgroundColor: 'transparent',
+                                                                            '& .MuiSvgIcon-root': {
+                                                                                color: '#3f51b5',
+                                                                            },
+                                                                            '& .MuiListItemText-root': {
+                                                                                fontWeight: 'bold',
+                                                                            },
+                                                                        },
+                                                                        '&.Mui-selected': {
+                                                                            '& .MuiListItemText-root': {
+                                                                                fontWeight: 'bold',
+                                                                            },
+                                                                        },
+                                                                    }}
+                                                                    onClick = {() => handleDateClick(date)}
+                                                                >
+                                                                    <ListItemIcon>
+                                                                        <DateRangeIcon/>
+                                                                    </ListItemIcon>
+                                                                    <ListItemText primary={date}/>
+                                                                </ListItemButton>
+                                                            </ListItem>
+                                                            {index !== self.length - 1 && <Divider sx={{ml:2, mr:2}}/>}
+                                                        </>
+                                                    ))
+                                                ) : (
+                                                    <Typography>No Rentals</Typography>
+                                                )
+                                            }
+                                            </AccordionDetails>
+                                        </Accordion>
+                                    </Box>
+                                </Box>
+                            </Grid>
+                           
+                            <Grid item xs={12} md={10}>
+                                <Box
+                                    sx={{
+                                        alignItems: 'center', 
+                                        justifyContent: 'center'  
+                                    }}
+                                >
+                                    <Typography variant = 'h6' sx={{
+                                         fontWeight: 'bold',
+                                         mt: 2,
+                                         mb: 2,
+                                         display: 'flex',
+                                         justifyContent: 'center',
+                                         alignItems: 'center',
+                                         alignContent: 'center',
+                                         flexWrap: 'wrap',
+                                    }}>
+                                        All Rental Books
+                                    </Typography>
+                                </Box>
+
+                                <Box sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    alignContent: 'center',
+                                    flexWrap: 'wrap',
+                                    mt: 2,
+                                    mb: 2,
+                                    gap: 2
+                                }}>
+                                    {
+                                        RentalBooks.length > 0 ? (
+                                            RentalBooks.map((book: Book) => (
                                                 <DetailedBookCard
-                                                    id={book.id}
+                                                    key={book.id}
                                                     coverimage={book.coverimage}
                                                     title={book.title}
                                                     description={book.description}
-                                                    authors={book.authors}
                                                     rating={book.rating}
-                                                    availability={book.availability}
-                                                    onClick={() => handleBookClick(Number(book.id))}
+                                                    authors={book.authors}
+                                                    availability={Boolean(true)}
+                                                    onClick= {() => handleBookClick(book.id as number)}
                                                 />
-                                            </Box>
-                                        ))
+                                            ))
                                         ) : (
-                                            <Box
-                                            sx={{
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                width: '100%', // ensure the Box takes up full width
-                                            }}
-                                            >
-                                                <Typography variant="h6">
-                                                    No current rentals
-                                                </Typography>
-                                            </Box>
-                                        )}
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={12} md={12}>
-                                    <Divider flexItem sx={{
-                                        width: '100%',
-                                    }}/>
-                                </Grid>
-                                <Grid item xs={12} md={12}>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'center',
-                                            alignItems: 'flex-start',
-                                            ml: 1,
-                                            mr: 1,
-                                            gap: 2.5,
-                                            mb: 2,
-                                        }}
-                                    >
-                                     {previousRentals && previousRentals.length > 0 && (
-                                        <>
-                                            <Typography variant="h6" sx={{
-                                            mt: 2,
-                                            mb: 2,
-                                            fontWeight: 'bold',
-                                            textAlign: 'start',
-                                            color: 'text.secondary',
-                                            }}>
-                                            Previous Rentals:
-                                            </Typography>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
-                                                    flexDirection: 'row',
                                                     justifyContent: 'center',
                                                     alignItems: 'center',
+                                                    alignContent: 'center',
                                                     flexWrap: 'wrap',
-                                                    gap: 2.5,
+                                                    color: 'text.secondary'
                                                 }}
                                             >
-                                            {previousRentals.map((book: Book, index: number) => (
-                                                <DetailedBookCard
-                                                key={index}
-                                                id={book.id}
-                                                coverimage={book.coverimage}
-                                                title={book.title}
-                                                description={book.description}
-                                                authors={book.authors}
-                                                rating={book.rating}
-                                                availability={book.availability}
-                                                onClick={() => handleBookClick(Number(book.id))}
-                                                />
-                                            ))}
-                                            </Box>
-                                        </>
-                                        )}
-                                    </Box>
 
-                                    {(currentRentals && currentRentals.length === 0 && previousRentals.length === 0) && (
-                                    <Typography variant="h6">No rental record</Typography>
-                                    )}
-                                </Grid>
+                                                <Typography
+                                                    variant='h5'
+                                                    sx={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        alignContent: 'center',
+                                                        flexWrap: 'wrap',
+                                                        color: 'text.secondary'
+                                                    }}
+                                                >
+                                                    No current Rentals
+                                                </Typography>
+                                            </Box>
+                                        ) 
+                                    }
+                                </Box>
+
+                            </Grid>
 
                         </Grid>
                 </Box>

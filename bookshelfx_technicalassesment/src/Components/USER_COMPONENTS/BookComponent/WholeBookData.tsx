@@ -23,7 +23,7 @@ import Alert from '@mui/material/Alert';
 import { SnackbarCloseReason } from '@mui/material/Snackbar';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { addFavBooks, getFavBooks, removeFavBooks } from '@/Services/BookRoutines';
+import { addFavBooks, removeFavBooks} from '@/Services/BookRoutines';
 import Cookies from 'js-cookie';
 import { usePathname } from 'next/navigation';
 import ChatboxComponent from '@/Components/ChatBox/ChatboxComponent';
@@ -40,19 +40,44 @@ export default function WholeBookData({id}:{id: string})
     const [isFav, setIsFav] = React.useState(false);
     const [confetti, setConfetti] = React.useState(false);
     const [isBookRented, setIsBookRented] = React.useState(false);
-    
+    const [isBookRentedByCurrentUser, setIsBookRentedByCurrentUser] = React.useState(false);
     
     React.useEffect(() => {
         const fetchData = async () => {
             const data = await getBookByID(id);
             if (data.success) {
                 setBook(data.data);
+                if(!data.data.availability)
+                {
+                    setIsBookRented(true);
+                }
+                if(data.data.rentals.length > 0)
+                {
+                    const user = Cookies.get('user');
+                    setIsBookRented(true)
+                    const userID = user ? JSON.parse(user).id.toString() : '';
+                    if (data.data.rentals[0].userId ===  Number(userID) && !data.data.rentals[0].returned) {
+                        setIsBookRentedByCurrentUser(true);
+                         
+                      } else {
+                        setIsBookRentedByCurrentUser(false);
+                      }
+                }
+                if(data.data.favoritedBy.length > 0)
+                {
+                    const user = Cookies.get('user');
+                    const userID = user ? JSON.parse(user).id.toString() : '';
+                    const userFav = data.data.favoritedBy.find((fav:{userId:number, bookId: number}) => fav.userId === Number(userID));
+                    if(userFav)
+                    {
+                        setIsFav(true);
+                    }
+                }
             }
         };
+        const timeoutId = setTimeout(fetchData, 1000); 
     
-        const timeoutId = setTimeout(fetchData, 1000); // Delay of 500 milliseconds
-    
-        return () => clearTimeout(timeoutId); // Clean up on component unmount
+        return () => clearTimeout(timeoutId);  
     }, [id]);
 
     const [open, setOpen] = React.useState(false);
@@ -222,21 +247,7 @@ export default function WholeBookData({id}:{id: string})
           </Dialog>
         )
     }
-
-   React.useEffect(() => {
-        const fetchData = async () => {
-            const user = Cookies.get('user');
-            const userID = user ? JSON.parse(user).id.toString() : '';
-            const Bookid = pathname.split('/')[3];
-            const response = await getFavBooks(userID || '', Bookid || '' );
-            if(response.success)
-            {
-                setIsFav(true);
-            }
-        }
-        fetchData();
-    }, []);
-
+        
     const handleAddToFav = async () => {
         if(book)
         {
@@ -310,6 +321,7 @@ export default function WholeBookData({id}:{id: string})
             setAlert({severity: "success", message: "Book checked out successfully"});
             setAlertOpen(true);
             setIsBookRented(true);
+            setIsBookRentedByCurrentUser(true);
         }
         else
         {
@@ -327,7 +339,8 @@ export default function WholeBookData({id}:{id: string})
         {
             setAlert({severity: "success", message: "Book returned successfully"});
             setAlertOpen(true);
-            setIsBookRented(false);
+            setIsBookRented(false); 
+            setIsBookRentedByCurrentUser(false);
         }
         else
         {
@@ -462,12 +475,17 @@ export default function WholeBookData({id}:{id: string})
                                     isBookRented && confetti && <Fireworks autorun={{ speed: 1, duration: 1000}}/>
                                 }
                                 {
-                                    isBookRented || !book.availability ?
-                                    <Button variant="contained" color="primary"  sx={{mb:1, mt:1}} onClick={handleClickonReturn}>
+                                    isBookRented?
+                                    isBookRentedByCurrentUser ?
+                                    <Button variant="contained" color="primary" sx={{mb:1, mt:1}} onClick={handleClickonReturn}>
                                         Return The Book
                                     </Button>
                                     :
-                                    <Button variant="outlined" color="primary"  sx={{mb:1, mt:1}} onClick={handleClickonCheckout}>
+                                    <Button variant="contained" color="primary" sx={{mb:1, mt:1}} disabled>
+                                        Book Not Available
+                                    </Button>
+                                    :
+                                    <Button variant="outlined" color="primary" sx={{mb:1, mt:1}} onClick={handleClickonCheckout}>
                                         Checkout Book
                                     </Button>
                                 }

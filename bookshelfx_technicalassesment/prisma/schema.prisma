@@ -54,11 +54,9 @@ model BookRentalDetails {
   returned        Boolean
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  
 }
 
 model BookReview {
-  id        Int      @id @default(autoincrement())
   book      BookDetails @relation(fields: [bookId], references: [id])
   bookId    Int
   user      User     @relation(fields: [userId], references: [id])
@@ -67,6 +65,8 @@ model BookReview {
   rating    Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@id([userId, bookId])
+  @@unique([userId, bookId])
 }
 
 model FavoriteBook {
@@ -74,7 +74,6 @@ model FavoriteBook {
   userId Int
   book   BookDetails   @relation(fields: [bookId], references: [id])
   bookId Int
-
   @@id([userId, bookId])
   @@unique([userId, bookId])
 }

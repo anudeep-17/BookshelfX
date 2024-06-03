@@ -30,21 +30,6 @@ export default function DetailedBookCard({coverimage, title, description, rating
                 }}
                 onClick={onClick}
                 >
-                   
-                   {!availability? <Box sx={{
-                        position: 'absolute',
-                        background: 'rgba(255, 0, 0, 0.7)',
-                        boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
-                        backdropFilter: 'blur(20px)',
-                        WebkitBackdropFilter: 'blur(20px)',
-                        borderRadius: '10px',
-                        border: '1px solid rgba(255, 255, 255, 0.18)',
-                        color: 'white',
-                        padding: '2px 10px',
-                    }}>
-                        {availability ? '' : 'Not Available'}
-                    </Box>: null}
-                  
                     <Box sx={{ 
                         height: 400, // Increased size
                         backgroundImage: `url(${coverimage})`,

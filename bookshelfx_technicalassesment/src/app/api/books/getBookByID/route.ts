@@ -16,9 +16,16 @@ export async function GET(req: Request)
         const book = await database.bookDetails.findUnique({
             where: {
                 id: Number(id) 
+            },
+            include: {
+                rentals: {
+                    orderBy: {
+                      rentalDate: 'desc'
+                    }
+                },
+                favoritedBy: true,
             }
         });
-
         if (!book) {
             return NextResponse.json({success: false, message: "Book not found"}, {status: 404});
         }
