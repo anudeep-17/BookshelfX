@@ -10,7 +10,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { red } from '@mui/material/colors';
-import { Create, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Authentication, RegisterUser } from '@/Services/UserRoutines';
 import {User} from '../interfaceModels';
 import Cookies from 'js-cookie';

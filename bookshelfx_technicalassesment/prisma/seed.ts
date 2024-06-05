@@ -7,7 +7,7 @@ import { faker } from '@faker-js/faker';
 import fs from 'fs';
 import { promisify } from 'util'; 
 import { join } from 'path';
-
+import bycrpt from 'bcrypt';
 //npx prisma migrate dev 
 //npx prisma db seed
 
@@ -29,7 +29,7 @@ async function CreateUsers()
             data: {
                 email: emails[i],
                 name: names[i],
-                password : passwords[i],
+                password : await bycrpt.hash(passwords[i], 10),
                 role,
             },
         });

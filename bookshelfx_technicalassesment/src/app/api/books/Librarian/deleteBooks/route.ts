@@ -6,6 +6,7 @@ export async function DELETE(req: Request)
     try{
         await database.bookRentalDetails.deleteMany();
         await database.favoriteBook.deleteMany();
+        await database.bookReview.deleteMany();
         await database.user.deleteMany();
         const deleteBooks = await database.bookDetails.deleteMany();
 
