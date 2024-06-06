@@ -21,7 +21,11 @@ export async function GET(req: Request)
         }
         
         const books = await database.bookDetails.findMany({
-            where: query 
+            where: query,
+            include:{
+                rentals: true,
+                reviews: true,
+            }
         });
         
         if (books.length === 0) {

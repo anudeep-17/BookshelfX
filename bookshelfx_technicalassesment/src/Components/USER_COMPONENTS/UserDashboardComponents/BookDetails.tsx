@@ -6,6 +6,7 @@ import theme from '../../Themes';
 
 export default function BookDetails({ book }: { book?: Book }) 
 {   
+    console.log(book);
     return(
         <ThemeProvider theme={theme}>
         {book?.title !== undefined?
@@ -95,7 +96,7 @@ export default function BookDetails({ book }: { book?: Book })
                     }}
                 >
                     <Typography variant="body1">
-                        {book?.customerReviews.length}
+                        {book?.reviews?.length > 0? book?.reviews: ""}
                     </Typography>
                     <Typography variant="body2" sx={{
                         color: theme.palette.text.secondary
