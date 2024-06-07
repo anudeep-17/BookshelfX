@@ -1,10 +1,6 @@
 import { Authentication, RegisterUser } from "@/Services/UserRoutines";
 import { User } from "../interfaceModels";
 
-const handleClickShowPassword = (setShowPassword: React.Dispatch<React.SetStateAction<boolean>>) => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
-  };
-
 const handleAuthentication = async(
     Email: string,
     Password: string,

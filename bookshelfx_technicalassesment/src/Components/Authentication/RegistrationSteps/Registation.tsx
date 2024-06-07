@@ -70,6 +70,7 @@ export default function Registration()
   const [passwordMatch, setpasswordMatch] = React.useState(false);
   const [Role, setRole] = React.useState('');
   const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
+  const [selectedAvatar, setSelectedAvatar] = React.useState<string>('');
 
   const [showAuthenticationFailed, setShowAuthenticationFailed] = React.useState(false);
   const { setIsAuthenticated } = React.useContext(AuthContext);
@@ -200,6 +201,8 @@ export default function Registration()
                                         setAlert={setalert}
                                         selectedCategories={selectedCategories}
                                         setSelectedCategories={setSelectedCategories}
+                                        SelectedAvatar={selectedAvatar}
+                                        setSelectedAvatar={setSelectedAvatar}
                                       /> :
                 activeStep === 2 ?  <RegistrationStep3 /> : null
             }
