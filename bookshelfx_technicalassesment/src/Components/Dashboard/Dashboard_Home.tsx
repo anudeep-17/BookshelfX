@@ -9,9 +9,20 @@ import Toolbar from '@mui/material/Toolbar';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 
-const UserDashboardComponent = dynamic(() => import('@/Components/USER_COMPONENTS/UserDashboardComponents/UserDashboardComponent'), { ssr: false });
+const UserDashboardComponent = dynamic(() => import('@/Components/USER_COMPONENTS/UserDashboardComponents/UserDashboardComponent'), { ssr: false, loading: () =>{
+  return (
+    <CircularProgress sx={{
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      color: 'primary.main'
+    }}/> 
+  )
+}});
 
 import { DashboardSize } from '../DashboardSize';
+import { CircularProgress } from '@mui/material';
 
 const drawerWidth = DashboardSize;
 

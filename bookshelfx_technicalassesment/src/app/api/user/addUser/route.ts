@@ -5,7 +5,11 @@ import bcrypt from 'bcrypt';
 export async function POST(req: Request) 
 {
     try{
-        const {email, password, name, role} = await req.json();
+        const {email, password, name, role, Avatar, favouriteCategories} = await req.json();
+        if(!email || !password || !name || !role){
+            return NextResponse.json({success:false, user: null, message: "Please fill in all fields"}, {status: 400});
+        }
+
         const existingUserByEmail = await database.user.findUnique({
             where: {email: email}
         });
@@ -21,7 +25,9 @@ export async function POST(req: Request)
                email,
                password: hashedpassword,
                name,
-               role
+               role,
+               Avatar,
+               favoriteCategories: favouriteCategories
             }
         });
         const {password:newUserPassword, ...user} = newuser;

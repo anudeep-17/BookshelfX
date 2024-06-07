@@ -28,6 +28,7 @@ export interface User {
     rentals?: BookRentalDetails[];
     authorizedRentals? : BookRentalDetails[];
     reviews? : BookReview[];
+    Avatar? : string;
     favoriteBooks? : Book[];
     createdAt?: Date;
     updatedAt?: Date;

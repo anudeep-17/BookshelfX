@@ -5,6 +5,8 @@ import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Cookies from 'js-cookie';
+
 const RegistrationStep1 = dynamic(() => import('@/Components/Authentication/RegistrationSteps/RegistationStep1'), { 
   loading: () => 
   <Box sx={{
@@ -41,12 +43,13 @@ const RegistrationStep3 = dynamic(() => import('@/Components/Authentication/Regi
   </Box>
 });
 
-import { User } from '@/Components/interfaceModels';
 import { AuthContext } from '@/Components/Context/AuthContext';
 import { Alert, Snackbar } from '@mui/material';
 import { SnackbarCloseReason } from '@mui/material';
 import dynamic from 'next/dynamic';
 import CircularProgress from '@mui/material/CircularProgress';
+import { RegisterUser } from '@/Services/UserRoutines';
+import { User } from '@/Components/interfaceModels';
 
 const steps = [
     'Personal Information',
@@ -72,6 +75,7 @@ export default function Registration()
   const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
   const [selectedAvatar, setSelectedAvatar] = React.useState<string>('');
 
+  const [allSetFromUserSide, setAllSetFromUserSide] = React.useState(false);
   const [showAuthenticationFailed, setShowAuthenticationFailed] = React.useState(false);
   const { setIsAuthenticated } = React.useContext(AuthContext);
   const [alert, setalert] = React.useState<{severity: 'success' | 'error' | 'warning', message: string}>({severity: 'error', message: ''});
@@ -92,7 +96,8 @@ export default function Registration()
     return completedSteps() === totalSteps();
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    
     let isError = false;
 
     if (activeStep+1 === 1) {
@@ -109,11 +114,36 @@ export default function Registration()
     else if(activeStep+1 === 2) 
     {
         setAlertopener(true);
-        if (selectedCategories.length > 1) {
-            setalert({severity: 'success', message: 'Step 2 Completed, Favourite categories added'});
+        let registeruser;
+        if (selectedCategories.length > 1 && selectedAvatar !== '') {
+            setalert({severity: 'success', message: 'Step 2 Completed, Favourite categories added '});
+            registeruser = await handleRegister();
         } else {
             setalert({severity: 'success', message: 'Step 2 Skipped, no favourite categories selected'});
+            registeruser = await handleRegister();
         }
+        if(registeruser)
+        {
+            Cookies.set('user', JSON.stringify(registeruser));
+        }
+        else
+        {
+            setAlertopener(true);
+            setalert({severity: 'error', message: 'Registration failed, please try again'});
+            isError = true;
+            setActiveStep(0); // Navigate back to step 0
+        }
+        setAllSetFromUserSide(true);
+    }
+    else if (activeStep+1 === 3) {
+        if (allSetFromUserSide) {
+            setAlertopener(true);
+            setalert({severity: 'success', message: 'Step 3 Completed, account created'});
+        } else {
+            setAlertopener(true);
+            setalert({severity: 'error', message: 'Please complete all steps'});
+            isError = true;
+        }     
     }
 
     if (!isError) {
@@ -137,15 +167,6 @@ export default function Registration()
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleStep = (step: number) => () => {
-    setActiveStep(step);
-  };
- 
-  const handleReset = () => {
-    setActiveStep(0);
-    setCompleted({});
-  };
-
   const handleAlertClose = (event: React.SyntheticEvent<any, Event> | Event, reason?: SnackbarCloseReason) => {
     if (reason === 'clickaway') {
         return;
@@ -153,6 +174,36 @@ export default function Registration()
 
     setAlertopener(false);
   };
+  
+  const handleRegister = async () => {
+      const Registerdetails = {
+          name: Name,
+          email: Email,
+          password: Password,
+          role: Role,
+          Avatar:  selectedAvatar? selectedAvatar : '',
+          favouriteCategories: selectedCategories? selectedCategories : []
+      }
+      const register = await RegisterUser(Registerdetails);
+      if(register.success)
+      {
+          const user: User = {
+              id: register.user.id,
+              email: register.user.email,
+              name:  register.user.name,
+              role:  register.user.role,
+              Avatar: register.user.Avatar,
+              favouriteCategories: register.user.favoriteCategories
+          }
+          setIsAuthenticated(true);
+          return user;
+      }
+      else
+      {
+          setShowAuthenticationFailed(true);
+      }
+  }
+
 
   return (
     <Box sx={{ p:1.5, width: '45vw'}}>
@@ -166,7 +217,7 @@ export default function Registration()
       <Stepper nonLinear activeStep={activeStep}>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
-            <StepButton color="inherit" onClick={handleStep(index)}>
+            <StepButton color="inherit" disabled>
               {label}
             </StepButton>
           </Step>
@@ -204,7 +255,7 @@ export default function Registration()
                                         SelectedAvatar={selectedAvatar}
                                         setSelectedAvatar={setSelectedAvatar}
                                       /> :
-                activeStep === 2 ?  <RegistrationStep3 /> : null
+                activeStep === 2 && allSetFromUserSide ?  <RegistrationStep3 /> : null
             }
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, mt:1}}>
               <Button

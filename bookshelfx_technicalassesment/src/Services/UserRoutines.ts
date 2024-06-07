@@ -1,8 +1,8 @@
 import { User } from '../Components/interfaceModels';
 
-export async function RegisterUser({email, password, name, role}: User)
+export async function RegisterUser({email, password, name, role, Avatar, favouriteCategories}: User)
 {
-    const response = await fetch('/api/user/createUser', {
+    const response = await fetch('/api/user/addUser', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -11,7 +11,9 @@ export async function RegisterUser({email, password, name, role}: User)
             email,
             password,
             name,
-            role
+            role,
+            Avatar, 
+            favouriteCategories
         })
     });
     return await response.json();
