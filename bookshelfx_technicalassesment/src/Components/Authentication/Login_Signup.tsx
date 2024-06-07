@@ -15,6 +15,7 @@ import { Authentication, RegisterUser } from '@/Services/UserRoutines';
 import {User} from '../interfaceModels';
 import Cookies from 'js-cookie';
 import { AuthContext } from '../Context/AuthContext';
+import Registration from './RegistrationSteps/Registation';
 
 export default function Login_Signup() {
     const [isregister, setisregister] = React.useState(false);
@@ -108,7 +109,7 @@ export default function Login_Signup() {
             >
                 {isregister ? (
                     <>
-                        <Typography variant="h4" letterSpacing={2}>
+                        {/* <Typography variant="h4" letterSpacing={2}>
                             Signup
                         </Typography>
                         <Typography variant="body2" letterSpacing={0} sx={{ mt: 1 }}>
@@ -210,7 +211,8 @@ export default function Login_Signup() {
                             >
                                 Login
                             </Button>
-                        </Box>
+                        </Box> */}
+                        <Registration/>
                     </>
                 ) : (
                     <>

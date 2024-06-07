@@ -15,7 +15,6 @@ export async function GET()
  
         const categories = result.map(r => r.category);
         const uniqueCategories = Array.from(new Set(categories));
-        console.log(uniqueCategories);
         if (uniqueCategories.length === 0) {
         return NextResponse.json({success: false, message: "No categories available"}, {status: 404});
         }

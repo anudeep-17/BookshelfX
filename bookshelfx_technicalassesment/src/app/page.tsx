@@ -5,6 +5,7 @@ import { AuthContext } from "@/Components/Context/AuthContext";
 import Cookies from 'js-cookie';
 import { useRouter } from "next/navigation"; // corrected from "next/navigation"
 import { CircularProgress } from "@mui/material";
+
 const Auth = dynamic(() => import('@/Components/Authentication/Auth'), { ssr: false, 
   loading: () => 
     <CircularProgress sx={{

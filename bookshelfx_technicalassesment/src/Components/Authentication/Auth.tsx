@@ -47,7 +47,7 @@ export default function Auth()
                     }}>
                         <Box sx={{
                             flexDirection: 'row', // column layout for small screens, row layout for larger screens
-                            mb: 7
+                            mb: 6
                         }}>
                             <Typography variant="h3" letterSpacing={4}
                                 sx={{
