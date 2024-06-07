@@ -64,6 +64,8 @@ export default function Login_Signup() {
                 email: authenticate.user.email,
                 name:  authenticate.user.name,
                 role:  authenticate.user.role,
+                Avatar: authenticate.user.Avatar,
+                favoriteCategories: authenticate.user.favoriteCategories
             }
             Cookies.set('user', JSON.stringify(user));
             setIsAuthenticated(true);

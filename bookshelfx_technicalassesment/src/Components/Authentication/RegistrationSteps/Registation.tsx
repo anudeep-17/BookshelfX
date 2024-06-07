@@ -97,7 +97,7 @@ export default function Registration()
   };
 
   const handleNext = async () => {
-    
+
     let isError = false;
 
     if (activeStep+1 === 1) {
@@ -122,6 +122,8 @@ export default function Registration()
             setalert({severity: 'success', message: 'Step 2 Skipped, no favourite categories selected'});
             registeruser = await handleRegister();
         }
+
+        // If user is registered, set the user in the cookies
         if(registeruser)
         {
             Cookies.set('user', JSON.stringify(registeruser));
@@ -182,7 +184,7 @@ export default function Registration()
           password: Password,
           role: Role,
           Avatar:  selectedAvatar? selectedAvatar : '',
-          favouriteCategories: selectedCategories? selectedCategories : []
+         favoriteCategories: selectedCategories? selectedCategories : []
       }
       const register = await RegisterUser(Registerdetails);
       if(register.success)
@@ -193,7 +195,7 @@ export default function Registration()
               name:  register.user.name,
               role:  register.user.role,
               Avatar: register.user.Avatar,
-              favouriteCategories: register.user.favoriteCategories
+              favoriteCategories: register.user.favoriteCategories
           }
           setIsAuthenticated(true);
           return user;

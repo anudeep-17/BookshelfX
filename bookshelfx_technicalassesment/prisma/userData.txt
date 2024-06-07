@@ -1,20 +1,20 @@
-Email: Buster_Hauck2@gmail.com, Name: Mr. Jamie Kiehn-Beer, Password: Fo7y7VDEmTWfUbP, Role: librarian
-Email: Georgette.Boyer93@hotmail.com, Name: Mr. Jeffrey Gibson, Password: gOjdDQHM2td2v3U, Role: librarian
-Email: Nelson_Pollich67@yahoo.com, Name: Rachael Daugherty, Password: rANEWnLZH0Nh_DE, Role: librarian
-Email: Paris_Hamill29@gmail.com, Name: Brent Barton, Password: L2oXqdUOxT53gJd, Role: customer
-Email: Joesph68@hotmail.com, Name: Lena Romaguera, Password: SCtJ3QRz5wuygIV, Role: customer
-Email: Lacy69@hotmail.com, Name: Frederick Lindgren, Password: 9AKDUYMUTHZDW31, Role: librarian
-Email: Maurice_Schimmel@yahoo.com, Name: Beulah Blanda, Password: 9i25OFPd0wDZKin, Role: librarian
-Email: Tillman.Deckow@yahoo.com, Name: Barry Parisian, Password: SDFYdYXiR_Rhzdq, Role: customer
-Email: Kelli_Jakubowski-Grady22@yahoo.com, Name: Natasha Monahan, Password: 0m3lpISYQsqIqGV, Role: customer
-Email: Addie_Funk49@yahoo.com, Name: Lila Fahey, Password: BJ3tFXnbXS7aQQZ, Role: librarian
-Email: Alfreda_Romaguera65@gmail.com, Name: Larry Lueilwitz, Password: MbDJYghDFLRPwMz, Role: librarian
-Email: Ashlynn.Nikolaus@hotmail.com, Name: Darryl Kilback, Password: BHccwpiFa1Gwwj5, Role: librarian
-Email: Elna77@gmail.com, Name: Robyn Hyatt, Password: MitKU9A7E3uncHV, Role: librarian
-Email: Kali80@hotmail.com, Name: Everett Hyatt V, Password: qG7Ciyrn154NaLA, Role: customer
-Email: Terence.Skiles@yahoo.com, Name: Sherry Kuvalis, Password: KICvfN9AIOPSkRk, Role: librarian
-Email: Leo.Haag@gmail.com, Name: Julie Corwin DVM, Password: tzeDvDbKxDQsqpD, Role: librarian
-Email: Adolfo.Kutch@yahoo.com, Name: Brandy Ratke, Password: YFDSXIUYDtr9zge, Role: librarian
-Email: Bessie_Renner@yahoo.com, Name: Preston Spinka, Password: a7k9TLNB3hKJgIP, Role: customer
-Email: Ubaldo.Zboncak@yahoo.com, Name: Anthony Kuvalis, Password: oELzhe5QEQNx1lW, Role: librarian
-Email: Denis61@hotmail.com, Name: Woodrow Rippin, Password: QPOTOeruWJfyDDV, Role: customer
+Email: Lionel_Beahan18@gmail.com, Name: Eula Howe, Password: UewAye1S4rlTStu, Role: customer, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Personal Development, Historical Fiction, Mystery Fiction, Travel, History, Biography
+Email: Mathew.Haag@hotmail.com, Name: Cristina Williamson V, Password: EZbp0FWEQK18iQh, Role: librarian, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Art & Photography, Coding & Programming, Fantasy, Action & Adventure, Historical Fiction, History
+Email: Hellen_Sauer13@gmail.com, Name: Jason Wuckert, Password: cLF6Ny2r3vk7VqS, Role: customer, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Travel, Dystopian, Business & Economics, Coding & Programming, Young Adult Fiction, Guide / How-to
+Email: Josie94@hotmail.com, Name: Leslie Carroll, Password: ehKcCxg_8rAFPZB, Role: customer, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Fantasy, Crafts & Hobbies, Romance Novel, Memoir & Autobiography, Art & Photography, Coding & Programming
+Email: Malinda75@gmail.com, Name: Bob Paucek, Password: C0FEOrzXCFU6EQV, Role: customer, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Poetry, Science & Technology, Children's, Coding & Programming, Fantasy, Young Adult Fiction
+Email: Nova40@yahoo.com, Name: Miss Vickie McGlynn-Schroeder, Password: LYMvkvaYXNLAfxS, Role: customer, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Crafts & Hobbies, Business & Economics, Coding & Programming, Historical Fiction, Health & Fitness, Fantasy
+Email: Meagan.Conn29@gmail.com, Name: Leslie Purdy, Password: RkeV0tZIsZg2hMc, Role: customer, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Travel, Self-help, Biography, Science & Technology, Guide / How-to, Cookbooks
+Email: Odessa.Hackett@gmail.com, Name: Laura McDermott, Password: QwPA2Ckhbk1U5Z6, Role: librarian, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Children's, Self-help, Contemporary Fiction, Humor, Cookbooks, Science & Technology
+Email: Arlene.Klein@gmail.com, Name: Tamara Rogahn, Password: U4M2P72MSRw8rAF, Role: customer, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Personal Development, Coding & Programming, Classics, Religion & Spirituality, History, Self-help
+Email: Alayna21@hotmail.com, Name: Opal Bailey, Password: 7tkNlk7J_42cLjO, Role: librarian, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Dystopian, Mystery Fiction, Thriller & Suspense, Personal Development, LGBTQ+, Contemporary Fiction
+Email: Gene.Olson21@yahoo.com, Name: Elizabeth Prosacco V, Password: L1PZfIZMf2nFu14, Role: customer, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Personal Development, Health & Fitness, Fantasy, Religion & Spirituality, Self-help, Business & Economics
+Email: Brisa_Schamberger90@gmail.com, Name: Clyde Jenkins III, Password: V1ZMBnTotDpafMf, Role: librarian, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Contemporary Fiction, Memoir & Autobiography, Personal Development, Humor, Self-help, Historical Fiction
+Email: Ofelia_Gislason@gmail.com, Name: Scott Schamberger, Password: RsVDzxo22W_CLFv, Role: customer, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Religion & Spirituality, Guide / How-to, Poetry, Art & Photography, History, Coding & Programming
+Email: Germaine_Haley@gmail.com, Name: Noel Mueller, Password: OBjWdWHBmDfL9dv, Role: librarian, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Historical Fiction, Action & Adventure, Dystopian, Science & Technology, Crafts & Hobbies, Religion & Spirituality
+Email: Mathilde_Larson@yahoo.com, Name: Edna Koss, Password: 6fI9X56pBO3e6eP, Role: customer, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Thriller & Suspense, LGBTQ+, Historical Fiction, Business & Economics, History, Science & Technology
+Email: Verla68@yahoo.com, Name: Gregg Bartell, Password: YE29JCEoLqDyopm, Role: librarian, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Children's, Contemporary Fiction, Poetry, Personal Development, Guide / How-to, Mystery Fiction
+Email: Anahi_Cremin@hotmail.com, Name: Charles Ortiz, Password: GzBQBq4W7iD21N7, Role: librarian, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Science & Technology, Guide / How-to, Health & Fitness, Humor, Young Adult Fiction, Science Fiction
+Email: Leonie.Volkman53@gmail.com, Name: Marcia DuBuque, Password: PPYarT4BbF03wzg, Role: librarian, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Self-help, History, Art & Photography, Memoir & Autobiography, Science Fiction, Young Adult Fiction
+Email: Abagail_Crooks@gmail.com, Name: Terrell Ratke, Password: DsrJQ7jO0_EQ4AD, Role: librarian, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: Classics, Action & Adventure, Dystopian, Business & Economics, Coding & Programming, Guide / How-to
+Email: Vito70@hotmail.com, Name: Courtney Rutherford DDS, Password: _h1teHfhPJM2cOX, Role: librarian, 		  Avatar: https://avatar.iran.liara.run/public, 		 Favourite Categories: History, Memoir & Autobiography, Personal Development, Science & Technology, Guide / How-to, Action & Adventure

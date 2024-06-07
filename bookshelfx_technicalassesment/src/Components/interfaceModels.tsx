@@ -11,11 +11,6 @@ export interface Book {
     publishedDate: Date;
     pagecount: number;
     rating: number;
-    createdAt?: Date;
-    updatedAt?: Date;
-    rentals?: BookRentalDetails[];
-    reviews?: BookReview[];
-    favoritedBy?: FavoriteBook[];
 }
 
 export interface User {
@@ -24,14 +19,8 @@ export interface User {
     name: string;
     role: string;
     password?: string; 
-    favouriteCategories?: string[];
-    rentals?: BookRentalDetails[];
-    authorizedRentals? : BookRentalDetails[];
-    reviews? : BookReview[];
     Avatar? : string;
-    favoriteBooks? : Book[];
-    createdAt?: Date;
-    updatedAt?: Date;
+    favoriteCategories?: string[];
 }
 
 export interface BookRentalDetails
@@ -42,8 +31,6 @@ export interface BookRentalDetails
     rentalDate: string;
     returnDate: string;
     returned: boolean;
-    createdAt?: Date;
-    updatedAt?: Date;
     book: Book;  
 }
 
@@ -52,8 +39,6 @@ export interface BookReview {
     userId: number;
     review: string;
     rating: number;
-    createdAt?: Date;
-    updatedAt?: Date;
 }
 
 export interface FavoriteBook {

@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import theme from '../Themes';
 import {ThemeProvider} from '@mui/material/styles';
-import { Alert, Button, CssBaseline, Divider, Drawer, Icon, InputAdornment, useMediaQuery } from '@mui/material';
+import { Alert, Avatar, Button, CssBaseline, Divider, Drawer, Icon, InputAdornment, useMediaQuery } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import {User} from "../interfaceModels"
@@ -415,35 +415,14 @@ export default function Navbar()
                 }}
                 onClick={handleClick}
               >
-                <Typography 
-                  variant="body2" 
-                  noWrap 
-                  component="div" 
-                  letterSpacing={3} 
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'center', // Center items horizontally
-                    alignItems: 'center', // Center items vertically
-                    fontFamily: "'Caveat Brush', cursive",
-                    fontSize: '1.5rem',
-                    fontWeight: '400'
-                  }}
-                >
-                   {user 
-                      ? (isXs 
-                        ? user.name.charAt(0).toUpperCase() 
-                        : (user.name.length > 7 
-                          ? user.name.charAt(0).toUpperCase() + user.name.slice(1, 7).toLowerCase() + "..." 
-                          : user.name.charAt(0).toUpperCase() + user.name.slice(1).toLowerCase())
-                        ) 
-                      : (isXs? "G" :" Guest")
-                    }
+                 
+                   {
+                      user? <Avatar alt={user.name} src={user.Avatar} sx={{ width: 30, height: 30, mr: 0.5 }} />: null
+                   }
                   <ArrowDropDownIcon sx={{
                     fontSize: { xs: '1rem', sm: '1.5rem' },
                     ml: 0.5
                   }}/>
-                </Typography>
               </Button>
               <Menu
                 anchorEl={anchorEl}

@@ -23,7 +23,9 @@ async function CreateUsers()
 
     for (let i = 0; i < 20; i++) {
         const role = faker.helpers.arrayElement(['librarian', 'customer']);
-        userData += `Email: ${emails[i]}, Name: ${names[i]}, Password: ${passwords[i]}, Role: ${role}\n`;
+        const Avatar =  `https://avatar.iran.liara.run/public`
+        const favoriteCategories = faker.helpers.shuffle(BookCategories.bookCategories).slice(0, 6);
+        userData += `Email: ${emails[i]}, Name: ${names[i]}, Password: ${passwords[i]}, Role: ${role}, \t\t  Avatar: ${Avatar}, \t\t Favourite Categories: ${favoriteCategories.join(", ")}\n`;
 
         await prisma.user.create({
             data: {
@@ -31,6 +33,10 @@ async function CreateUsers()
                 name: names[i],
                 password : await bycrpt.hash(passwords[i], 10),
                 role,
+                Avatar: Avatar,
+                favoriteCategories: {
+                    set: favoriteCategories
+                }
             },
         });
 

@@ -19,11 +19,12 @@ model User {
   Avatar     String?
   rentals   BookRentalDetails[] @relation("RentedByUser")
   authorizedRentals BookRentalDetails[] @relation("AuthorizedByLibrarian")
-  reviews   BookReview[]
-  favoriteBooks  FavoriteBook[]
+  reviews   BookReview[]  @relation("UserToReviews")
+  favoriteBooks  FavoriteBook[] @relation("BookToFavorites")
 }
-model BookDetails{
-  id              Int      @id @default(autoincrement())
+
+model BookDetails {
+  id              Int                @id @default(autoincrement())
   ISBN            String
   coverimage      String
   title           String
@@ -35,18 +36,18 @@ model BookDetails{
   publishedDate   DateTime 
   pagecount       Int
   rating          Float
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  rentals         BookRentalDetails[]
-  reviews         BookReview[]
-  favoritedBy     FavoriteBook[]
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  rentals         BookRentalDetails[] @relation("BookToRentals")
+  reviews         BookReview[]       @relation("BookToReviews")
+  favoritedBy     FavoriteBook[]     @relation("BookToFavorites")
 
   @@unique([title, authors])
 } 
 
 model BookRentalDetails {
   id              Int      @id @default(autoincrement())
-  book            BookDetails @relation(fields: [bookId], references: [id])
+  book            BookDetails @relation("BookToRentals", fields: [bookId], references: [id])
   bookId          Int
   user            User     @relation("RentedByUser", fields: [userId], references: [id])
   userId          Int
@@ -61,9 +62,9 @@ model BookRentalDetails {
 }
 
 model BookReview {
-  book      BookDetails @relation(fields: [bookId], references: [id])
+  book      BookDetails @relation("BookToReviews", fields: [bookId], references: [id])
   bookId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation("UserToReviews", fields: [userId], references: [id])
   userId    Int
   review    String
   rating    Float
@@ -74,9 +75,9 @@ model BookReview {
 }
 
 model FavoriteBook {
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation("BookToFavorites", fields: [userId], references: [id])
   userId Int
-  book   BookDetails   @relation(fields: [bookId], references: [id])
+  book   BookDetails   @relation("BookToFavorites", fields: [bookId], references: [id])
   bookId Int
   @@id([userId, bookId])
   @@unique([userId, bookId])

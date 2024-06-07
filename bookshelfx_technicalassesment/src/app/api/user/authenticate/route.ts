@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { database } from "../prismaConfig";
+import { database } from "../../prismaConfig";
 import { NextApiRequest } from "next";
 import bcrypt from 'bcrypt';
 
