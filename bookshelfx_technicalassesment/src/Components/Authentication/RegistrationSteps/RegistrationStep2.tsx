@@ -87,9 +87,8 @@ export default function RegistrationStep2({setAlertopener, setAlert, selectedCat
     return (
         <>
         <Typography variant="body1" sx={{ mb:2, textAlign: 'center', mt:3, wordBreak: 'break-word' }}>
-            Select upto {' '}
-        <Typography variant="body1" color="text.secondary" component="span">6</Typography>
-            {' '} categories
+            Select an {' '}
+        <Typography variant="body1" color="text.secondary" component="span">Avtar</Typography>
         </Typography>
 
         <Box
@@ -121,6 +120,7 @@ export default function RegistrationStep2({setAlertopener, setAlert, selectedCat
                             sx={{ 
                                 width: 100, 
                                 height: 100, 
+                                mt:1.5,
                                 mb: 2,
                                 transition: 'transform 0.3s ease-in-out',
                                 '&:hover': {
@@ -135,6 +135,11 @@ export default function RegistrationStep2({setAlertopener, setAlert, selectedCat
                 )
             }
         </Box>
+        <Typography variant="body1" sx={{ mb:2, textAlign: 'center', mt:3, wordBreak: 'break-word' }}>
+            Select upto {' '}
+        <Typography variant="body1" color="text.secondary" component="span">6</Typography>
+            {' '} categories
+        </Typography>
 
         <Box component="form"
             sx={{
