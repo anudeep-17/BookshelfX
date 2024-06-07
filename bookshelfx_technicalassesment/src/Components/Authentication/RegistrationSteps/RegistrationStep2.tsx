@@ -17,12 +17,12 @@ export default function RegistrationStep2({setAlertopener, setAlert, selectedCat
     }) 
     {
     
-    function addUniqueRandomNumber(min: number, max: number): void {
+    function addUniqueRandomNumber(min: number, max: number, currentNumbers: number[]): number {
         let randomNumber: number;
         do {
             randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-        } while (avatarNumbers.includes(randomNumber));
-        setAvatarNumbers(prevNumbers => [...prevNumbers, randomNumber]);
+        } while (currentNumbers.includes(randomNumber));
+        return randomNumber;
     }
 
     const [avatarNumbers, setAvatarNumbers] = useState<number[]>([]);
@@ -48,14 +48,17 @@ export default function RegistrationStep2({setAlertopener, setAlert, selectedCat
         async function fetchAvatars() {
             // Set loading to true before fetching the avatars
             setIsAvatarLoading(true);
-    
+        
             // Add a delay of 0.5 seconds before fetching the avatars
             setTimeout(async () => {
-                for (let i = 0; i < 5; i++) {
-                    addUniqueRandomNumber(1, 48);
-                    addUniqueRandomNumber(51, 100);
+                let currentBatch = [...avatarNumbers];
+                for (let i = 0; i < 6; i++) {
+                    currentBatch = [...currentBatch, addUniqueRandomNumber(1, 48, currentBatch)];
+                    currentBatch = [...currentBatch, addUniqueRandomNumber(51, 100, currentBatch)];
                 }
-    
+        
+                setAvatarNumbers(currentBatch);
+        
                 // Set loading to false after the avatars have been fetched
                 setIsAvatarLoading(false);
             }, 500);
@@ -124,7 +127,7 @@ export default function RegistrationStep2({setAlertopener, setAlert, selectedCat
                                     transform: 'translateY(-10px)',
                                     boxShadow: '0px 10px 20px rgba(0,0,0,0.1)',
                                 },
-                                border: number === Number(SelectedAvatar.split('/').pop()) ? '2px solid red' : 'none'
+                                border: number === Number(SelectedAvatar.split('/').pop()) ? '2px solid #3f51b5' : 'none'
                             }}
                             onClick={() => setSelectedAvatar(`https://avatar.iran.liara.run/public/${number}`)}
                         />
@@ -155,7 +158,7 @@ export default function RegistrationStep2({setAlertopener, setAlert, selectedCat
         >
 
             {isLoading ? (
-                   Array.from({ length: 20 }).map((_, index) => (
+                   Array.from({ length: 12 }).map((_, index) => (
                         <Skeleton key={index} variant="text" width={100} height={30}/>
                     ))
                 ) :
