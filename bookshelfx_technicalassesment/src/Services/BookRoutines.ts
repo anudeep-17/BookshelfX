@@ -1,31 +1,34 @@
 export async function getBook()
 {
-    const response = await fetch('/api/books/getAllBooks');
+    const response = await fetch('/api/books/getAll/Books');
     const data = await response.json();
+    console.log(data);
     return data;
 }
 
 export async function getCategories()
 {
-    const response = await fetch('/api/books/getCategories');
+    const response = await fetch('/api/books/getAll/Categories');
     const data = await response.json();
     return data;
 }
 
+//================================================================================================= Book By _____ ROUTINES ================================================================================================
 export async function getBooksByCategory(category: string)
 {
-    const response = await fetch(`/api/books/getBooksByCategory?category=${category}`);
+    const response = await fetch(`/api/books/getBooksBy/Category?category=${category}`);
     const data = await response.json();
     return data;
 }
 
 export async function getBookByID(id: string)
 {
-    const response = await fetch(`/api/books/getBookByID?id=${id}`);
+    const response = await fetch(`/api/books/getBookBy/ID?id=${id}`);
     const data = await response.json();
     return data;
 }
 
+//================================================================================================= Rental ROUTINES ================================================================================================
 export async function setAvailabilityofBook(bookId: number, availability: boolean, userId:number)
 {
     const response = await fetch(`/api/books/setAvailabilityofBook`, {
@@ -42,7 +45,7 @@ export async function setAvailabilityofBook(bookId: number, availability: boolea
 
 export async function getRentalsofUser(userID: number)
 {
-    const response = await fetch(`/api/books/getRentalsofUser?userId=${userID}`);
+    const response = await fetch(`/api/user/getRentalsofUser?userId=${userID}`);
     const data = await response.json();
     return data;
 }
@@ -76,7 +79,7 @@ export async function addFavBooks(userId: number, bookId: number)
     }
     else
     {
-        const response = await fetch(`/api/favouriteBook/addFavBook`, {
+        const response = await fetch(`/api/user/favouriteBook/addFavBook`, {
             method: 'POST',
             headers: {
                  'Content-Type': 'application/json'
@@ -90,7 +93,7 @@ export async function addFavBooks(userId: number, bookId: number)
 
 export async function removeFavBooks(userId: number, bookId: number)
 {
-    const response = await fetch(`/api/favouriteBook/RemoveFavBook`, {
+    const response = await fetch(`/api/user/favouriteBook/RemoveFavBook`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -103,7 +106,7 @@ export async function removeFavBooks(userId: number, bookId: number)
 
 export async function getFavBooksByUser(userId: number)
 {
-    const response = await fetch(`/api/favouriteBook/getFavBooks?userId=${userId}`);
+    const response = await fetch(`/api/user/favouriteBook/getFavBooks?userId=${userId}`);
     const data = await response.json();
     return data;
 }

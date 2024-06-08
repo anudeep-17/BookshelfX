@@ -1,6 +1,6 @@
 import { User } from '../Components/interfaceModels';
 
-export async function RegisterUser({email, password, name, role, Avatar, favouriteCategories}: User)
+export async function RegisterUser({email, password, name, role, Avatar, favoriteCategories}: User)
 {
     const response = await fetch('/api/user/addUser', {
         method: 'POST',
@@ -13,7 +13,7 @@ export async function RegisterUser({email, password, name, role, Avatar, favouri
             name,
             role,
             Avatar, 
-            favouriteCategories
+            favoriteCategories
         })
     });
     return await response.json();
@@ -27,7 +27,7 @@ export async function GetUser({id}: {id: number})
 
 export async function Authentication({email, password}: {email: string, password: string})
 {
-    const response = await fetch('/api/authenticate', {
+    const response = await fetch('/api/user/authenticate', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
