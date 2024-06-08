@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, Pagination, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import Chip from '@mui/material/Chip';
@@ -9,7 +9,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {BookDetails, BookCardProps} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { getBook, getCategories} from '@/Services/BookRoutines';
+import {getCategories, getBooksByCategory, getBooksCountByCategory} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
@@ -24,23 +24,33 @@ export default function AllCategoryBookListComponent()
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
     const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
     const [allCategory, setCategory] = React.useState<string[]>([]);
-    
-    const [books, setBook] = React.useState<BookDetails[]>([])
     const [categoryWiseBooks, setCategoryWiseBooks] = React.useState<BookDetails[]>([]);
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
+    const[bookCount, setBookCount] = React.useState<number>(0);
+    const [offset, setOffset] = React.useState<number>(0);
+
     React.useEffect(() => {
         const fetchData = async () => {
-            const data = await getBook();
+            const data = await getBooksCountByCategory(selectedCategory? selectedCategory : '');
             if (data.success) {
-                setBook(data.data);
+                setBookCount(data.data);
             }
         };
-
         fetchData();
-    }, []);
+    },[selectedCategory])
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const data = await getBooksByCategory(selectedCategory? selectedCategory : '', offset, 9);
+            if (data.success) {
+                setCategoryWiseBooks(data.data);
+            }
+        }
+        fetchData();
+    },[selectedCategory, offset])
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -72,7 +82,6 @@ export default function AllCategoryBookListComponent()
 
     const onCategorySelection = (category: string) => {
         setSelectedCategory(category);
-        setCategoryWiseBooks(books.filter((book) => book.category === category));
     }   
 
     return(
@@ -183,10 +192,10 @@ export default function AllCategoryBookListComponent()
                                                         'aria-labelledby': 'basic-button',
                                                         }}
                                                     >
-                                                        <MenuItem onClick={() => handleSort({sortBy: 'title', setBook, books, handleSortClose: handleSortClose})}>
+                                                        <MenuItem onClick={() => handleSort({sortBy: 'title', setBook: setCategoryWiseBooks, books: categoryWiseBooks, handleSortClose: handleSortClose})}>
                                                             Sort by book titles
                                                         </MenuItem>
-                                                        <MenuItem onClick={() => handleSort({sortBy: 'author', setBook, books, handleSortClose: handleSortClose})}>
+                                                        <MenuItem onClick={() => handleSort({sortBy: 'author',  setBook: setCategoryWiseBooks, books: categoryWiseBooks, handleSortClose: handleSortClose})}>
                                                             Sort by book authors
                                                         </MenuItem>
                                                         <MenuItem onClick={() => handleSort({sortBy: 'Category', setCategory, allCategory, handleSortClose: handleSortClose})}>
@@ -301,7 +310,31 @@ export default function AllCategoryBookListComponent()
                                         }
                                     </Box>
                                 </Grid>
-
+                                <Grid xs={12} sm={12}>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            alignContent: 'center',
+                                            mb: 2,
+                                            mt:2,
+                                        }}
+                                    >
+                                        { 
+                                               <Pagination 
+                                               count={Math.ceil((selectedCategory !== null ? bookCount : 0) / 9)}
+                                               color="primary" 
+                                               size="large"
+                                               page={selectedCategory !== null ? offset : 1}
+                                               onChange={(event, page) => {
+                                                   selectedCategory !== null ? setOffset(page) : setOffset(1);
+                                               }}
+                                           />
+                                         } 
+                                    </Box>
+                                </Grid>
                         </Grid>
                 </Box>
             </Box>

@@ -28,12 +28,9 @@ export async function GET(req: Request)
             skip: (page-1) * limit,
             take: limit
         });
-    
-        
         if(!books){
             return NextResponse.json({success: false, message: "Book not found"}, {status: 404});
         }
-        console.log(books);
         return NextResponse.json({success: true, message: "Book found", data:books}, {status: 200});
     }
     catch(err)

@@ -9,10 +9,9 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import ImageCard from './ImageCard';
-import {Book} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import Skeleton from '@mui/material/Skeleton';
-import { getBooksByCategory, getCategories, getFeaturedBooks } from '@/Services/BookRoutines';
+import { getBooksByCategory, getFeaturedBooks } from '@/Services/BookRoutines';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { BookDetails } from '@/Components/interfaceModels';
@@ -64,30 +63,22 @@ export default function UserDashboardComponent() {
 
     React.useEffect(() => {
         async function fetchData() {
-          const data = await getFeaturedBooks(0,5);
+          const data = await getFeaturedBooks(1,5);
           if (data.success) {
             setBookData(data.data);
           }
         }
         fetchData();
-      }, []);
+      }, []);  
 
-    React.useEffect(() => {
-        console.log("BookData", BookData);
-    }, [BookData]);
-      
-     
-    
     const [categoryWiseBookData, setCategoryWiseBookData] = React.useState<{ [key: string]: BookDetails[] }>({});
 
     useEffect(() => {
         async function fetchData() {
             const tempData: { [key: string]: BookDetails[] } = {};
-            console.log("categories", categories);
             for (const category of categories) {
                 const data = await getBooksByCategory(category);
-                tempData[category] = data.books;
-                console.log("tempData", tempData);
+                tempData[category] = data.data;
             }
             setCategoryWiseBookData(tempData);
         }
