@@ -10,7 +10,7 @@
     margin: auto;
     --slide-height: 6rem;
     --slide-spacing: 10rem;
-    --slide-size: 80%;
+    --slide-size: 100%;
   }
   .embla__viewport {
     overflow: hidden;

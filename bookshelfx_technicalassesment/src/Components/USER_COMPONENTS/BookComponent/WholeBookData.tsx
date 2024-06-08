@@ -28,7 +28,8 @@ import Cookies from 'js-cookie';
 import { usePathname } from 'next/navigation';
 import ChatboxComponent from '@/Components/ChatBox/ChatboxComponent';
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
-
+import bookcover from '@/assets/bookcover.png'
+import { BookDetails } from '../../interfaceModels';
 
 const drawerWidth = DashboardSize;
 const OPTIONS: EmblaOptionsType = { loop: true }
@@ -36,7 +37,7 @@ const OPTIONS: EmblaOptionsType = { loop: true }
 export default function WholeBookData({id}:{id: string})
 {
     const pathname = usePathname();
-    const [book, setBook] = React.useState<Book>();
+    const [book, setBook] = React.useState<BookDetails>();
     const [isFav, setIsFav] = React.useState(false);
     const [confetti, setConfetti] = React.useState(false);
     const [isBookRented, setIsBookRented] = React.useState(false);
@@ -47,6 +48,7 @@ export default function WholeBookData({id}:{id: string})
             const data = await getBookByID(id);
             if (data.success) {
                 setBook(data.data);
+                console.log(data.data)
                 if(!data.data.availability)
                 {
                     setIsBookRented(true);
@@ -376,13 +378,13 @@ export default function WholeBookData({id}:{id: string})
                             <Grid item xs={12} sm={4}>
                                 <Box 
                                     component="img" 
-                                    src={book?.coverimage} 
+                                    src={book?.coverimage !== 'N/A'? book?.coverimage : bookcover.src} 
                                     alt={book?.title} 
                                     sx={{ 
                                         width: 350,
                                         height: 450,
                                         objectFit: 'cover',
-                                        mb:2
+                                        mb:2,
                                         }}
                                 />
                             </Grid>
@@ -494,7 +496,7 @@ export default function WholeBookData({id}:{id: string})
                                 <Typography variant="h5" sx={{mb:1, color: theme.palette.primary.main}}>
                                     Reader Reviews: 
                                 </Typography>
-                                <EmblaCarousel slides={book?.customerReviews || []} options={OPTIONS} />
+                                <EmblaCarousel slides={book?.reviews || []} options={OPTIONS} />
                             </Grid>
                         </Grid>
                         :

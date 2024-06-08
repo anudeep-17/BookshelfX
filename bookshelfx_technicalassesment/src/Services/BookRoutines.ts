@@ -2,13 +2,30 @@ export async function getBook()
 {
     const response = await fetch('/api/books/getAll/Books');
     const data = await response.json();
-    console.log(data);
+    return data;
+}
+
+export async function getFeaturedBooks(page: number, limit: number)
+{
+    console.log(`Page: ${page}, Limit: ${limit}`);
+    const response = await fetch(`/api/books/getAll/FeaturedBooks?page=${page}&limit=${limit}`,{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const data = await response.json();
     return data;
 }
 
 export async function getCategories()
 {
-    const response = await fetch('/api/books/getAll/Categories');
+    const response = await fetch('/api/books/getAll/Categories',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
     const data = await response.json();
     return data;
 }
@@ -16,7 +33,8 @@ export async function getCategories()
 //================================================================================================= Book By _____ ROUTINES ================================================================================================
 export async function getBooksByCategory(category: string)
 {
-    const response = await fetch(`/api/books/getBooksBy/Category?category=${category}`);
+    category = encodeURIComponent(category);
+    const response = await fetch(`/api/books/getBookBy/Category?category=${category}`);
     const data = await response.json();
     return data;
 }

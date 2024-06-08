@@ -8,10 +8,11 @@ import {
   PrevButton,
   usePrevNextButtons
 } from './EmblaCarouselArrowButtons'
-import { Typography } from '@mui/material'
+import { Box, Rating, Typography } from '@mui/material'
+import { BookReview } from '@/Components/interfaceModels'
 
 type PropType = {
-  slides: string[]
+  slides: BookReview[]
   options?: EmblaOptionsType
 }
 
@@ -39,15 +40,40 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
     <div className="embla">
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
-          {slides.map((index) => (
-            <div className="embla__slide" key={index}>
-              <div className="embla__slide__number">
-              <Typography variant="body1">
-                  &quot;{index}&quot;
-              </Typography>
+        {slides.length > 0 ? (
+          slides.map((slide, index) => (
+              <div className="embla__slide" key={index}>
+                  <div className="embla__slide__number">
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <Rating value={slide.rating} readOnly/>
+                        <Typography variant="body1" sx={{
+                          textAlign: 'center',
+                          textOverflow: 'ellipsis',
+                          mt:2
+                        }}>
+                            &quot;{slide.review}&quot;
+                        </Typography>
+                      </Box>
+                      
+                  </div>
               </div>
-            </div>
-          ))}
+                ))
+          ) : (
+              <div className="embla__slide">
+                <div className="embla__slide__number">
+                    <Typography variant="body1">
+                      &quot;No Reviews Available at the moment, may be you will like it. Read and review it.&quot;
+                    </Typography>
+                </div>
+              </div>
+          )}
         </div>
       </div>
 

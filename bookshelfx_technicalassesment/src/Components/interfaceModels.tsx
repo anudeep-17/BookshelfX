@@ -11,6 +11,26 @@ export interface Book {
     publishedDate: Date;
     pagecount: number;
     rating: number;
+    isFeaturedBook: boolean;
+}
+
+export interface BookDetails {
+    id?: number;
+    ISBN: string;
+    coverimage: string;
+    title: string;
+    authors: string[];
+    description: string;
+    availability: boolean;
+    category: string;
+    publisher: string;
+    publishedDate: Date;
+    pagecount: number;
+    rating: number;
+    isFeaturedBook: boolean;
+    rentals : BookRentalDetails[];
+    reviews : BookReview[];
+    favoritedBy : FavoriteBook[];
 }
 
 export interface User {

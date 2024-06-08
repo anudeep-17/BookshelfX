@@ -3,24 +3,41 @@ import { database } from "../../../prismaConfig";
 
 export async function GET(req: Request)
 {
-    const url = new URL(req.url || '');
-    const category = url.searchParams.get('category');
+    try
+    {
+        const url = new URL(req.url || '');
+        const category = url.searchParams.get('category');
+        const page = parseInt(url.searchParams.get('page') || '0');
+        const limit = parseInt(url.searchParams.get('limit') || '7');
+        
 
-    if(!category){
-        return NextResponse.json({success: false, message: "Category not provided"}, {status: 400});
-    }
-
-    const books = await database.bookDetails.findMany({
-        where: {
-            category: category
+        if(!category){
+            return NextResponse.json({success: false, message: "Category not provided"}, {status: 400});
         }
-    });
-
+        
+        const books = await database.bookDetails.findMany({
+            where: {
+                category: category
+            },
+            include:
+            {
+                reviews: true,
+                rentals: true,
+            },
+            skip: page * limit,
+            take: limit
+        });
     
-    if(!books){
-        return NextResponse.json({success: false, message: "Book not found"}, {status: 404});
+        
+        if(!books){
+            return NextResponse.json({success: false, message: "Book not found"}, {status: 404});
+        }
+    
+        return NextResponse.json({success: true, message: "Book found", books}, {status: 200});
     }
-
-    return NextResponse.json({success: true, message: "Book found", books}, {status: 200});
+    catch(err)
+    {
+        return NextResponse.json({success: false, message: err}, {status: 500});
+    }
     
 }

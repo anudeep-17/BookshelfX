@@ -70,6 +70,7 @@ async function CreateBooks() {
         console.log(`\t\tTotal books found: ${books.length}`);
 
         await Promise.all(books.map(async (book: any) => {
+            const isFeaturedBook = faker.helpers.arrayElement([false, true]);
             const bookData: Book = {
                 ISBN: book.volumeInfo?.industryIdentifiers && book.volumeInfo.industryIdentifiers[0]?.identifier ? book.volumeInfo.industryIdentifiers[0].identifier : "N/A",
                 title: book.volumeInfo?.title ? book.volumeInfo.title : "N/A",
@@ -81,7 +82,8 @@ async function CreateBooks() {
                 category: bookCategory,
                 rating: book.volumeInfo?.averageRating ? book.volumeInfo.averageRating : 0,
                 coverimage: book.volumeInfo?.imageLinks?.thumbnail ? book.volumeInfo.imageLinks.thumbnail : "N/A",
-                availability: true,  
+                availability: true,
+                isFeaturedBook: isFeaturedBook,
             }
 
             try {
@@ -112,7 +114,7 @@ async function CreateBookRentalDetails()
         
         const bookRentalHistory: Record<number, {rentalDate: Date, returnDate: Date}> = {};
 
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 200; i++) {
             const user = faker.helpers.arrayElement(users);
             const book = faker.helpers.arrayElement(books);
             const librarian = faker.helpers.arrayElement(librarians);
@@ -164,7 +166,7 @@ async function CreateFavoriteBooks()
 
     const userBookPairs = new Set();
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 100; i++) {
         const user = faker.helpers.arrayElement(users);
         const book = faker.helpers.arrayElement(books);
 
@@ -195,7 +197,7 @@ async function CreateCustomerReviews()
     
     const userBookPairs = new Set();
     
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 200; i++) {
         const user = faker.helpers.arrayElement(users);
         const book = faker.helpers.arrayElement(books);
         const review = faker.helpers.arrayElement(customerReviews);

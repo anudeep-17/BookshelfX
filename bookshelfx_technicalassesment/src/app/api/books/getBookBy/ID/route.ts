@@ -24,6 +24,7 @@ export async function GET(req: Request)
                     }
                 },
                 favoritedBy: true,
+                reviews: true
             }
         });
         if (!book) {

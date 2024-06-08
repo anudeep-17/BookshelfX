@@ -1,12 +1,11 @@
 import { Box, Button, CssBaseline, Divider, Rating, ThemeProvider, Tooltip, Typography } from '@mui/material';
-import {Book} from '../../interfaceModels';
+import {BookDetails} from '../../interfaceModels';
 import LibraryImage from "@/assets/Library.png";
 import theme from '../../Themes';
  
 
-export default function BookDetails({ book }: { book?: Book }) 
+export default function BookDetails({ book }: { book?: BookDetails }) 
 {   
-    console.log(book);
     return(
         <ThemeProvider theme={theme}>
         {book?.title !== undefined?
@@ -96,7 +95,7 @@ export default function BookDetails({ book }: { book?: Book })
                     }}
                 >
                     <Typography variant="body1">
-                        {book?.reviews?.length > 0? book?.reviews: ""}
+                        {book?.reviews?.length}
                     </Typography>
                     <Typography variant="body2" sx={{
                         color: theme.palette.text.secondary

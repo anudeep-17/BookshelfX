@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Button, CssBaseline, ThemeProvider, Tooltip, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, CircularProgress, CssBaseline, ThemeProvider, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid';
 import theme from '../../Themes';
@@ -12,10 +12,21 @@ import ImageCard from './ImageCard';
 import {Book} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import Skeleton from '@mui/material/Skeleton';
-import { getBook, getBooksByCategory, getCategories } from '@/Services/BookRoutines';
+import { getBooksByCategory, getCategories, getFeaturedBooks } from '@/Services/BookRoutines';
 import { useRouter } from 'next/navigation';
+import { BookDetails } from '@prisma/client';
+import Cookies from 'js-cookie';
 
-const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false});
+const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false, loading: () => 
+    <CircularProgress
+        sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: 'primary.main'
+        }}
+/>});
 
 /**
  * UserDashboardComponent is a component that displays the user dashboard.
@@ -26,11 +37,12 @@ export default function UserDashboardComponent() {
     const [selectedCategory, setSelectedCategory] = React.useState('');
     React.useEffect(() => {
         const fetchData = async () => {
-            const data = await getCategories();
-            if (data.success) {
-                setCategory(data.data.slice(0,8));
+            const userCookie = Cookies.get('user');
+            const data = userCookie ? JSON.parse(userCookie).favoriteCategories : undefined;
+            if (data !== undefined) {
+                setCategory(data);
             }
-            setSelectedCategory(data.data[0]);
+            setSelectedCategory(data[0]);
         };
         fetchData();
     }, []);
@@ -45,27 +57,36 @@ export default function UserDashboardComponent() {
 
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const [book, setBook] = React.useState({} as Book);
+    const [book, setBook] = React.useState({} as BookDetails);
 
-    const [BookData, setBookData] = React.useState<Book[]>([]);
+    const [BookData, setBookData] = React.useState<BookDetails[]>([]);
 
     React.useEffect(() => {
         async function fetchData() {
-          const data = await getBook();
-          setBookData(data.data);
+          const data = await getFeaturedBooks(0,5);
+          if (data.success) {
+            setBookData(data.data);
+          }
         }
-    
         fetchData();
       }, []);
+
+    React.useEffect(() => {
+        console.log("BookData", BookData);
+    }, [BookData]);
+      
+     
     
-    const [categoryWiseBookData, setCategoryWiseBookData] = React.useState<{ [key: string]: Book[] }>({});
+    const [categoryWiseBookData, setCategoryWiseBookData] = React.useState<{ [key: string]: BookDetails[] }>({});
 
     useEffect(() => {
         async function fetchData() {
-            const tempData: { [key: string]: Book[] } = {};
+            const tempData: { [key: string]: BookDetails[] } = {};
+            console.log("categories", categories);
             for (const category of categories) {
                 const data = await getBooksByCategory(category);
                 tempData[category] = data.books;
+                console.log("tempData", tempData);
             }
             setCategoryWiseBookData(tempData);
         }
@@ -191,7 +212,7 @@ export default function UserDashboardComponent() {
                                                 BookData ?
                                                 (
                                                     BookData.length > 0 ?
-                                                    BookData.slice(0,5).map((book, index) => (
+                                                    BookData.map((book, index) => (
                                                         <BookCard
                                                             key={index}
                                                             coverimage={book?.coverimage}
@@ -199,7 +220,7 @@ export default function UserDashboardComponent() {
                                                             description={book?.description}
                                                             rating={book?.rating}
                                                             authors={book?.authors}
-                                                            onMouseEnter={() => setBook(book as Book)}
+                                                            onMouseEnter={() => setBook(book as BookDetails)}
                                                             onClick={() => handleBookClick(book.id as number)}
                                                         />
                                                     ))
@@ -326,7 +347,7 @@ export default function UserDashboardComponent() {
                                                             image={book.coverimage} 
                                                             rating={book.rating} 
                                                             title={book.title} 
-                                                            onMouseEnter={() => setBook(book as Book)}
+                                                            onMouseEnter={() => setBook(book as BookDetails)}
                                                             onClick={() => handleBookClick(book?.id as number)}
                                                         />
                                                     ))
