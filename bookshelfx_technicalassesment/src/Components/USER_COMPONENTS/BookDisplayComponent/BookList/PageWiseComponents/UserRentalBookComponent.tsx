@@ -88,12 +88,10 @@ export default function UserRentalBookComponent()
     };
 
     const handleDateClick = (date: string) => {
-        console.log(date);
         setSelectedRentalDates(date);
         const filteredBooks = RentalBookWholeDetails
         .filter((bookDetail: BookRentalDetails) => new Date(bookDetail.rentalDate).toLocaleDateString() === date)
         .flatMap((bookDetail: BookRentalDetails) => bookDetail.book);
-        console.log(filteredBooks);
         setRentalBooks(filteredBooks);
     }
 
@@ -208,7 +206,7 @@ export default function UserRentalBookComponent()
                                                         <MenuItem onClick={() => handleSort({sortBy: 'title', setBook: setRentalBooks, books: RentalBooks, handleSortClose: handleSortClose})}>
                                                             Sort by book titles
                                                         </MenuItem>
-                                                        <MenuItem onClick={() => handleSort({sortBy: 'author',  setBook: setRentalBooks, books:  RentalBooks, handleSortClose: handleSortClose})}>
+                                                        <MenuItem onClick={() => handleSort({sortBy: 'author',  setBook: setRentalBooks, books: RentalBooks, handleSortClose: handleSortClose})}>
                                                             Sort by book authors
                                                         </MenuItem>
                                                     </Menu>
@@ -427,7 +425,7 @@ export default function UserRentalBookComponent()
                                                     description={book.description}
                                                     rating={book.rating}
                                                     authors={book.authors}
-                                                    availability={Boolean(true)}
+                                                    availability={book.availability}
                                                     onClick= {() => handleBookClick(book.id as number)}
                                                 />
                                             ))

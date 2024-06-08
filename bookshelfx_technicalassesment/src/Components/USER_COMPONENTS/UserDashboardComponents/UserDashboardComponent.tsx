@@ -14,8 +14,8 @@ import dynamic from 'next/dynamic';
 import Skeleton from '@mui/material/Skeleton';
 import { getBooksByCategory, getCategories, getFeaturedBooks } from '@/Services/BookRoutines';
 import { useRouter } from 'next/navigation';
-import { BookDetails } from '@prisma/client';
 import Cookies from 'js-cookie';
+import { BookDetails } from '@/Components/interfaceModels';
 
 const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false, loading: () => 
     <CircularProgress
@@ -220,7 +220,7 @@ export default function UserDashboardComponent() {
                                                             description={book?.description}
                                                             rating={book?.rating}
                                                             authors={book?.authors}
-                                                            onMouseEnter={() => setBook(book as BookDetails)}
+                                                            onMouseEnter={() => {setBook(book as BookDetails)}}
                                                             onClick={() => handleBookClick(book.id as number)}
                                                         />
                                                     ))

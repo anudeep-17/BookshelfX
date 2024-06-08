@@ -1,6 +1,6 @@
-import { Book } from "@/Components/interfaceModels";
+import { Book, BookDetails } from "@/Components/interfaceModels";
 
-export function handleSort({
+export function handleSort<T extends Book | BookDetails>({
     sortBy, 
     setBook, 
     books, 
@@ -10,8 +10,8 @@ export function handleSort({
 }:
 {
     sortBy: string,
-    setBook?: (value: Book[]) => void,
-    books?: Book[],
+    setBook?: (value: T[]) => void,
+    books?: T[],
     setCategory?: (value: string[]) => void,
     allCategory?: string[],
     handleSortClose: () => void
@@ -36,11 +36,11 @@ export function slidervaluetext_forDays(value: number) {
     return `${value} days`;
 }
 
-export  function sortBooksByTitle(books: Book[]) {
+export function sortBooksByTitle<T extends Book | BookDetails>(books: T[]) {
     return [...books].sort((a, b) => a.title.localeCompare(b.title));
 }
 
-export  function sortBooksByAuthor(books: Book[]) {
+export function sortBooksByAuthor<T extends Book | BookDetails>(books: T[]) {
     return [...books].sort((a, b) => {
         let comparison = 0;
         const maxAuthors = Math.max(a.authors.length, b.authors.length);

@@ -6,7 +6,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import {Book, BookCardProps} from '@/Components/interfaceModels';
+import {BookDetails, BookCardProps} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { getBook, getCategories} from '@/Services/BookRoutines';
@@ -25,8 +25,8 @@ export default function AllBooksListComponent()
     const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
     const [allCategory, setCategory] = React.useState<string[]>([]);
     
-    const [books, setBook] = React.useState<Book[]>([])
-    const [categoryWiseBooks, setCategoryWiseBooks] = React.useState<Book[]>([]);
+    const [books, setBook] = React.useState<BookDetails[]>([])
+    const [categoryWiseBooks, setCategoryWiseBooks] = React.useState<BookDetails[]>([]);
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -288,7 +288,7 @@ export default function AllBooksListComponent()
                                                 description={book.description}
                                                 rating={book.rating}
                                                 authors={book.authors}
-                                                availability={Boolean(true)}
+                                                availability={book.availability}
                                                 onClick= {() => handleBookClick(book.id as number)}
                                                 />
                                             ))
@@ -296,7 +296,7 @@ export default function AllBooksListComponent()
                                                 No Books Found
                                             </Typography>)
                                         : (categoryWiseBooks.length > 0 
-                                            ? categoryWiseBooks.map((book: Book) => (
+                                            ? categoryWiseBooks.map((book: BookDetails) => (
                                                 <DetailedBookCard
                                                 key={book.id}
                                                 coverimage={book.coverimage}
@@ -304,7 +304,7 @@ export default function AllBooksListComponent()
                                                 description={book.description}
                                                 rating={book.rating}
                                                 authors={book.authors}
-                                                availability={Boolean(true)}
+                                                availability={book.availability}
                                                 onClick= {() => handleBookClick(book.id as number)}
                                                 />
                                             ))

@@ -18,8 +18,12 @@ export async function GET(req:Request)
               },
               include: {
                 rentals: {
-                  include: {
-                    book: true,
+                  select: {
+                    id: true,
+                    bookId: true,
+                    userId: true,
+                    rentalDate: true,
+                    returnDate: true,
                   },
                 },
               },

@@ -4,10 +4,10 @@ import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import {Book, BookCardProps} from '@/Components/interfaceModels';
+import {Book, BookCardProps, BookDetails} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { getBook, getCategories} from '@/Services/BookRoutines';
+import { getBook, getCategories, getFeaturedBooks} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
@@ -19,13 +19,13 @@ export default function FeaturedBookComponent()
     const router = useRouter();
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
-    const [books, setBook] = React.useState<Book[]>([])
+    const [books, setBook] = React.useState<BookDetails[]>([])
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
     React.useEffect(() => {
         const fetchData = async () => {
-            const data = await getBook();
+            const data = await getFeaturedBooks(0,10);
             if (data.success) {
                 setBook(data.data);
             }
@@ -222,7 +222,7 @@ export default function FeaturedBookComponent()
                                                     description={book.description}
                                                     rating={book.rating}
                                                     authors={book.authors}
-                                                    availability={Boolean(true)}
+                                                    availability={book.availability}
                                                     onClick= {() => handleBookClick(book.id as number)}
                                                 />
                                                 )) :

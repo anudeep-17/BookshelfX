@@ -30,7 +30,7 @@ export interface BookDetails {
     isFeaturedBook: boolean;
     rentals : BookRentalDetails[];
     reviews : BookReview[];
-    favoritedBy : FavoriteBook[];
+    favoritedBy? : FavoriteBook[];
 }
 
 export interface User {

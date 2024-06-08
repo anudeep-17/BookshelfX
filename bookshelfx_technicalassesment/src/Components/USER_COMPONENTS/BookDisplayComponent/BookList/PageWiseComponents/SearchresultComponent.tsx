@@ -7,7 +7,7 @@ import { useRouter} from 'next/navigation';
 import Grid from '@mui/material/Grid'; 
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import {Book} from '@/Components/interfaceModels';
+import {BookDetails} from '@/Components/interfaceModels';
 import { motion } from 'framer-motion';
 import { searchBook } from '@/Services/BookRoutines';
 import DrawerForFilter from '../DrawerForFilter';
@@ -20,7 +20,7 @@ export default function Searchresultcomponent()
 {
     const router = useRouter();
     const searchParams = useSearchParams()
-    const [SearchResultBooks, setSearchResultBooks] = React.useState<Book[]>([]); 
+    const [SearchResultBooks, setSearchResultBooks] = React.useState<BookDetails[]>([]); 
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -282,7 +282,7 @@ export default function Searchresultcomponent()
                                                         description={book.description}
                                                         rating={book.rating}
                                                         authors={book.authors}
-                                                        availability={Boolean(true)}
+                                                        availability={book.availability}
                                                         onClick= {() => handleBookClick(book.id as number)}
                                                     />
                                                 );

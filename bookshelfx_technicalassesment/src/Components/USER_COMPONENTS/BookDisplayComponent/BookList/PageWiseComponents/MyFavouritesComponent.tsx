@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import {Book, BookCardProps} from '@/Components/interfaceModels';
+import {BookDetails, BookCardProps} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { getBook, getCategories, getFavBooksByUser} from '@/Services/BookRoutines';
@@ -21,7 +21,7 @@ export default function MyFavouritesComponent()
     const router = useRouter();
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
-    const [favBooks, setFavBooks] = React.useState<Book[]>([])
+    const [favBooks, setFavBooks] = React.useState<BookDetails[]>([])
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     let userID: string | undefined;
@@ -237,7 +237,7 @@ export default function MyFavouritesComponent()
                                                         description={book.book.description}
                                                         rating={book.book.rating}
                                                         authors={book.book.authors}
-                                                        availability={Boolean(true)}
+                                                        availability={book.availability}
                                                         onClick={() => handleBookClick(book.book.id as number)}
                                                     />
                                                 );
