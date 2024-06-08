@@ -2,7 +2,7 @@ import { Box, Button, CssBaseline, Divider, Rating, ThemeProvider, Tooltip, Typo
 import {BookDetails} from '../../interfaceModels';
 import LibraryImage from "@/assets/Library.png";
 import theme from '../../Themes';
- 
+import bookcover from '@/assets/bookcover.png';
 
 export default function BookDetails({ book }: { book?: BookDetails }) 
 {   
@@ -12,7 +12,7 @@ export default function BookDetails({ book }: { book?: BookDetails })
                 <>
                 <Box 
                 component="img" 
-                src={book?.coverimage} 
+                src={book?.coverimage !== 'N/A'? book?.coverimage : bookcover.src} 
                 alt={book?.title} 
                 sx={{ 
                     width: 250, 

@@ -6,7 +6,7 @@ export async function GET(req:Request)
     try
     {   
         const url = new URL(req.url || '');
-        const page = parseInt(url.searchParams.get('page') || '0');
+        const page = parseInt(url.searchParams.get('page') || '1');
         const limit = parseInt(url.searchParams.get('limit') || '10');
 
         const result = await database.bookDetails.findMany({
@@ -18,7 +18,7 @@ export async function GET(req:Request)
                 reviews: true,
                 favoritedBy: true
             },
-            skip: page * limit,
+            skip: (page-1) * limit,
             take: limit
         });
 

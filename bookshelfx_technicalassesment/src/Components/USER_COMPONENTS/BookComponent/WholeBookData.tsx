@@ -502,22 +502,22 @@ export default function WholeBookData({id}:{id: string})
                         :
                          <Grid container>
                          <Grid item xs={12} sm={4}>
-                           <Skeleton variant="rectangular" width={350} height={450} sx={{mb:2}}/>
+                           <Skeleton variant="rectangular" width={350} height={450} sx={{mb:2}} animation="wave" />
                          </Grid>
                          <Grid item xs={12} sm={8}>
-                           <Skeleton variant="text" sx={{mb:1}}/>
-                           <Skeleton variant="text" sx={{mb:1}}/>
-                           <Skeleton variant="text" sx={{mb:1}}/>
-                           <Skeleton variant="text" sx={{mb:1}}/>
-                           <Skeleton variant="text" sx={{mb:1}}/>
-                           <Skeleton variant="text" sx={{mb:1}}/>
-                           <Skeleton variant="text" sx={{mb:1}}/>
-                           <Skeleton variant="text" sx={{mb:1}}/>
-                           <Skeleton variant="rectangular" width={100} height={40} sx={{mb:2}}/>
+                           <Skeleton variant="text" sx={{mb:1}} animation="wave" />
+                           <Skeleton variant="text" sx={{mb:1}} animation="wave" />
+                           <Skeleton variant="text" sx={{mb:1}} animation="wave" />
+                           <Skeleton variant="text" sx={{mb:1}} animation="wave" />
+                           <Skeleton variant="text" sx={{mb:1}} animation="wave" />
+                           <Skeleton variant="text" sx={{mb:1}} animation="wave" />
+                           <Skeleton variant="text" sx={{mb:1}} animation="wave" />
+                           <Skeleton variant="text" sx={{mb:1}} animation="wave"  />
+                           <Skeleton variant="rectangular" width={100} height={40} sx={{mb:2}} animation="wave"/>
                          </Grid>
                          <Grid item xs={12} sm={12}>
-                           <Skeleton variant="text" sx={{mb:1}}/>
-                           <Skeleton variant="rectangular" width="74rem" height="13rem" />
+                           <Skeleton variant="text" sx={{mb:1}}  animation="wave" />
+                           <Skeleton variant="rectangular" width="74rem" height="13rem"  animation="wave" />
                          </Grid>
                        </Grid>
                         }

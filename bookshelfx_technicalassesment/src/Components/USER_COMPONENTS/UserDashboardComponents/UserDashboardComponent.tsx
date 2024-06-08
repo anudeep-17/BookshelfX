@@ -16,6 +16,7 @@ import { getBooksByCategory, getCategories, getFeaturedBooks } from '@/Services/
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { BookDetails } from '@/Components/interfaceModels';
+import bookcover from '@/assets/bookcover.png';
 
 const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false, loading: () => 
     <CircularProgress
@@ -206,7 +207,7 @@ export default function UserDashboardComponent() {
                                             {
                                                 loading ?
                                                 Array.from(new Array(5)).map((_, index) => (
-                                                    <Skeleton variant="rectangular" width={150} height={300} key={index} />
+                                                    <Skeleton variant="rectangular" width={150} height={300} key={index} animation="wave" />
                                                 ))
                                                 :
                                                 BookData ?
@@ -215,7 +216,7 @@ export default function UserDashboardComponent() {
                                                     BookData.map((book, index) => (
                                                         <BookCard
                                                             key={index}
-                                                            coverimage={book?.coverimage}
+                                                            coverimage={book?.coverimage !== 'N/A' ? book?.coverimage : bookcover.src}
                                                             title={book?.title}
                                                             description={book?.description}
                                                             rating={book?.rating}
@@ -337,14 +338,14 @@ export default function UserDashboardComponent() {
                                             {
                                                 loading ?
                                                 Array.from(new Array(5)).map((_, index) => (
-                                                    <Skeleton variant="rectangular" width={120} height={180} key={index} sx={{mb:2}} />
+                                                    <Skeleton variant="rectangular" width={120} height={180} key={index} sx={{mb:2}} animation="wave" />
                                                 ))
                                                 :
                                                 categoryWiseBookData[selectedCategory] ?
                                                     categoryWiseBookData[selectedCategory].map((book, index) => (
                                                         <ImageCard 
                                                             key={index} 
-                                                            image={book.coverimage} 
+                                                            image={book.coverimage !== 'N/A' ? book.coverimage : bookcover.src} 
                                                             rating={book.rating} 
                                                             title={book.title} 
                                                             onMouseEnter={() => setBook(book as BookDetails)}

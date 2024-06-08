@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, Pagination, Skeleton, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
@@ -7,12 +7,13 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {Book, BookCardProps, BookDetails} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { getBook, getCategories, getFeaturedBooks} from '@/Services/BookRoutines';
+import { getBook, getCategories, getFeaturedBooks, getFeaturedBooksCount} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
 
-const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
+const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false, 
+loading: ()=> <Skeleton variant="rectangular" width={'30%'} height={600} animation="wave" /> });
 
 export default function FeaturedBookComponent()
 {
@@ -22,17 +23,32 @@ export default function FeaturedBookComponent()
     const [books, setBook] = React.useState<BookDetails[]>([])
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const [offset, setOffset] = React.useState(1);
+    const [countofBooks, setCountofBooks] = React.useState<number>(0);
+    const [isLoading, setIsLoading] = React.useState(true);
+
+
+    React.useEffect(() => {
+        const fetchData = async() =>{
+            const data = await getFeaturedBooksCount();
+            if(data.success)
+            {
+                setCountofBooks(data.data);
+            }
+        }
+        fetchData();
+    },[]);
 
     React.useEffect(() => {
         const fetchData = async () => {
-            const data = await getFeaturedBooks(0,10);
+            const data = await getFeaturedBooks(offset,9);
             if (data.success) {
                 setBook(data.data);
+                setIsLoading(false);
             }
-        };
-
+        };   
         fetchData();
-    }, []);
+    }, [offset]);
 
 
     function handleBookClick(id: number) {
@@ -214,25 +230,54 @@ export default function FeaturedBookComponent()
                                         }}
                                     >
                                         {
-                                            books.length > 0 ? books.map((book: BookCardProps) => (
-                                                <DetailedBookCard
-                                                    key={book.id}
-                                                    coverimage={book.coverimage}
-                                                    title={book.title}
-                                                    description={book.description}
-                                                    rating={book.rating}
-                                                    authors={book.authors}
-                                                    availability={book.availability}
-                                                    onClick= {() => handleBookClick(book.id as number)}
-                                                />
-                                                )) :
+                                           isLoading ? (
+                                            <>
+                                            </>
+                                            ) : books.length > 0 ? (
+                                                books.map((book: BookCardProps) => (
+                                                    <DetailedBookCard
+                                                        key={book.id}
+                                                        coverimage={book.coverimage}
+                                                        title={book.title}
+                                                        description={book.description}
+                                                        rating={book.rating}
+                                                        authors={book.authors}
+                                                        availability={book.availability}
+                                                        onClick= {() => handleBookClick(book.id as number)}
+                                                    />
+                                                ))
+                                            ) : (
                                                 <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
                                                     No Books Found
                                                 </Typography>
+                                            )
                                         }
                                     </Box>
                                 </Grid>
-
+                                <Grid xs={12} sm={12}>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            alignContent: 'center',
+                                            mb: 2,
+                                            mt:2,
+                                        }}
+                                    >
+                                        {!isLoading && (
+                                                <Pagination 
+                                                    count={Math.ceil(countofBooks / 9)} 
+                                                    color="primary" 
+                                                    size="large"
+                                                    onChange={(event, page) => {
+                                                        setOffset(page);
+                                                    }}
+                                                />
+                                        )}
+                                    </Box>
+                                </Grid>
                         </Grid>
                 </Box>
             </Box>

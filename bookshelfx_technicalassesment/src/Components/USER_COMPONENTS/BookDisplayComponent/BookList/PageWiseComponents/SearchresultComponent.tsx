@@ -24,12 +24,14 @@ export default function Searchresultcomponent()
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    
     const open = Boolean(anchorEl);
 
     let SearchMap = new Map();
     searchParams.forEach((value, key) => {
         SearchMap.set(key, value);
     });
+
 
     React.useEffect(() => {
         const fetchData = async () => {

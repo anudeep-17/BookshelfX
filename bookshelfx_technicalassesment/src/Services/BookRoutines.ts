@@ -128,3 +128,12 @@ export async function getFavBooksByUser(userId: number)
     const data = await response.json();
     return data;
 }
+
+//================================================================================================= Book Count ROUTINES ================================================================================================
+
+export async function getFeaturedBooksCount()
+{
+    const response = await fetch(`/api/books/getCountOf/featuredBooks`);
+    const data = await response.json();
+    return data;
+}
