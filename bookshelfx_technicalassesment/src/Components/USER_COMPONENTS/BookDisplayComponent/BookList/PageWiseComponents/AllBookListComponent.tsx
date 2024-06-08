@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, CssBaseline, Drawer, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CssBaseline, Drawer, Menu, MenuItem, Pagination, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import Chip from '@mui/material/Chip';
@@ -9,7 +9,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {BookDetails, BookCardProps} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { getBook, getCategories} from '@/Services/BookRoutines';
+import { getAllBooksCount, getBooks, getBooksByCategory, getBooksCountByCategory, getCategories} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
@@ -22,7 +22,7 @@ export default function AllBooksListComponent()
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
 
-    const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
+    const [selectedCategory, setSelectedCategory] = React.useState<string>('All Books');
     const [allCategory, setCategory] = React.useState<string[]>([]);
     
     const [books, setBook] = React.useState<BookDetails[]>([])
@@ -31,16 +31,58 @@ export default function AllBooksListComponent()
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
+
+    const [offset, setOffset] = React.useState(1);
+    const [offsetForCategory, setOffsetForCategory] = React.useState(1);
+
+    const [countofBooks, setCountofBooks] = React.useState<number>(0);
+    const [countofBooksByCategory, setCountofBooksByCategory] = React.useState<number>(0);
+
+    React.useEffect(() => {
+        const fetchData = async() =>{
+            const data = await getAllBooksCount();
+            if(data.success)
+            {
+                setCountofBooks(data.data);
+            }
+        }
+        fetchData();
+    },[]);
+
+    React.useEffect(() => {
+        const fetchData = async() =>{
+            const data = await getBooksCountByCategory(selectedCategory);
+            if(data.success)
+            {
+                setCountofBooksByCategory(data.data);
+            }
+        }
+        fetchData();
+    }, [selectedCategory]);
+
     React.useEffect(() => {
         const fetchData = async () => {
-            const data = await getBook();
-            if (data.success) {
-                setBook(data.data);
+            if(selectedCategory !== 'All Books')
+            {
+                const data = await getBooksByCategory(selectedCategory, offsetForCategory, 9);
+                if (data.success) {
+                    setCategoryWiseBooks(data.data);
+                }
             }
         };
 
         fetchData();
-    }, []);
+    }, [selectedCategory, offsetForCategory]);
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const data = await getBooks(offset, 9);
+            if (data.success) {
+                setBook(data.data);
+            }
+        };
+        fetchData();
+    }, [offset]);
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -70,10 +112,10 @@ export default function AllBooksListComponent()
         setFilterDrawerOpen(newOpen);
     };
 
-    const onCategorySelection = (category: string) => {
+    const handleCategoryClick = (category: string) => {
+        setOffsetForCategory(1);
         setSelectedCategory(category);
-        setCategoryWiseBooks(books.filter((book) => book.category === category));
-    }   
+    }
 
     return(
         <ThemeProvider theme={theme}>
@@ -254,7 +296,7 @@ export default function AllBooksListComponent()
                                                             boxShadow: '0 3px 5px 2px rgba(63, 81, 181, .3)', // Changes the shadow on hover
                                                         },
                                                     }}
-                                                    onClick={() =>  onCategorySelection(category)}
+                                                    onClick={() =>  handleCategoryClick(category)}
                                                     clickable
                                                 />
                                             ))
@@ -278,43 +320,67 @@ export default function AllBooksListComponent()
                                         }}
                                     >
                                         {
-                                        selectedCategory === null || selectedCategory === 'All Books'
-                                        ? (books.length > 0 
-                                            ? books.map((book: BookCardProps) => (
-                                                <DetailedBookCard
-                                                key={book.id}
-                                                coverimage={book.coverimage}
-                                                title={book.title}
-                                                description={book.description}
-                                                rating={book.rating}
-                                                authors={book.authors}
-                                                availability={book.availability}
-                                                onClick= {() => handleBookClick(book.id as number)}
-                                                />
-                                            ))
-                                            : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
-                                                No Books Found
-                                            </Typography>)
-                                        : (categoryWiseBooks.length > 0 
-                                            ? categoryWiseBooks.map((book: BookDetails) => (
-                                                <DetailedBookCard
-                                                key={book.id}
-                                                coverimage={book.coverimage}
-                                                title={book.title}
-                                                description={book.description}
-                                                rating={book.rating}
-                                                authors={book.authors}
-                                                availability={book.availability}
-                                                onClick= {() => handleBookClick(book.id as number)}
-                                                />
-                                            ))
-                                            : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
-                                                No Books Found
-                                            </Typography>)
+                                            selectedCategory === null || selectedCategory === 'All Books'
+                                            ? (books.length > 0 
+                                                ? books.map((book: BookCardProps) => (
+                                                    <DetailedBookCard
+                                                    key={book.id}
+                                                    coverimage={book.coverimage}
+                                                    title={book.title}
+                                                    description={book.description}
+                                                    rating={book.rating}
+                                                    authors={book.authors}
+                                                    availability={book.availability}
+                                                    onClick= {() => handleBookClick(book.id as number)}
+                                                    />
+                                                ))
+                                                : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
+                                                    No Books Found
+                                                </Typography>)
+                                            : (categoryWiseBooks.length > 0 
+                                                ? categoryWiseBooks.map((book: BookDetails) => (
+                                                    <DetailedBookCard
+                                                    key={book.id}
+                                                    coverimage={book.coverimage}
+                                                    title={book.title}
+                                                    description={book.description}
+                                                    rating={book.rating}
+                                                    authors={book.authors}
+                                                    availability={book.availability}
+                                                    onClick= {() => handleBookClick(book.id as number)}
+                                                    />
+                                                ))
+                                                : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
+                                                    No Books Found
+                                                </Typography>)
                                         }
                                     </Box>
                                 </Grid>
-
+                                <Grid xs={12} sm={12}>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            alignContent: 'center',
+                                            mb: 2,
+                                            mt:2,
+                                        }}
+                                    >
+                                        { 
+                                                <Pagination 
+                                                    count={Math.ceil((selectedCategory !== 'All Books' ? countofBooksByCategory : countofBooks) / 9)}
+                                                    color="primary" 
+                                                    size="large"
+                                                    page={selectedCategory !== 'All Books' ? offsetForCategory : offset}
+                                                    onChange={(event, page) => {
+                                                        selectedCategory !== 'All Books' ? setOffsetForCategory(page) : setOffset(page);
+                                                    }}
+                                                />
+                                         } 
+                                    </Box>
+                                </Grid>
                         </Grid>
                 </Box>
             </Box>

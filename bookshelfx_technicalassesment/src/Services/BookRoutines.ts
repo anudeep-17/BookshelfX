@@ -1,13 +1,19 @@
-export async function getBook()
+export async function getBooks(page: number, limit: number)
 {
-    const response = await fetch('/api/books/getAll/Books');
+    const response = await fetch(`/api/books/getAll/Books?page=${page}&limit=${limit}`);
+    const data = await response.json();
+    return data;
+}
+
+export async function getCategoryBasedBooks(page: number, limit: number) 
+{
+    const response = await fetch(`/api/books/getAll/CategoryBasedBook?page=${page}&limit=${limit}`);
     const data = await response.json();
     return data;
 }
 
 export async function getFeaturedBooks(page: number, limit: number)
 {
-    console.log(`Page: ${page}, Limit: ${limit}`);
     const response = await fetch(`/api/books/getAll/FeaturedBooks?page=${page}&limit=${limit}`,{
         method: 'GET',
         headers: {
@@ -31,10 +37,19 @@ export async function getCategories()
 }
 
 //================================================================================================= Book By _____ ROUTINES ================================================================================================
-export async function getBooksByCategory(category: string)
+export async function getBooksByCategory(category: string, page?: number, limit?: number)
 {
+    if(!category)
+    {
+        return {success: false, message: "Category is required"};
+    }
+    
     category = encodeURIComponent(category);
-    const response = await fetch(`/api/books/getBookBy/Category?category=${category}`);
+    let url = `/api/books/getBookBy/Category?category=${category}`;
+    if (page && limit) {
+        url += `&page=${page}&limit=${limit}`;
+    }
+    const response = await fetch(url);
     const data = await response.json();
     return data;
 }
@@ -134,6 +149,25 @@ export async function getFavBooksByUser(userId: number)
 export async function getFeaturedBooksCount()
 {
     const response = await fetch(`/api/books/getCountOf/featuredBooks`);
+    const data = await response.json();
+    return data;
+}
+
+export async function getBooksCountByCategory(category: string)
+{
+    if(!category)
+    {
+        return {success: false, message: "Category is required"};
+    }
+    category = encodeURIComponent(category);
+    const response = await fetch(`/api/books/getCountOf/categoryWiseBooks?category=${category}`);
+    const data = await response.json();
+    return data;
+}
+
+export async function getAllBooksCount()
+{
+    const response = await fetch(`/api/books/getCountOf/allBooks`);
     const data = await response.json();
     return data;
 }

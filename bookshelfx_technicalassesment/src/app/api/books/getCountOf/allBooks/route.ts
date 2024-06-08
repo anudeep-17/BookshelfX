@@ -4,11 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET(req: Request)
 {
     try{
-        const count = await database.bookDetails.count({
-            where: {
-                isFeaturedBook: true
-            }
-        });
+        const count = await database.bookDetails.count();
         if (count === 0) {
             return NextResponse.json({success: false, message: "No featured books available"}, {status: 404});
         }

@@ -4,9 +4,14 @@ import { NextResponse } from "next/server";
 export async function GET(req: Request)
 {
     try{
+        const url = new URL(req.url);
+        const category = url.searchParams.get("category");
+        
+        if(!category) return NextResponse.json({success: false, message: "Category not found"}, {status: 404})
+
         const count = await database.bookDetails.count({
             where: {
-                isFeaturedBook: true
+                category: category
             }
         });
         if (count === 0) {

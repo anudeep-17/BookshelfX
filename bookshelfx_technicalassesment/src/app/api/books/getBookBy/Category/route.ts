@@ -6,8 +6,9 @@ export async function GET(req: Request)
     try
     {
         const url = new URL(req.url || '');
+        console.log(url.searchParams.get('category'));
         const category = url.searchParams.get('category');
-        const page = parseInt(url.searchParams.get('page') || '0');
+        const page = parseInt(url.searchParams.get('page') || '1');
         const limit = parseInt(url.searchParams.get('limit') || '7');
         
 
@@ -24,7 +25,7 @@ export async function GET(req: Request)
                 reviews: true,
                 rentals: true,
             },
-            skip: page * limit,
+            skip: (page-1) * limit,
             take: limit
         });
     
@@ -32,8 +33,8 @@ export async function GET(req: Request)
         if(!books){
             return NextResponse.json({success: false, message: "Book not found"}, {status: 404});
         }
-    
-        return NextResponse.json({success: true, message: "Book found", books}, {status: 200});
+        console.log(books);
+        return NextResponse.json({success: true, message: "Book found", data:books}, {status: 200});
     }
     catch(err)
     {
