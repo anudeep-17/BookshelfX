@@ -4,15 +4,10 @@ import { NextApiRequest } from "next";
 
 export async function GET(req: NextApiRequest) 
 {
-    const url = new URL(req.url || '');
-    const ID = url.searchParams.get('id');
     try{
-        const user = await database.user.findUnique({
-            where: {id: Number(ID)}
-        });
+        const user = await database.user.findMany({ });
         if(user){
-            const {password, ...userData} = user;
-            return NextResponse.json({user: userData}, {status: 200});
+            return NextResponse.json({user: user}, {status: 200});
         }
         else{
             return NextResponse.json({user: null, message: "User not found"}, {status: 404});

@@ -42,6 +42,12 @@ import SendIcon from '@mui/icons-material/Send';
 import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
+
+
 
 const drawerWidth = DashboardSize;
 
@@ -87,53 +93,94 @@ export default function Navbar()
       router.push('/');
     }
 
-      const UserDrawer = [
-        {
-          text: 'Discover',
-          path: '/Reader/home',
-          icon: <HomeIcon/>,
-        },
-        {
-          text: 'Featured Books',
-          path: '/Reader/featuredbooks',
-          icon: <FlagIcon />,
-        },
-        {
-          text: 'All Categories',
-          path: '/Reader/allcategory',
-          icon: <CategoryIcon />,
-        },
-        {
-          text: 'All Books',
-          path: '/Reader/allbooks',
-          icon: <MenuBookIcon/>,
-        },
-        {
-          text: 'My Favourites',
-          path: '/Reader/favourites',
-          icon: <FavoriteBorderIcon />,
-        },
-        {
-          text: 'My Rentals',
-          path: '/Reader/myrentals',
-          icon:  <AutoStoriesIcon/>,
-        },
-        {
-          text: 'Settings',
-          icon: <SettingsIcon/>
-        },
-        {
-          text: 'Logout',
-          icon: <LogoutIcon/>
-        }
-    ]
+    const UserDrawer = [
+      {
+        text: 'Discover',
+        path: '/Reader/home',
+        icon: <HomeIcon/>,
+      },
+      {
+        text: 'Featured Books',
+        path: '/Reader/featuredbooks',
+        icon: <FlagIcon />,
+      },
+      {
+        text: 'All Categories',
+        path: '/Reader/allcategory',
+        icon: <CategoryIcon />,
+      },
+      {
+        text: 'All Books',
+        path: '/Reader/allbooks',
+        icon: <MenuBookIcon/>,
+      },
+      {
+        text: 'My Favourites',
+        path: '/Reader/favourites',
+        icon: <FavoriteBorderIcon />,
+      },
+      {
+        text: 'My Rentals',
+        path: '/Reader/myrentals',
+        icon:  <AutoStoriesIcon/>,
+      },
+      {
+        text: 'Settings',
+        icon: <SettingsIcon/>
+      },
+      {
+        text: 'Logout',
+        icon: <LogoutIcon/>
+      }
+  ]
+
+  const LibrarianDrawer = [
+    {
+      text: 'DashBoard',
+      path: '/librarian/home',
+      icon: <HomeIcon/>,
+    },
+    {
+      text: 'Add Books',
+      path: '/librarian/addbooks',
+      icon: <AddIcon />,
+    },
+    {
+      text: 'Delete Books',
+      path: '/librarian/deletebooks',
+      icon: <DeleteIcon />,
+    },
+    {
+      text: 'Edit Books',
+      path: '/librarian/editbooks',
+      icon: <EditIcon/>,
+    },
+    {
+      text: 'All Books',
+      path: '/librarian/allbooks',
+      icon: <FavoriteBorderIcon />,
+    },
+    {
+      text: 'Close Active User Rentals',
+      path: '/librarian/closeuserrentals',
+      icon:  <DoDisturbAltIcon/>,
+    },
+    {
+      text: 'Settings',
+      icon: <SettingsIcon/>
+    },
+    {
+      text: 'Logout',
+      icon: <LogoutIcon/>
+    }
+  ];
   
       const drawer = (
         <ThemeProvider theme={theme}>
           <Box sx={{ alignItems: 'center', justifyContent: 'center' }}>
             {
             isXs? <Toolbar sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <IconButton onClick={handleDrawerClose }>
+              <IconButton onClick={handleDrawerClose}>
                 <ArrowLeftIcon sx={{
                   fontSize:'2rem' 
                 }}/>
@@ -151,7 +198,7 @@ export default function Navbar()
             
           </Toolbar>
             <List>
-              {UserDrawer.slice(0, 6).map((item, index) => (
+              {(pathname.split("/")[1] === 'Reader'? UserDrawer : LibrarianDrawer).slice(0, 6).map((item, index) => (
                 <ListItem key={item.text} disablePadding>
                 <ListItemButton 
                 selected={pathname === item.path}

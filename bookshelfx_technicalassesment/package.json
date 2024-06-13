@@ -21,6 +21,7 @@
     "@fontsource/roboto": "^5.0.12",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
+    "@mui/x-charts": "^7.6.2",
     "@prisma/adapter-pg": "^5.13.0",
     "@vercel/postgres": "^0.8.0",
     "bcrypt": "^5.1.1",

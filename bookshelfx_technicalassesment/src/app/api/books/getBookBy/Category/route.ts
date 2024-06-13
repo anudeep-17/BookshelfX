@@ -6,7 +6,6 @@ export async function GET(req: Request)
     try
     {
         const url = new URL(req.url || '');
-        console.log(url.searchParams.get('category'));
         const category = url.searchParams.get('category');
         const page = parseInt(url.searchParams.get('page') || '1');
         const limit = parseInt(url.searchParams.get('limit') || '7');
