@@ -41,9 +41,7 @@ export default function Dashboard_Home()
       
           fetchData();
     }, []);
-    console.log("librarian: ", librarianID);
-    console.log("stats: ", stats);
- 
+     
     return(
          <ThemeProvider theme={theme}>
             <Box

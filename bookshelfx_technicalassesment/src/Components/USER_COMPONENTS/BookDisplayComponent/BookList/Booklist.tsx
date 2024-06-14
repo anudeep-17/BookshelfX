@@ -8,7 +8,6 @@ const AllCategoryComponent = dynamic(() => import('@/Components/USER_COMPONENTS/
 const FeaturedBooksComponent = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/PageWiseComponents/FeaturedBookComponent'), { ssr: false });
 const SearchResultComponent = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/PageWiseComponents/SearchresultComponent'), { ssr: false });
 const UserRentalBookComponent = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/PageWiseComponents/UserRentalBookComponent'), { ssr: false });
-const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 export default function BookList() 
 {
     const pathname = usePathname();

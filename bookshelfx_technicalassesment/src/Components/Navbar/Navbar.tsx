@@ -142,22 +142,22 @@ export default function Navbar()
     },
     {
       text: 'Add Books',
-      path: '/librarian/addbooks',
+      path: '/librarian/addBook',
       icon: <AddIcon />,
     },
     {
       text: 'Delete Books',
-      path: '/librarian/deletebooks',
+      path: '/librarian/deleteBook',
       icon: <DeleteIcon />,
     },
     {
       text: 'Edit Books',
-      path: '/librarian/editbooks',
+      path: '/librarian/editBook',
       icon: <EditIcon/>,
     },
     {
       text: 'All Books',
-      path: '/librarian/allbooks',
+      path: '/librarian/allBooks',
       icon: <FavoriteBorderIcon />,
     },
     {
