@@ -23,7 +23,8 @@ export default function AddBookManualComponent()
     const [publishedDate, setPublishedDate] = React.useState('');
     const [bookDescription, setBookDescription] = React.useState('');
     const [availability, setAvailability] = React.useState(true);
-
+    const [IsFeaturedBook, setIsFeaturedBook] = React.useState(false);
+    
     return (
         <ThemeProvider theme={theme}>
         <CssBaseline />           
@@ -85,6 +86,7 @@ export default function AddBookManualComponent()
                                                 label="Book Title"
                                                 variant="outlined"
                                                 sx={{mb:2}}
+                                                value={bookTitle}
                                                 onChange={(e) => setBookTitle(e.target.value)}
                                             />
                                         </Box>
@@ -94,6 +96,7 @@ export default function AddBookManualComponent()
                                                 label="Authors"
                                                 variant="outlined"
                                                 sx={{mb:2}}
+                                                value={authors}
                                                 onChange={(e) => setAuthors(e.target.value)}
                                         />
 
@@ -101,7 +104,7 @@ export default function AddBookManualComponent()
                                             <Typography variant="body1">
                                                 Rating: 
                                             </Typography>
-                                            <Rating value={0} />
+                                            <Rating value={rating}onChange={(event, newValue) => { setRating(newValue !== null ? newValue : 0);}}/>
                                         </Box>
 
                                         <TextField 
@@ -110,6 +113,7 @@ export default function AddBookManualComponent()
                                                 label="Category"
                                                 variant="outlined"
                                                 sx={{mb:2}}
+                                                value = {category}
                                                 onChange={(e) => setCategory(e.target.value)}
                                         />
                                            <TextField
@@ -120,6 +124,7 @@ export default function AddBookManualComponent()
                                             type="number"
                                             InputProps={{ inputProps: { min: 0 } }}
                                             sx={{mb:2}}
+                                            value = {pageCount}
                                             onChange={(e) => setPageCount(e.target.value)}
                                         />
 
@@ -129,30 +134,49 @@ export default function AddBookManualComponent()
                                                 label="Publisher"
                                                 variant="outlined"
                                                 sx={{mb:2}}
+                                                value = {publisher}
                                                 onChange={(e) => setPublisher(e.target.value)}
                                         />
 
                                          
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <DemoItem sx={{
-                                                mb:2,
-                                            }}>
-                                                <DatePicker />
+                                            <DemoItem sx={{ mb:2 }}>
+                                                <DatePicker 
+                                                value={dayjs(publishedDate)} 
+                                                onChange={(newValue) => {
+                                                    setPublishedDate(newValue ? newValue.format('YYYY-MM-DD') : '');
+                                                }}
+                                                />
                                             </DemoItem>
-                                        </LocalizationProvider> 
+                                        </LocalizationProvider>
 
                                         <TextField
                                                 id="outlined-multiline-static"
                                                 label="Book Description"
                                                 multiline
-                                                rows={4}
+                                                rows={7}
                                                 fullWidth
                                                 variant="outlined"
                                                 sx={{mb:2}}
+                                                value={bookDescription}
                                                 onChange={(e) => setBookDescription(e.target.value)}
                                             />
+                                        
+                                        <FormControl fullWidth sx={{mb:2}}>
+                                            <InputLabel id="availability-select-label">Is Featured Book</InputLabel>
+                                            <Select
+                                                labelId="availability-select-label"
+                                                id="availability-select"
+                                                value={IsFeaturedBook}
+                                                label="Availability"
+                                                onChange={(e) => setIsFeaturedBook(e.target.value as boolean)}
+                                            >
+                                                <MenuItem value="true">True</MenuItem>
+                                                <MenuItem value="false">False</MenuItem>
+                                            </Select>
+                                        </FormControl>
 
-                                        <FormControl fullWidth>
+                                        <FormControl fullWidth sx={{mb:2}}>
                                             <InputLabel id="availability-select-label">Availability</InputLabel>
                                             <Select
                                                 labelId="availability-select-label"
