@@ -1,0 +1,258 @@
+'use client';
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { Book } from '../../../interfaceModels';
+import { Box, FormControl, Grid, IconButton, InputLabel, MenuItem, Rating, Select, TextField, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import Image from 'next/image';
+import theme from '@/Components/Themes';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+ 
+
+export default function BookDisplayDialog({open, setOpen, handleClose, book}: 
+    {
+        open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+        book: Book,
+        handleClose: () => void
+    }) 
+{
+   
+    const [isEditing, setIsEditing] = React.useState(false);
+    const [title, setTitle] = React.useState(book.title);
+    const [authors, setAuthors] = React.useState(book.authors.join(', '));
+    const [description, setDescription] = React.useState(book.description);
+    const [category, setCategory] = React.useState(book.category);
+    const [publisher, setPublisher] = React.useState(book.publisher);
+    const [pageCount, setPageCount] = React.useState(book.pagecount);
+    const [rating, setRating] = React.useState(book.rating);
+    const [publishedDate, setPublishedDate] = React.useState(dayjs(new Date(book.publishedDate)));
+    const [isFeaturedBook, setIsFeaturedBook] = React.useState(book.isFeaturedBook);
+    const [availability, setAvailability] = React.useState(book.availability);
+
+    //===============================================================================================================
+    const [editedAuthors, setEditedAuthors] = React.useState(book.authors.join(', '));
+    const [editedDescription, setEditedDescription] = React.useState(book.description);
+    const [editedCategory, setEditedCategory] = React.useState(book.category);
+    const [editedPublisher, setEditedPublisher] = React.useState(book.publisher);
+    const [editedPageCount, setEditedPageCount] = React.useState(book.pagecount);
+    const [editedRating, setEditedRating] = React.useState(book.rating);
+    const [editedPublishedDate, setEditedPublishedDate] = React.useState(dayjs(new Date(book.publishedDate)));
+
+    const [editedisFeaturedBook, setIsEditedFeaturedBook] = React.useState(book.isFeaturedBook);
+    const [editedavailability, setEditedAvailability] = React.useState(book.availability);
+
+    function handleSave(){
+      setAuthors(editedAuthors);
+      setDescription(editedDescription);
+      setCategory(editedCategory);
+      setPublisher(editedPublisher);
+      setPageCount(editedPageCount);
+      setRating(editedRating);
+      setPublishedDate(editedPublishedDate);
+      setIsFeaturedBook(editedisFeaturedBook);
+      setAvailability(editedavailability);
+    }
+
+    function handleCancel() {
+      setEditedAuthors(authors);
+      setEditedDescription(description);
+      setEditedCategory(category);
+      setEditedPublisher(publisher);
+      setEditedPageCount(pageCount);
+      setEditedRating(rating);
+      setEditedPublishedDate(publishedDate);
+      setIsEditedFeaturedBook(isFeaturedBook);
+      setEditedAvailability(availability);
+    }
+
+
+    const BookInformationTypography = () => 
+    {
+
+      return(
+        <>
+          <Typography variant="h6" sx={{mb: 2}}>{`Author(s): ${editedAuthors}`}</Typography>
+          <Rating name="read-only" value={editedRating} readOnly  sx={{mb:2}}/>
+          <Typography variant="body1" sx={{mb: 2}}>{`Description: ${editedDescription}`}</Typography>
+          <Typography variant="body1" sx={{mb: 2}}>{`Category: ${editedCategory}`}</Typography>
+          <Typography variant="body1" sx={{mb: 2}}>{`Publisher: ${editedPublisher}`}</Typography>
+          <Typography variant="body1" sx={{mb: 2}}>{`Page Count: ${editedPageCount}`}</Typography>
+          <Typography variant="body1" sx={{mb: 2}}>{`Rating: ${editedRating}`}</Typography>
+          <Typography variant="body1" sx={{mb: 2}}>
+            {`Published Date: ${editedPublishedDate}`}
+          </Typography>
+          <Typography variant="body1" sx={{mb: 2}}>{`Is Featured: ${isFeaturedBook}` }</Typography>
+          <Typography variant="body1" sx={{mb: 2}}>{`Is Available: ${availability}`}</Typography>
+        </>
+      )
+    }
+
+    return (
+        <React.Fragment>
+          <ThemeProvider theme={theme}>
+            <Dialog
+              fullWidth={true}
+              maxWidth='lg'
+              open={open}
+              onClose={handleClose}
+              PaperProps={{
+                component: 'form',
+                onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+                  event.preventDefault();
+                },
+              }}
+            >
+              <DialogTitle sx={{width: '100%'}}>
+                {"Check the book details before adding to shelf"}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  {
+                      isEditing ?
+                      <Box sx={{display: 'flex', flexDirection: 'row', alignContent: 'center', alignItems: 'center', justifyContent: 'flex-end', gap:0.5}}>
+                        <IconButton onClick={() => {setIsEditing(!isEditing); handleCancel()}}><ClearIcon sx={{color: 'red', fontSize: '2rem', cursor: 'pointer', float: 'right'}}/></IconButton>
+                        <IconButton onClick={() => {setIsEditing(!isEditing); handleSave()} }><CheckIcon sx={{color: theme.palette.primary.main,fontSize: '2rem', cursor: 'pointer', float: 'right'}}/></IconButton>
+                      </Box>
+                      : <Tooltip title = "Edit the book content" placement='top'>
+                          <EditIcon onClick={() => setIsEditing(!isEditing)} sx={{cursor: 'pointer', float: 'right'}}/>
+                        </Tooltip>
+                    }
+                    
+
+                      <Grid container spacing={2} sx={{
+                        color: theme.palette.text.primary,
+                      }}>
+                          <Grid item xs={12} sm={4}>  
+                              <Image src={book.coverimage} alt={book.title} width={300} height={500}/>
+                          </Grid>
+                          <Grid item xs={12} sm={8}>
+                              <Typography variant="h2" sx={{color:theme.palette.text.secondary, mb: 2}}>{`${book.title}`}</Typography>
+                              {!isEditing ? <BookInformationTypography /> :
+                                          <>
+                                              <TextField
+                                                id="authors"
+                                                label="Authors"
+                                                value={editedAuthors}
+                                                onChange={(e) => setEditedAuthors(e.target.value)}
+                                                fullWidth
+                                                variant="outlined"
+                                                sx={{mb: 2}}
+                                              />
+                                              <Box display="flex" alignItems="center" >
+                                                <Typography variant="h6" sx={{mb: 2, mr: 1}}>
+                                                  {`Rating:`}
+                                                </Typography>
+                                                <Rating value={editedRating} onChange={(event, newValue) => {
+                                                  setEditedRating(newValue as number);
+                                                } } sx={{mb: 2}}/>
+                                              </Box>
+                                            
+                                              <TextField
+                                                multiline
+                                                id="description"
+                                                label="Description"
+                                                value={editedDescription}
+                                                onChange={(e) => setEditedDescription(e.target.value)}
+                                                fullWidth
+                                                variant="outlined"
+                                                sx={{mb: 2}}
+                                              />
+                                              <TextField
+                                                id="category"
+                                                label="Category"
+                                                value={editedCategory}
+                                                onChange={(e) => setEditedCategory(e.target.value)}
+                                                fullWidth
+                                                variant="outlined"
+                                                sx={{mb: 2}}
+                                              />
+                                              <TextField
+                                                id="publisher"
+                                                label="Publisher"
+                                                value={editedPublisher}
+                                                onChange={(e) => setEditedPublisher(e.target.value)}
+                                                fullWidth
+                                                variant="outlined"
+                                                sx={{mb: 2}}
+                                              />
+                                              <TextField
+                                                  fullWidth
+                                                  id="outlined-basic"
+                                                  label="Page Count"
+                                                  variant="outlined"
+                                                  type="number"
+                                                  value={editedPageCount}
+                                                  InputProps={{ inputProps: { min: 0 } }}
+                                                  sx={{mb:2}}
+                                                  onChange={(e) =>  setEditedPageCount(Number(e.target.value))}
+                                              />
+
+                                              <LocalizationProvider dateAdapter={AdapterDayjs}> 
+                                                  <DemoItem sx={{ mb:2 }}>
+                                                      <DatePicker 
+                                                          value={editedPublishedDate} 
+                                                          onChange={(newDate) => {
+                                                              if (newDate) {
+                                                                  setEditedPublishedDate(newDate);
+                                                              }
+                                                          }}
+                                                      />
+                                                  </DemoItem>
+                                              </LocalizationProvider>
+
+                                              <FormControl fullWidth sx={{ mb:2 }}>
+                                                  <InputLabel id="isfeatured-select-label">Is Featured Book</InputLabel>
+                                                  <Select
+                                                      labelId="isfeatured-select-label"
+                                                      id="isfeatured-select"
+                                                      value={editedisFeaturedBook ? 'true' : 'false'}
+                                                      label="Is Featured Book"
+                                                      onChange={(e) => setIsEditedFeaturedBook(e.target.value === 'true' ? true : false)}
+                                                  >
+                                                      <MenuItem value="true">True</MenuItem>
+                                                      <MenuItem value="false">False</MenuItem>
+                                                  </Select>
+                                              </FormControl>
+
+                                              <FormControl fullWidth sx={{ mb:2 }}>
+                                                <InputLabel id="availability-select-label">Availability</InputLabel>
+                                                <Select
+                                                  labelId="availability-select-label"
+                                                  id="availability-select"
+                                                  value={editedavailability ? 'true' : 'false'}
+                                                  label="Availability"
+                                                  onChange={(e) =>  setEditedAvailability(e.target.value === 'true' ? true : false)}
+                                                >
+                                                  <MenuItem value="true">True</MenuItem>
+                                                  <MenuItem value="false">False</MenuItem>
+                                                </Select>
+                                              </FormControl>
+                                          
+                                          </>
+                              }
+                          </Grid>
+                      </Grid>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Close</Button>
+                <Button onClick={handleClose} autoFocus>
+                  add to shelf
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </ThemeProvider>
+        </React.Fragment>
+      );
+}

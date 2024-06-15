@@ -6,11 +6,20 @@ import AddBookManualComponent from "./AddBookManualComponent";
 import AddBookFromGoogleComponent from "./AddBookFromGoogleComponent";
 import GoogleIcon from '@mui/icons-material/Google';
 import SpellcheckIcon from '@mui/icons-material/Spellcheck';
+import { useRouter } from "next/navigation";
 
 const drawerWidth = DashboardSize;
 
 export default function AddBooksComponent() 
 {
+    const router = useRouter();
+    const handleAddBookManually = () => {
+        router.push('/librarian/addBook/manually');
+    }
+    const handleAddBookFromGoogle = () => {
+        router.push('/librarian/addBook/byGoogle');
+    }
+
     return (
         <ThemeProvider theme={theme}>
         <CssBaseline />            
@@ -63,7 +72,7 @@ export default function AddBooksComponent()
                                                         justifyContent: 'center',
                                                         alignItems: 'center'
                                                     }} 
-                                                    onClick={() => {}}
+                                                    onClick={handleAddBookFromGoogle}
                                                 >
                                                     <GoogleIcon sx={{fontSize: 300,  mb:2}} />
                                                     <Typography variant="h2">
@@ -83,7 +92,7 @@ export default function AddBooksComponent()
                                                         justifyContent: 'center',
                                                         alignItems: 'center'
                                                     }}  
-                                                    onClick={() => { /* handle add book manually */ }}>
+                                                    onClick={handleAddBookManually}>
                                                     <SpellcheckIcon sx={{fontSize: 300, mb:2}} />
                                                     <Typography variant="h2">
                                                         Add book manually
