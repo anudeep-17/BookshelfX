@@ -2,16 +2,18 @@
 import React, { useEffect } from 'react';
 import { DashboardSize } from "@/Components/DashboardSize";
 import theme from "@/Components/Themes";
-import { Box, Button, CssBaseline, Grid, Pagination, Paper, TextField, ThemeProvider, Toolbar, Typography } from "@mui/material";
+import { Alert, Box, Button, CssBaseline, Grid, Pagination, Paper, Snackbar, TextField, ThemeProvider, Toolbar, Typography } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
 import { getBooksFromGoogleBooks } from '@/Services/LibrarianRoutines';
 import { Book } from '@/Components/interfaceModels';
 import BookDisplayCard from './BookDisplayCard';
 
+ 
 const drawerWidth = DashboardSize;
 
 export default function AddBookFromGoogleComponent() 
 {  
+    
     const [author, setAuthor] = React.useState('');
     const [title, setTitle] = React.useState('');
     const [publisher, setPublisher] = React.useState('');
@@ -19,7 +21,11 @@ export default function AddBookFromGoogleComponent()
     const [page, setPage] = React.useState(1);
     const [totalBooks, setTotalBooks] = React.useState(0);
     const [searchType, setSearchType] = React.useState<{ [key: string]: string }>({});
-
+    const [alertOpen, setAlertOpen] = React.useState(false);
+    const [alertContent, setAlertContent] = React.useState<{ severity: "success" | "error" | "info" | "warning" | undefined, message: string }>({
+        severity: 'success', message: ''
+    });
+    
     const handleClickofSearch = async() => {
         const data = await getBooksFromGoogleBooks(title, author, publisher, page-1, 10);
         if(data.success && data.data.totalItems > 0)
@@ -39,7 +45,7 @@ export default function AddBookFromGoogleComponent()
                 publisher: book.volumeInfo.publisher || 'N/A',
                 publishedDate: book.volumeInfo.publishedDate ? new Date(book.volumeInfo.publishedDate) : 'N/A',
                 pagecount: book.volumeInfo.pageCount || 'N/A',
-                rating: book.volumeInfo.averageRating || 'N/A',
+                rating: book.volumeInfo.averageRating || 0,
                 isFeaturedBook: false,  
             }));
         
@@ -60,6 +66,15 @@ export default function AddBookFromGoogleComponent()
         setSearchType(types);
       
     }
+
+    const handleCloseAlert = (event: React.SyntheticEvent<any, Event> | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+      
+        setAlertOpen(false);
+    };
+
 
     return (
         <ThemeProvider theme={theme}>
@@ -146,7 +161,12 @@ export default function AddBookFromGoogleComponent()
                                             >
                                             {
                                                 Books && Books.length > 0 ? Books.map((book: Book) => (
-                                                    <BookDisplayCard key={book.ISBN} book={book} />
+                                                    <BookDisplayCard 
+                                                        key={book.ISBN} 
+                                                        book={book} 
+                                                        setAlertOpen={setAlertOpen}
+                                                        setAlertContent={setAlertContent}
+                                                    />
                                                 )) :
                                                 <Typography variant="h6" sx={{mt:2}}>
                                                     
@@ -169,6 +189,13 @@ export default function AddBookFromGoogleComponent()
                             </Grid>              
                         </Box>
             </Box>
+
+            <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleCloseAlert}>
+              <Alert onClose={handleCloseAlert} severity={alertContent.severity}>
+                {alertContent.message}
+              </Alert>
+            </Snackbar>
+        
         </Box>
         </ThemeProvider>
     )

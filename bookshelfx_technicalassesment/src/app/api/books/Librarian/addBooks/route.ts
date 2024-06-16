@@ -1,19 +1,44 @@
 import { NextResponse } from "next/server";
 import { database } from "../../../prismaConfig";
  
-
-
 export async function POST(req: Request) 
 {
-    const { title, authors, description, ISBN, coverimage, availability, category, publisher, publishedDate, pagecount, rating, customerReviews } = await req.json();
-    
-    if(!title || !authors || !description || !ISBN || !coverimage || !availability || !category || !publisher || !publishedDate || !pagecount || !rating || !customerReviews)
-    {
-            
-        return NextResponse.json({success: false, message: "All fields are required"}, {status: 400});
-    }
-    
+
     try{
+        const { 
+            title, 
+            authors, 
+            description, 
+            ISBN, 
+            coverimage, 
+            availability, 
+            category, 
+            publisher, 
+            publishedDate, 
+            pagecount, 
+            rating, 
+            isFeaturedBook } = await req.json();
+    
+            if(title == null || authors == null || description == null || ISBN == null || coverimage == null || availability == null || category == null || publisher == null || publishedDate == null || pagecount == null || rating == null || isFeaturedBook == null) 
+            {
+                console.log({
+                    title,
+                    authors,
+                    description,
+                    ISBN,
+                    coverimage,
+                    availability,
+                    category,
+                    publisher,
+                    publishedDate,
+                    pagecount,
+                    rating,
+                    isFeaturedBook
+                });
+                return NextResponse.json({success: false, message: "All fields are required"}, {status: 400});
+            }
+    
+        
         const newBook = await database.bookDetails.create({
             data: {
                 ISBN,
@@ -27,7 +52,7 @@ export async function POST(req: Request)
                 publishedDate,
                 pagecount,
                 rating,
-                customerReviews
+                isFeaturedBook
             },
         });
 

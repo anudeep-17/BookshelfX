@@ -4,11 +4,19 @@ import { database } from "../../../prismaConfig";
 export async function DELETE(req: Request) 
 {
     try{
-        await database.bookRentalDetails.deleteMany();
-        await database.favoriteBook.deleteMany();
-        await database.bookReview.deleteMany();
-        await database.user.deleteMany();
-        const deleteBooks = await database.bookDetails.deleteMany();
+        const url = new URL(req.url);
+        const title = url.searchParams.get('title');
+        
+        if(title == null) 
+        {
+            return NextResponse.json({success: false, message: "All fields are required"}, {status: 400});
+        }
+
+        const deleteBooks = await database.bookDetails.findFirst({
+            where: {
+                title: title 
+            }
+        });
 
         if(!deleteBooks)
         {

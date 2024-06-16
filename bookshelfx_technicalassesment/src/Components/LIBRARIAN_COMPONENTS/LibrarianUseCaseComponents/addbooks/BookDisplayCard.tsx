@@ -7,7 +7,11 @@ import { Book  } from '../../../interfaceModels';
 import BookDisplayDialog from './BookDisplayDialog';
 
 
-export default function BookDisplayCard({book}:{book: Book }) {
+export default function BookDisplayCard({book, setAlertOpen, setAlertContent}:{
+    book: Book
+    setAlertOpen: React.Dispatch<React.SetStateAction<boolean>>
+    setAlertContent: React.Dispatch<React.SetStateAction<{severity: "success" | "error" | "info" | "warning" | undefined; message: string;}>>
+}) {
     const [value, setValue] = React.useState<number | null>(book.rating || null);
     
     const [openDialog, setOpenDialog] = React.useState(false);
@@ -78,7 +82,7 @@ export default function BookDisplayCard({book}:{book: Book }) {
                 </Box>
                 {
                     openDialog &&
-                    <BookDisplayDialog open={openDialog} setOpen={setOpenDialog} book={book} handleClose={handleClose}/>
+                    <BookDisplayDialog open={openDialog}  book={book} handleClose={handleClose} setAlertOpen={setAlertOpen} setAlertContent={setAlertContent}/>
                 }
                     
         </ThemeProvider>

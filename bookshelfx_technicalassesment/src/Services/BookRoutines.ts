@@ -1,3 +1,5 @@
+import { Book } from "@/Components/interfaceModels";
+
 export async function getBooks(page: number, limit: number)
 {
     const response = await fetch(`/api/books/getAll/Books?page=${page}&limit=${limit}`);
@@ -24,6 +26,7 @@ export async function getFeaturedBooks(page: number, limit: number)
     return data;
 }
 
+//================================================================================================= GetAll ROUTINES ================================================================================================
 export async function getCategories()
 {
     const response = await fetch('/api/books/getAll/Categories',{
@@ -36,6 +39,30 @@ export async function getCategories()
     return data;
 }
 
+export async function getAuthors()
+{
+    const response = await fetch('/api/books/getAll/Authors',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const data = await response.json();
+    return data;
+
+}
+
+export async function getPublishers()
+{
+    const response = await fetch('/api/books/getAll/Publisher',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const data = await response.json();
+    return data;
+}
 //================================================================================================= Book By _____ ROUTINES ================================================================================================
 export async function getBooksByCategory(category: string, page?: number, limit?: number)
 {
@@ -168,6 +195,20 @@ export async function getBooksCountByCategory(category: string)
 export async function getAllBooksCount()
 {
     const response = await fetch(`/api/books/getCountOf/allBooks`);
+    const data = await response.json();
+    return data;
+}
+
+//================================================================================================= Book Insertion ROUTINES ================================================================================================
+export async function addBookToLibrary(book: Book)
+{
+    const response = await fetch(`/api/books/librarian/addBooks`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(book)
+    });
     const data = await response.json();
     return data;
 }

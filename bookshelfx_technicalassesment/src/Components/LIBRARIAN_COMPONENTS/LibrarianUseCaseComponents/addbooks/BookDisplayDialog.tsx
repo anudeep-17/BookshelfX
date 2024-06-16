@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Book } from '../../../interfaceModels';
-import { Box, FormControl, Grid, IconButton, InputLabel, MenuItem, Rating, Select, TextField, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Alert, Box, FormControl, Grid, IconButton, InputLabel, MenuItem, Rating, Select, Snackbar, TextField, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Image from 'next/image';
 import theme from '@/Components/Themes';
 import EditIcon from '@mui/icons-material/Edit';
@@ -18,16 +18,18 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
- 
+import Autocomplete from '@mui/material/Autocomplete';
+import { addBookToLibrary, getAuthors, getCategories, getPublishers } from '@/Services/BookRoutines';
 
-export default function BookDisplayDialog({open, setOpen, handleClose, book}: 
+export default function BookDisplayDialog({open, handleClose, book, setAlertOpen, setAlertContent}: 
     {
-        open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+        open: boolean, 
         book: Book,
-        handleClose: () => void
+        handleClose: () => void,
+        setAlertOpen: React.Dispatch<React.SetStateAction<boolean>>,
+        setAlertContent: React.Dispatch<React.SetStateAction<{severity: "success" | "error" | "info" | "warning" | undefined; message: string;}>>
     }) 
 {
-   
     const [isEditing, setIsEditing] = React.useState(false);
     const [title, setTitle] = React.useState(book.title);
     const [authors, setAuthors] = React.useState(book.authors.join(', '));
@@ -51,6 +53,35 @@ export default function BookDisplayDialog({open, setOpen, handleClose, book}:
 
     const [editedisFeaturedBook, setIsEditedFeaturedBook] = React.useState(book.isFeaturedBook);
     const [editedavailability, setEditedAvailability] = React.useState(book.availability);
+
+    const [AllAuthors, setAllAuthors] = React.useState<string[]>([]);
+    const [AllPublishers, setAllPublishers] = React.useState<string[]>([]);
+    const [AllCategories, setAllCategories] = React.useState<string[]>([]);
+
+    
+
+    React.useEffect(()=>{
+         const fetchData = async() => {
+            const authors = await getAuthors();
+            if(authors.success)
+            {
+                setAllAuthors(authors.data);
+            }
+            const Categories = await getCategories();
+            if(Categories.success)
+            {
+                setAllCategories(Categories.data);
+            }
+            const Publishers = await getPublishers();
+            if(Publishers.success)
+            {
+                setAllPublishers(Publishers.data);
+            }
+        }
+        fetchData();
+       
+    },[])
+     
 
     function handleSave(){
       setAuthors(editedAuthors);
@@ -76,6 +107,38 @@ export default function BookDisplayDialog({open, setOpen, handleClose, book}:
       setEditedAvailability(availability);
     }
 
+    async function addToshelf()
+    {
+        const response = await addBookToLibrary({
+            title: title,
+            authors: authors.split(','),
+            description: description,
+            ISBN: book.ISBN,
+            coverimage: book.coverimage,
+            availability: availability,
+            category: category,
+            publisher: publisher,
+            publishedDate: publishedDate.toDate(),
+            pagecount: pageCount,
+            rating: rating,
+            isFeaturedBook: isFeaturedBook
+        });
+        console.log(response);  
+        if(response.success)
+        {
+            setAlertOpen(true);
+            setAlertContent({severity: 'success', message: "book added to Libraiary successfully"});
+            handleClose();
+        }
+        else
+        {
+            setAlertOpen(true);
+            setAlertContent({severity: 'error', message: "unable to add book to Libraiary successfully"});
+        }
+    }
+
+
+    
 
     const BookInformationTypography = () => 
     {
@@ -88,7 +151,6 @@ export default function BookDisplayDialog({open, setOpen, handleClose, book}:
           <Typography variant="body1" sx={{mb: 2}}>{`Category: ${editedCategory}`}</Typography>
           <Typography variant="body1" sx={{mb: 2}}>{`Publisher: ${editedPublisher}`}</Typography>
           <Typography variant="body1" sx={{mb: 2}}>{`Page Count: ${editedPageCount}`}</Typography>
-          <Typography variant="body1" sx={{mb: 2}}>{`Rating: ${editedRating}`}</Typography>
           <Typography variant="body1" sx={{mb: 2}}>
             {`Published Date: ${editedPublishedDate}`}
           </Typography>
@@ -140,15 +202,16 @@ export default function BookDisplayDialog({open, setOpen, handleClose, book}:
                               <Typography variant="h2" sx={{color:theme.palette.text.secondary, mb: 2}}>{`${book.title}`}</Typography>
                               {!isEditing ? <BookInformationTypography /> :
                                           <>
-                                              <TextField
+                                              <Autocomplete
                                                 id="authors"
-                                                label="Authors"
+                                                options={AllAuthors}  
                                                 value={editedAuthors}
-                                                onChange={(e) => setEditedAuthors(e.target.value)}
-                                                fullWidth
-                                                variant="outlined"
-                                                sx={{mb: 2}}
+                                                onInputChange={(event, newInputValue) => {
+                                                  setEditedAuthors(newInputValue);
+                                                }}
+                                                renderInput={(params) => <TextField {...params} label="Authors" fullWidth variant="outlined" sx={{mb: 2}}/>}
                                               />
+
                                               <Box display="flex" alignItems="center" >
                                                 <Typography variant="h6" sx={{mb: 2, mr: 1}}>
                                                   {`Rating:`}
@@ -168,15 +231,19 @@ export default function BookDisplayDialog({open, setOpen, handleClose, book}:
                                                 variant="outlined"
                                                 sx={{mb: 2}}
                                               />
-                                              <TextField
-                                                id="category"
-                                                label="Category"
+
+                                              <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                options={AllCategories}
                                                 value={editedCategory}
-                                                onChange={(e) => setEditedCategory(e.target.value)}
-                                                fullWidth
-                                                variant="outlined"
-                                                sx={{mb: 2}}
+                                                freeSolo
+                                                onInputChange={(event, newInputValue) => {
+                                                  setEditedCategory(newInputValue);
+                                                }}
+                                                renderInput={(params) => <TextField {...params} label="Category" fullWidth variant="outlined" sx={{mb: 2}}/>}
                                               />
+
                                               <TextField
                                                 id="publisher"
                                                 label="Publisher"
@@ -186,6 +253,7 @@ export default function BookDisplayDialog({open, setOpen, handleClose, book}:
                                                 variant="outlined"
                                                 sx={{mb: 2}}
                                               />
+
                                               <TextField
                                                   fullWidth
                                                   id="outlined-basic"
@@ -247,11 +315,12 @@ export default function BookDisplayDialog({open, setOpen, handleClose, book}:
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose}>Close</Button>
-                <Button onClick={handleClose} autoFocus>
+                <Button onClick={addToshelf} autoFocus>
                   add to shelf
                 </Button>
               </DialogActions>
             </Dialog>
+ 
           </ThemeProvider>
         </React.Fragment>
       );
