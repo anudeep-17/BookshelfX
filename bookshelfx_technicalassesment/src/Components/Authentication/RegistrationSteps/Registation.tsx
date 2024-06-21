@@ -60,9 +60,7 @@ const steps = [
 export default function Registration() 
 {
   const [activeStep, setActiveStep] = React.useState(0);
-  const [completed, setCompleted] = React.useState<{
-    [k: number]: boolean;
-  }>({});
+  const [completed, setCompleted] = React.useState<{[k: number]: boolean;}>({});
   const [alertopener, setAlertopener] = React.useState(false);
 
   const [Email, setEmail] = React.useState('');

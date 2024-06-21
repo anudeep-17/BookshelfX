@@ -16,7 +16,7 @@ import {User} from '../interfaceModels';
 import Cookies from 'js-cookie';
 import { AuthContext } from '../Context/AuthContext';
 import Registration from './RegistrationSteps/Registation';
-
+ 
 export default function Login_Signup() {
     const [isregister, setisregister] = React.useState(false);
     const [Email, setEmail] = React.useState('');
