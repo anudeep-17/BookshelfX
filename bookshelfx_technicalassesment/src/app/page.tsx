@@ -46,7 +46,7 @@ export default function Home() {
       }
       
     }
-  }, [isAuthenticated, router]); 
+  }, [isAuthenticated, router, userRole]); 
 
   if (isLoading) {
     return null;  
