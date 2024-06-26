@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import { useRouter } from "next/navigation"; // corrected from "next/navigation"
 import { CircularProgress } from "@mui/material";
 
+
 const Auth = dynamic(() => import('@/Components/Authentication/Auth'), { ssr: false, 
   loading: () => 
     <CircularProgress sx={{
@@ -19,6 +20,8 @@ const Auth = dynamic(() => import('@/Components/Authentication/Auth'), { ssr: fa
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState('');
+
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
@@ -26,13 +29,22 @@ export default function Home() {
     const user = Cookies.get('user');
     if (user) {
       setIsAuthenticated(true);
+      setUserRole(JSON.parse(user).role);
     }
     setIsLoading(false);
   }, []); 
     
   useEffect(() => {
     if (isAuthenticated) {
-      router.push('/Reader/home');
+      if(userRole === 'librarian')  
+      {
+        router.push('/librarian/home');
+      }
+      else
+      {
+        router.push('/Reader/home');
+      }
+      
     }
   }, [isAuthenticated, router]); 
 
