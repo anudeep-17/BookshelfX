@@ -3,6 +3,8 @@ import theme from "@/Components/Themes";
 import { Box, Button, ThemeProvider, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import NotFound from '@/assets/NotFound1.png';
+import Image from "next/image";
 
 export default function Home() {
     const router = useRouter();
@@ -18,7 +20,9 @@ export default function Home() {
                     alignItems: "center",
                     height: "100vh",
                     width: "100vw",
-                    backgroundColor: 'black'
+                    backgroundImage: `url(${NotFound.src})`, // use the image as a background
+                    backgroundSize: 'cover', // cover the entire box with the image
+                    backgroundPosition: 'center', // center the image
                 }}
             >
                 <Box
@@ -27,10 +31,9 @@ export default function Home() {
                         flexDirection: "column",
                         alignItems: "center",
                         gap: 2,
-                        color: 'white'
+                        color: 'white',  
                     }}
                 >
-                   <Typography variant="h2">Not Found</Typography>
                     <Button variant="contained" color="secondary" fullWidth onClick={()=> {router.push(pathname)}}>
                         Return to Home
                     </Button>
