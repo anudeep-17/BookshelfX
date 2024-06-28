@@ -37,7 +37,7 @@ export function middleware(request: NextRequest)
             }
             else if (isPathInRoutes(currentPath, LibrarianRoutes)) 
             {
-                return NextResponse.redirect('/notAuthorized');
+              return NextResponse.redirect('http://localhost:3000/notAuthorized');
             }
           } 
           else if (role === 'librarian' && isPathInRoutes(currentPath, LibrarianRoutes)) 

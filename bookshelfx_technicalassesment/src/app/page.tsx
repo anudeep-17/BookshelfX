@@ -20,8 +20,6 @@ const Auth = dynamic(() => import('@/Components/Authentication/Auth'), { ssr: fa
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState('');
-
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
@@ -29,24 +27,26 @@ export default function Home() {
     const user = Cookies.get('user');
     if (user) {
       setIsAuthenticated(true);
-      setUserRole(JSON.parse(user).role);
     }
     setIsLoading(false);
   }, []); 
     
   useEffect(() => {
     if (isAuthenticated) {
-      if(userRole === 'librarian')  
+      const user = Cookies.get('user');
+      if(user)
       {
-        router.push('/librarian/home');
+        if(JSON.parse(user).role === 'customer') 
+        {
+          router.push('/Reader/home');
+        }
+        else
+        {
+          router.push('/librarian/home');
+        }
       }
-      else
-      {
-        router.push('/Reader/home');
-      }
-      
     }
-  }, [isAuthenticated, router, userRole]); 
+  }, [isAuthenticated, router]); 
 
   if (isLoading) {
     return null;  
