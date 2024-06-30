@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { DashboardSize } from "@/Components/DashboardSize";
 import theme from "@/Components/Themes";
 import { Alert, Box, Button, CssBaseline, Grid, Pagination, Paper, Snackbar, TextField, ThemeProvider, Toolbar, Typography } from "@mui/material";
@@ -8,12 +8,10 @@ import { getBooksFromGoogleBooks } from '@/Services/LibrarianRoutines';
 import { Book } from '@/Components/interfaceModels';
 import BookDisplayCard from './BookDisplayCard';
 
- 
 const drawerWidth = DashboardSize;
 
 export default function AddBookFromGoogleComponent() 
 {  
-    
     const [author, setAuthor] = React.useState('');
     const [title, setTitle] = React.useState('');
     const [publisher, setPublisher] = React.useState('');
@@ -30,9 +28,7 @@ export default function AddBookFromGoogleComponent()
         const data = await getBooksFromGoogleBooks(title, author, publisher, page-1, 10);
         if(data.success && data.data.totalItems > 0)
         {
-            setTotalBooks(data.data.totalItems);
-            console.log(data.data);
-        
+            setTotalBooks(data.data.totalItems);        
             const googleBooks = data.data.items;
             const mappedBooks: Book[] = googleBooks.map((book: any) => ({
                 ISBN: book.volumeInfo.industryIdentifiers?.[0]?.identifier || 'N/A',
@@ -49,7 +45,7 @@ export default function AddBookFromGoogleComponent()
                 isFeaturedBook: false,  
             }));
         
-            setBooks(mappedBooks);
+            setBooks(prevBooks => [...prevBooks, ...mappedBooks]);
         }
 
         let types = {} as { [key: string]: string };

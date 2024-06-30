@@ -15,8 +15,8 @@ export async function GET(req: NextApiRequest)
             return NextResponse.json({success: false, message: "At least one search parameter is required"}, {status: 400});
         }
         let query = '';
+        if (title) query += title;
         if (author) query += `+inauthor:${author}`;
-        if (title) query += `+intitle:${title}`;
         if (publisher) query += `+inpublisher:${publisher}`;
         
         startIndex = startIndex * maxResults;
