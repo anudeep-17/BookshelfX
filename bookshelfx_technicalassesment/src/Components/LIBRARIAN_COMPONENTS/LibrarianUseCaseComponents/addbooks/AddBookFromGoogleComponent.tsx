@@ -2,33 +2,38 @@
 import React from 'react';
 import { DashboardSize } from "@/Components/DashboardSize";
 import theme from "@/Components/Themes";
-import { Alert, Box, Button, CssBaseline, Grid, Pagination, Paper, Snackbar, TextField, ThemeProvider, Toolbar, Typography } from "@mui/material";
+import { Chip, Alert, Box, Button, CircularProgress, CssBaseline, Grid, Pagination, Paper, Snackbar, TextField, ThemeProvider, Toolbar, Typography, Tooltip } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
 import { getBooksFromGoogleBooks } from '@/Services/LibrarianRoutines';
 import { Book } from '@/Components/interfaceModels';
 import BookDisplayCard from './BookDisplayCard';
 
+
 const drawerWidth = DashboardSize;
 
 export default function AddBookFromGoogleComponent() 
 {  
-    const [author, setAuthor] = React.useState('');
+    const [authors, setAuthors] = React.useState<string[]>([])
+    const [input, setInput] = React.useState('')
     const [title, setTitle] = React.useState('');
     const [publisher, setPublisher] = React.useState('');
+    const [category, setCategory] = React.useState('');
     const [Books, setBooks] = React.useState<Book[]>([]);
     const [page, setPage] = React.useState(1);
-    const [totalBooks, setTotalBooks] = React.useState(0);
     const [searchType, setSearchType] = React.useState<{ [key: string]: string }>({});
     const [alertOpen, setAlertOpen] = React.useState(false);
     const [alertContent, setAlertContent] = React.useState<{ severity: "success" | "error" | "info" | "warning" | undefined, message: string }>({
         severity: 'success', message: ''
     });
-    
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [totalItems, setTotalItems] = React.useState(0);
+
     const handleClickofSearch = async() => {
-        const data = await getBooksFromGoogleBooks(title, author, publisher, page-1, 10);
+        const author = authors.join(', ');
+        const data = await getBooksFromGoogleBooks(title, author, publisher, category, page-1, 10);
         if(data.success && data.data.totalItems > 0)
         {
-            setTotalBooks(data.data.totalItems);        
+            setTotalItems(data.data.totalItems);
             const googleBooks = data.data.items;
             const mappedBooks: Book[] = googleBooks.map((book: any) => ({
                 ISBN: book.volumeInfo.industryIdentifiers?.[0]?.identifier || 'N/A',
@@ -44,8 +49,13 @@ export default function AddBookFromGoogleComponent()
                 rating: book.volumeInfo.averageRating || 0,
                 isFeaturedBook: false,  
             }));
-        
-            setBooks(prevBooks => [...prevBooks, ...mappedBooks]);
+
+            setBooks(mappedBooks);
+        }
+        else if(Books.length > 0)
+        {
+            setBooks([]);
+            setTotalItems(0);
         }
 
         let types = {} as { [key: string]: string };
@@ -53,21 +63,24 @@ export default function AddBookFromGoogleComponent()
         if (title !== '') {
             types['Title'] = title;
         }
-        if (author !== '') {
-            types['Author'] = author;
+        if (authors.length > 0) {
+            types['Author'] = authors.join(', ');
+        }
+        if (category !== '') {
+            types['Category'] = category;
         }
         if (publisher !== '') {
             types['Publisher'] = publisher;
         }
+       
         setSearchType(types);
       
     }
-
+ 
     const handleCloseAlert = (event: React.SyntheticEvent<any, Event> | Event, reason?: string) => {
         if (reason === 'clickaway') {
           return;
         }
-      
         setAlertOpen(false);
     };
 
@@ -110,17 +123,58 @@ export default function AddBookFromGoogleComponent()
                                                             fullWidth
                                                             sx={{mb:2}}
                                                         />
+
+                                                        <Tooltip title="You can enter multiple authors, press enter for each" placement='top'> 
+                                                            <TextField
+                                                                label="Author"
+                                                                value={input}
+                                                                onChange={(e) => setInput(e.target.value)}
+                                                                onKeyDown={(e) => {
+                                                                if (e.key === 'Enter') {
+                                                                    setAuthors([...authors, input])
+                                                                    setInput('')
+                                                                }
+                                                                }}
+                                                                sx={{mb:2}}
+                                                            />
+                                                        </Tooltip>
+
+                                                        {authors.length>0?  
+                                                            authors.map((author, index) => (
+                                
+                                                                <Chip
+                                                                    label={author}
+                                                                    onDelete={() => {
+                                                                        const newAuthors = [...authors]
+                                                                        newAuthors.splice(index, 1)
+                                                                        setAuthors(newAuthors)
+                                                                    }}
+                                                                    variant="outlined"
+                                                                    color="primary"
+                                                                    sx={{mb:1.5, width: '100%'}}
+                                                                    key={index}
+                                                                    dir="ltr"
+                                                                />
+                                                        
+                                                            )): 
+                                                            <Typography variant="body2" color="text.primary" textAlign={'center'} sx={{mb:2}}>
+                                                                No authors added
+                                                            </Typography>
+                                                        }
+
                                                         <TextField
-                                                            label="Author"
-                                                            value={author}
-                                                            onChange={(e) => setAuthor(e.target.value)}
+                                                            label="Category"
+                                                            value={category}
+                                                            onChange={(e) => setCategory(e.target.value)}
                                                             sx={{mb:2}}
                                                         />
+
                                                         <TextField
                                                             label="Publisher"
                                                             value={publisher}
                                                             onChange={(e) => setPublisher(e.target.value)}
                                                         />
+
                                                         <Button variant="contained" sx={{mt:2}} onClick={handleClickofSearch}>Search on google book </Button>
                                                     </FormControl>
                                                 </Grid>
@@ -140,9 +194,26 @@ export default function AddBookFromGoogleComponent()
                                                 p:1.5,
                                             }}
                                         >
-                                            <Typography variant="h4" sx={{mb:2}}>
-                                                Search results {Object.keys(searchType).length > 0 && `for ${Object.values(searchType).join(', ')}:`}
+                                            <Typography variant="h4">
+                                                Search results 
+                                                {Object.keys(searchType).length > 0 && ` for:`}
                                             </Typography>
+                                            <Box display="flex" flexDirection="row" flexWrap="wrap" sx={{
+                                                mb:3
+                                            }}>
+                                                {Object.entries(searchType).map(([key, value]) => (
+                                                    <Box display="flex" flexDirection="row" alignItems="center" sx={{
+                                                        mr:2
+                                                    }}>
+                                                        <Typography variant="body1" color="text.secondary" key={key} sx={{mr: 1}}>
+                                                            {`${key}:`}
+                                                        </Typography>
+                                                        <Typography variant="body1" color="primary" key={value}>
+                                                            {value}
+                                                        </Typography>
+                                                    </Box>
+                                                ))}
+                                            </Box>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -156,27 +227,36 @@ export default function AddBookFromGoogleComponent()
                                                 }}
                                             >
                                             {
+                                              isLoading ? (
+                                                <CircularProgress /> 
+                                              ) : (
                                                 Books && Books.length > 0 ? Books.map((book: Book) => (
-                                                    <BookDisplayCard 
-                                                        key={book.ISBN} 
-                                                        book={book} 
-                                                        setAlertOpen={setAlertOpen}
-                                                        setAlertContent={setAlertContent}
-                                                    />
+                                                  <BookDisplayCard 
+                                                    key={book.ISBN} 
+                                                    book={book} 
+                                                    setAlertOpen={setAlertOpen}
+                                                    setAlertContent={setAlertContent}
+                                                  />
                                                 )) :
+                                                ((title || authors.length>0 || publisher || category) && Books.length === 0) ? 
+                                                <Typography variant="h6" sx={{mt:2, color: theme.palette.primary.main}}>
+                                                  No Books found
+                                                </Typography> :
                                                 <Typography variant="h6" sx={{mt:2}}>
-                                                    
                                                 </Typography>
+                                              )
                                             }
                                              </Box>
                                             <Pagination 
-                                                    count={Math.ceil(totalBooks/10)}
+                                                    count={Math.ceil(totalItems/10)}
                                                     color="primary" 
                                                     size="large"
                                                     page={ page }
-                                                    onChange={(event, page) => {
+                                                    onChange={async (event, page) => {
                                                         setPage(page);
-                                                        handleClickofSearch();
+                                                        setIsLoading(true); // start loading
+                                                        await handleClickofSearch();
+                                                        setIsLoading(false); // end loading
                                                     }}
                                             />
                                         </Box>

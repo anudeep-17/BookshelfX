@@ -123,7 +123,7 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
             rating: rating,
             isFeaturedBook: isFeaturedBook
         });
-        console.log(response);  
+
         if(response.success)
         {
             setAlertOpen(true);
@@ -244,14 +244,14 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
                                                 renderInput={(params) => <TextField {...params} label="Category" fullWidth variant="outlined" sx={{mb: 2}}/>}
                                               />
 
-                                              <TextField
-                                                id="publisher"
-                                                label="Publisher"
+                                              <Autocomplete
+                                                id="publishers"
+                                                options={AllPublishers}
                                                 value={editedPublisher}
-                                                onChange={(e) => setEditedPublisher(e.target.value)}
-                                                fullWidth
-                                                variant="outlined"
-                                                sx={{mb: 2}}
+                                                onInputChange={(event, newInputValue) => {
+                                                  setEditedPublisher(newInputValue);
+                                                }}
+                                                renderInput={(params) => <TextField {...params} label="Publishers" fullWidth variant="outlined" sx={{mb: 2}}/>}
                                               />
 
                                               <TextField
@@ -306,7 +306,6 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
                                                   <MenuItem value="false">False</MenuItem>
                                                 </Select>
                                               </FormControl>
-                                          
                                           </>
                               }
                           </Grid>

@@ -20,9 +20,9 @@ export async function AllStats(LibrarianId: number)
     return data;
 }
 
-export async function getBooksFromGoogleBooks(title: string, authors: string, publisher: string, startIndex: number, maxResults: number)
+export async function getBooksFromGoogleBooks(title: string, authors: string, publisher: string, category:string, startIndex: number, maxResults: number)
 {
-    const response = await fetch(`/api/books/librarian/GoogleAPISupport/getBookFromGoogleApi?title=${title}&authors=${authors}&publisher=${publisher}&startIndex=${startIndex}&maxResults=${maxResults}`,{
+    const response = await fetch(`/api/books/librarian/GoogleAPISupport/getBookFromGoogleApi?title=${title}&authors=${authors}&publisher=${publisher}&category=${category}&startIndex=${startIndex}&maxResults=${maxResults}`,{
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

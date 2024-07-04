@@ -201,7 +201,7 @@ export default function Navbar()
               {(pathname.split("/")[1] === 'Reader'? UserDrawer : LibrarianDrawer).slice(0, 6).map((item, index) => (
                 <ListItem key={item.text} disablePadding>
                 <ListItemButton 
-                selected={pathname === item.path}
+                selected={pathname.startsWith(item.path? item.path : "")}
                 sx={{ 
                   borderRadius: '4px', // Make edges curved
                   m:2,

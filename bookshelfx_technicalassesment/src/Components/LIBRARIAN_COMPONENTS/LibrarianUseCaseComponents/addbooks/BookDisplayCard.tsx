@@ -63,7 +63,9 @@ export default function BookDisplayCard({book, setAlertOpen, setAlertContent}:{
                         <Typography variant="body1" color="text.secondary" sx={{
                             mb:0.5
                         }}>
-                            {book.authors.join(", ")}
+                            {
+                                Array.isArray(book.authors) ? book.authors.join(', ') : book.authors
+                            }
                         </Typography>
                         
                         <Rating name="read-only" value={value} readOnly sx={{
