@@ -158,7 +158,7 @@ export default function AddBookFromGoogleComponent()
                                                         
                                                             )): 
                                                             <Typography variant="body2" color="text.primary" textAlign={'center'} sx={{mb:2}}>
-                                                                No authors added
+                                                               Please add an author
                                                             </Typography>
                                                         }
 
