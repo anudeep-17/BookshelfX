@@ -6,15 +6,19 @@ export async function DELETE(req: Request)
     try{
         const url = new URL(req.url);
         const title = url.searchParams.get('title');
-        
-        if(title == null) 
+        const authors = url.searchParams.get('authors');
+         
+        if(title == null || authors == null) 
         {
             return NextResponse.json({success: false, message: "All fields are required"}, {status: 400});
         }
 
         const deleteBooks = await database.bookDetails.findFirst({
             where: {
-                title: title 
+                title: title,
+                authors: {
+                    hasSome: authors ? authors.split(",") : undefined
+                }
             }
         });
 

@@ -2,17 +2,22 @@
 import React from 'react';
 import { DashboardSize } from "@/Components/DashboardSize";
 import theme from "@/Components/Themes";
-import { Box, Button, CssBaseline, FormControl, Grid, InputLabel,  Paper, Rating, Select, Skeleton, TextField, ThemeProvider, Toolbar, Typography } from "@mui/material";
+import { Box, Button, CssBaseline, FormControl, Grid, InputLabel,  Paper, Rating, Select, TextField, ThemeProvider, Toolbar, Typography } from "@mui/material";
 import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MenuItem from '@mui/material/MenuItem';
+import ImageUrlDialog from './ImageUrlDialog';
+import Image from 'next/image';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const drawerWidth = DashboardSize;
+
 export default function AddBookManualComponent() 
 {
+    const [showImageDialog, setShowImageDialog] = React.useState(false);
     const [bookImage, setBookImage] = React.useState('');  
     const [bookTitle, setBookTitle] = React.useState('');
     const [authors, setAuthors] = React.useState('');
@@ -24,7 +29,18 @@ export default function AddBookManualComponent()
     const [bookDescription, setBookDescription] = React.useState('');
     const [availability, setAvailability] = React.useState(true);
     const [IsFeaturedBook, setIsFeaturedBook] = React.useState(false);
-    
+    const [loadingImage, setLoadingImage] = React.useState(true);  
+    const onClose = () => 
+    {
+        console.log("was called");
+        setShowImageDialog(false);
+    }  
+
+    const onClickofImage = () =>
+    {
+        setShowImageDialog(true);
+    }
+
     return (
         <ThemeProvider theme={theme}>
         <CssBaseline />           
@@ -66,15 +82,55 @@ export default function AddBookManualComponent()
                                                 mb:2,
                                             }}
                                         >
-                                            <Button variant="contained" component="span">
-                                                Upload Image
-                                            </Button>
-                                            <input
-                                                id="upload-button"
-                                                type="file"
-                                                accept="image/*"
-                                                hidden
-                                            />
+                                            {
+                                                bookImage.length > 0 ?
+                                                <Box sx={{ position: 'relative', width: 350, height: 450, '&:hover button': { opacity: 1} }}>
+                                                     <Box sx={{ 
+                                                        position: 'absolute', 
+                                                        top: 0, 
+                                                        right: 0, 
+                                                        bottom: 0, 
+                                                        left: 0,
+                                                        '&:hover::after': {
+                                                        content: '""',
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        right: 0,
+                                                        bottom: 0,
+                                                        left: 0,
+                                                        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                                                        },
+                                                    }}>
+                                                        <Image src={bookImage} alt="Book Image" width={350} height={450}/>
+                                                    </Box>
+                                                    <Button 
+                                                        sx={{ 
+                                                            position: 'absolute', 
+                                                            top: '50%', 
+                                                            left: '50%', 
+                                                            transform: 'translate(-50%, -50%)', 
+                                                            opacity: 0,  
+                                                            transition: 'opacity 0.3s' 
+                                                        }}
+                                                        variant="contained"
+                                                        onClick={onClickofImage}
+                                                    >
+                                                        Edit Image
+                                                    </Button>
+                                                </Box>
+                                                :
+                                                <>
+                                                    <Button variant="contained" component="span" onClick={onClickofImage}>
+                                                        Upload Image
+                                                    </Button>
+                                                </>
+                                            }
+
+                                            {
+                                                showImageDialog &&
+                                                <ImageUrlDialog bookImage={bookImage} setBookImage={setBookImage} open={showImageDialog} onClose={onClose}/>
+                                            }
+
                                         </Box>
                                     </Grid>
 
@@ -101,7 +157,9 @@ export default function AddBookManualComponent()
                                         />
 
                                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                            <Typography variant="body1">
+                                            <Typography variant="body1" sx={{
+                                                mr:1
+                                            }}>
                                                 Rating: 
                                             </Typography>
                                             <Rating value={rating}onChange={(event, newValue) => { setRating(newValue !== null ? newValue : 0);}}/>

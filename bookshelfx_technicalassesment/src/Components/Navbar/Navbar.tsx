@@ -360,6 +360,7 @@ export default function Navbar()
                   },
                 },
                 '& .MuiInputBase-input': {
+                  color: 'white',
                   padding: (theme) => theme.spacing(1, 1, 1, 0),
                   paddingLeft: (theme) => `calc(${theme.spacing(2)}px + 1em)`, // Modify this line to adjust the placeholder position
                   transition: (theme) => theme.transitions.create('width'),
@@ -396,8 +397,8 @@ export default function Navbar()
                 ),
               }}
               variant="outlined"
-             
             />
+
             <Menu
               anchorEl={searchanchorEl}
               open={Boolean(searchanchorEl)}

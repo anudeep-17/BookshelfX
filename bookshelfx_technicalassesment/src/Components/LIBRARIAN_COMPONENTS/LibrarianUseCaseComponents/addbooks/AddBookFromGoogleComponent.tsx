@@ -45,7 +45,7 @@ export default function AddBookFromGoogleComponent()
                 category: book.volumeInfo.categories?.[0] || 'N/A',
                 publisher: book.volumeInfo.publisher || 'N/A',
                 publishedDate: book.volumeInfo.publishedDate ? new Date(book.volumeInfo.publishedDate) : 'N/A',
-                pagecount: book.volumeInfo.pageCount || 'N/A',
+                pagecount: book.volumeInfo.pageCount || 0,
                 rating: book.volumeInfo.averageRating || 0,
                 isFeaturedBook: false,  
             }));
@@ -124,7 +124,7 @@ export default function AddBookFromGoogleComponent()
                                                             sx={{mb:2}}
                                                         />
 
-                                                        <Tooltip title="You can enter multiple authors, press enter for each" placement='top'> 
+                                                        <Tooltip title="You can enter multiple authors, press enter for each"> 
                                                             <TextField
                                                                 label="Author"
                                                                 value={input}

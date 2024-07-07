@@ -5,7 +5,7 @@ import { Box, Button, ThemeProvider, Tooltip } from '@mui/material';
 import theme from '../../../Themes';
 import { Book  } from '../../../interfaceModels';
 import BookDisplayDialog from './BookDisplayDialog';
-
+import bookcover from '@/assets/bookcover.png'
 
 export default function BookDisplayCard({book, setAlertOpen, setAlertContent}:{
     book: Book
@@ -44,7 +44,7 @@ export default function BookDisplayCard({book, setAlertOpen, setAlertContent}:{
                 >
                     <Box sx={{ 
                         height: 400, // Increased size
-                        backgroundImage: `url(${book.coverimage})`,
+                        backgroundImage: `url(${book.coverimage !== 'N/A' ? book.coverimage : bookcover.src})`,
                         backgroundSize: 'cover', // Add this to fit the image
                         backgroundPosition: 'center', // Add this to center the image
                         borderRadius: '10px 10px 0 0', // Make top borders curved
