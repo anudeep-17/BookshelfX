@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Book } from '../../../interfaceModels';
-import { Alert, Box, FormControl, Grid, IconButton, InputLabel, MenuItem, Rating, Select, Snackbar, TextField, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Alert, Box, Chip, FormControl, Grid, IconButton, InputLabel, MenuItem, Rating, Select, Snackbar, TextField, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Image from 'next/image';
 import theme from '@/Components/Themes';
 import EditIcon from '@mui/icons-material/Edit';
@@ -33,6 +33,7 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
         setAlertContent: React.Dispatch<React.SetStateAction<{severity: "success" | "error" | "info" | "warning" | undefined; message: string;}>>
     }) 
 {
+
     const [isEditing, setIsEditing] = React.useState(false);
     const [title, setTitle] = React.useState(book.title);
     const [authors, setAuthors] = React.useState(book.authors.join(', '));
@@ -48,7 +49,7 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
     const [addedSuccessfully, setAddedSuccessfully] = React.useState(false);
 
     //===============================================================================================================
-    const [editedAuthors, setEditedAuthors] = React.useState(book.authors.join(', '));
+    const [editedAuthors, setEditedAuthors] = React.useState(book.authors as string[]);
     const [editedDescription, setEditedDescription] = React.useState(book.description);
     const [editedCategory, setEditedCategory] = React.useState(book.category);
     const [editedPublisher, setEditedPublisher] = React.useState(book.publisher);
@@ -70,7 +71,7 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
             const authors = await getAuthors();
             if(authors.success)
             {
-                setAllAuthors(authors.data);
+                setAllAuthors(authors.data.flatMap((item: { authors: string }) => item.authors));
             }
             const Categories = await getCategories();
             if(Categories.success)
@@ -89,8 +90,7 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
 
     React.useEffect(() => {
       const fetchData = async () => { 
-        const bookalreadyInshelf = await isBookAlreadyInShelf(title, authors);
-        console.log(bookalreadyInshelf);
+        const bookalreadyInshelf = await isBookAlreadyInShelf(title, authors.split(","));
         if(bookalreadyInshelf.success)
         {
             setAlreadyInShelf(true);
@@ -104,7 +104,7 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
 
     function handleSave()
     {
-      setAuthors(editedAuthors);
+      setAuthors(editedAuthors.join(', '));
       setDescription(editedDescription);
       setCategory(editedCategory);
       setPublisher(editedPublisher);
@@ -117,7 +117,7 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
 
     function handleCancel() 
     {
-      setEditedAuthors(authors);
+      setEditedAuthors(authors.split(','));
       setEditedDescription(description);
       setEditedCategory(category);
       setEditedPublisher(publisher);
@@ -219,7 +219,7 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
                 </DialogTitle>
                 <DialogContent>
                   <DialogContentText id="alert-dialog-description">
-                    {
+                      {
                         isEditing ?
                         <Box sx={{display: 'flex', flexDirection: 'row', alignContent: 'center', alignItems: 'center', justifyContent: 'flex-end', gap:0.5}}>
                           <IconButton onClick={() => {setIsEditing(!isEditing); handleCancel()}}><ClearIcon sx={{color: 'red', fontSize: '2rem', cursor: 'pointer', float: 'right'}}/></IconButton>
@@ -241,15 +241,22 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
                                 <Typography variant="h2" sx={{color:theme.palette.text.secondary, mb: 2}}>{`${book.title}`}</Typography>
                                 {!isEditing ? <BookInformationTypography /> :
                                             <>
-                                                <Autocomplete
-                                                  id="authors"
-                                                  options={AllAuthors}  
-                                                  value={editedAuthors}
-                                                  onInputChange={(event, newInputValue) => {
-                                                    setEditedAuthors(newInputValue);
-                                                  }}
-                                                  renderInput={(params) => <TextField {...params} label="Authors" fullWidth variant="outlined" sx={{mb: 2}}/>}
-                                                />
+                                              <Autocomplete
+                                                id="authors"
+                                                multiple
+                                                options={AllAuthors}
+                                                value={editedAuthors}
+                                                onChange={(event, newInputValue) => {
+                                                  setEditedAuthors(newInputValue);
+                                                }}
+                                                renderInput={(params) => <TextField {...params} label="Authors" fullWidth variant="outlined" sx={{mb: 2}}/>}
+                                                renderTags={(value, getTagProps) =>
+                                                  value.map((option, index) => (
+                                                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                                                  ))
+                                                }
+                                              />
+
 
                                                 <Box display="flex" alignItems="center" >
                                                   <Typography variant="h6" sx={{mb: 2, mr: 1}}>
@@ -272,7 +279,6 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
                                                 />
 
                                                 <Autocomplete
-                                                  disablePortal
                                                   id="combo-box-demo"
                                                   options={AllCategories}
                                                   value={editedCategory}

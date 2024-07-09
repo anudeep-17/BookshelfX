@@ -7,7 +7,7 @@ export async function GET(req: any)
         const url = new URL(req.url);
         const title = url.searchParams.get('title');
         const author = url.searchParams.get('author');
-        console.log(title, author);
+        
         if(title == null && author == null) 
         {
             return NextResponse.json({success: false, message: "Atleast one field is required"}, {status: 400});
@@ -16,7 +16,7 @@ export async function GET(req: any)
             where: {
                 title: title? title : undefined,
                 authors: {
-                    hasSome: author ? author.split(",") : undefined
+                    equals: author ? author.split(",") : undefined
                 }
             }
         });

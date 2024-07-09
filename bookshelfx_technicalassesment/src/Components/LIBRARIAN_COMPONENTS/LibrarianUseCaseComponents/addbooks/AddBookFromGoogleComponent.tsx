@@ -8,7 +8,6 @@ import { getBooksFromGoogleBooks } from '@/Services/LibrarianRoutines';
 import { Book } from '@/Components/interfaceModels';
 import BookDisplayCard from './BookDisplayCard';
 
-
 const drawerWidth = DashboardSize;
 
 export default function AddBookFromGoogleComponent() 
@@ -34,6 +33,7 @@ export default function AddBookFromGoogleComponent()
         if(data.success && data.data.totalItems > 0)
         {
             setTotalItems(data.data.totalItems);
+
             const googleBooks = data.data.items;
             const mappedBooks: Book[] = googleBooks.map((book: any) => ({
                 ISBN: book.volumeInfo.industryIdentifiers?.[0]?.identifier || 'N/A',
@@ -78,7 +78,8 @@ export default function AddBookFromGoogleComponent()
     }
  
     const handleCloseAlert = (event: React.SyntheticEvent<any, Event> | Event, reason?: string) => {
-        if (reason === 'clickaway') {
+        if (reason === 'clickaway') 
+        {
           return;
         }
         setAlertOpen(false);
@@ -139,27 +140,27 @@ export default function AddBookFromGoogleComponent()
                                                             />
                                                         </Tooltip>
 
-                                                        {authors.length>0?  
-                                                            authors.map((author, index) => (
-                                
-                                                                <Chip
-                                                                    label={author}
-                                                                    onDelete={() => {
-                                                                        const newAuthors = [...authors]
-                                                                        newAuthors.splice(index, 1)
-                                                                        setAuthors(newAuthors)
-                                                                    }}
-                                                                    variant="outlined"
-                                                                    color="primary"
-                                                                    sx={{mb:1.5, width: '100%'}}
-                                                                    key={index}
-                                                                    dir="ltr"
-                                                                />
-                                                        
-                                                            )): 
-                                                            <Typography variant="body2" color="text.primary" textAlign={'center'} sx={{mb:2}}>
-                                                               Please add an author
-                                                            </Typography>
+                                                        {
+                                                            authors.length>0?  
+                                                                authors.map((author, index) => (
+                                                                    <Chip
+                                                                        label={author}
+                                                                        onDelete={() => {
+                                                                            const newAuthors = [...authors]
+                                                                            newAuthors.splice(index, 1)
+                                                                            setAuthors(newAuthors)
+                                                                        }}
+                                                                        variant="outlined"
+                                                                        color="primary"
+                                                                        sx={{mb:1.5, width: '100%'}}
+                                                                        key={index}
+                                                                        dir="ltr"
+                                                                    />
+                                                            
+                                                                )): 
+                                                                <Typography variant="body2" color="text.primary" textAlign={'center'} sx={{mb:2}}>
+                                                                Please add an author
+                                                                </Typography>
                                                         }
 
                                                         <TextField

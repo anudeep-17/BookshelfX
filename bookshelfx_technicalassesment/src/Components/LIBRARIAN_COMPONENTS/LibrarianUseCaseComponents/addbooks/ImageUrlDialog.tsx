@@ -23,6 +23,9 @@ export default function ImageUrlDialog({bookImage, setBookImage, open, onClose}:
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
                     fullWidth
+                    sx={{
+                        mt:1
+                    }}
                 />
             </DialogContent>
             <DialogActions>

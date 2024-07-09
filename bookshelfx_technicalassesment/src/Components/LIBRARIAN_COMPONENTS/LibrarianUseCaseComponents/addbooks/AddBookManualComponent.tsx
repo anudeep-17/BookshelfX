@@ -11,7 +11,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MenuItem from '@mui/material/MenuItem';
 import ImageUrlDialog from './ImageUrlDialog';
 import Image from 'next/image';
-import CircularProgress from '@mui/material/CircularProgress';
+ 
 
 const drawerWidth = DashboardSize;
 
@@ -29,7 +29,7 @@ export default function AddBookManualComponent()
     const [bookDescription, setBookDescription] = React.useState('');
     const [availability, setAvailability] = React.useState(true);
     const [IsFeaturedBook, setIsFeaturedBook] = React.useState(false);
-    const [loadingImage, setLoadingImage] = React.useState(true);  
+
     const onClose = () => 
     {
         console.log("was called");
@@ -85,7 +85,7 @@ export default function AddBookManualComponent()
                                             {
                                                 bookImage.length > 0 ?
                                                 <Box sx={{ position: 'relative', width: 350, height: 450, '&:hover button': { opacity: 1} }}>
-                                                     <Box sx={{ 
+                                                    <Box sx={{ 
                                                         position: 'absolute', 
                                                         top: 0, 
                                                         right: 0, 
@@ -137,23 +137,23 @@ export default function AddBookManualComponent()
                                     <Grid item xs={12} sm={8}>
                                         <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
                                                 <TextField
-                                                fullWidth
-                                                id="outlined-basic"
-                                                label="Book Title"
-                                                variant="outlined"
-                                                sx={{mb:2}}
-                                                value={bookTitle}
-                                                onChange={(e) => setBookTitle(e.target.value)}
-                                            />
+                                                    fullWidth
+                                                    id="outlined-basic"
+                                                    label="Book Title"
+                                                    variant="outlined"
+                                                    sx={{mb:2}}
+                                                    value={bookTitle}
+                                                    onChange={(e) => setBookTitle(e.target.value)}
+                                                />
                                         </Box>
                                         <TextField
-                                                fullWidth
-                                                id="outlined-basic"
-                                                label="Authors"
-                                                variant="outlined"
-                                                sx={{mb:2}}
-                                                value={authors}
-                                                onChange={(e) => setAuthors(e.target.value)}
+                                            fullWidth
+                                            id="outlined-basic"
+                                            label="Authors"
+                                            variant="outlined"
+                                            sx={{mb:2}}
+                                            value={authors}
+                                            onChange={(e) => setAuthors(e.target.value)}
                                         />
 
                                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -249,6 +249,16 @@ export default function AddBookManualComponent()
                                         </FormControl>
                                     </Grid>
                                 </Grid>
+
+                                <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                                    <Button variant="outlined" sx={{mt:2, mr:2}}>
+                                        Clear Fields
+                                    </Button>
+                                    <Button variant="contained" sx={{mt:2}}>
+                                        Add Book
+                                    </Button>
+                                </Box>
+
                             </Paper>
                         </Box>
                     </Box>

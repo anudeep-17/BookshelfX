@@ -32,10 +32,12 @@ export async function getBooksFromGoogleBooks(title: string, authors: string, pu
     return data;
 }
 
-export async function isBookAlreadyInShelf(title: string, author: string)
+export async function isBookAlreadyInShelf(title: string, author: string[])
 {
-    
-    const response = await fetch(`/api/books/librarian/addBooks/isBookAlreadyInShelf?title=${title}&author=${author}`,{
+    const encodedtitle = encodeURIComponent(title);
+    const encodedauthor = author.map((author) => encodeURIComponent(author));
+    console.log(encodedtitle, encodedauthor);
+    const response = await fetch(`/api/books/librarian/addBooks/isBookAlreadyInShelf?title=${encodedtitle}&author=${encodedauthor}`,{
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
