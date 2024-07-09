@@ -2,7 +2,7 @@
 import React from 'react';
 import { DashboardSize } from "@/Components/DashboardSize";
 import theme from "@/Components/Themes";
-import { Box, Button, CssBaseline, FormControl, Grid, InputLabel,  Paper, Rating, Select, TextField, ThemeProvider, Toolbar, Typography } from "@mui/material";
+import { Alert, Autocomplete, Box, Button, Chip, CssBaseline, FormControl, Grid, InputLabel,  Paper, Rating, Select, Snackbar, TextField, ThemeProvider, Toolbar, Typography } from "@mui/material";
 import dayjs from 'dayjs';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -11,7 +11,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MenuItem from '@mui/material/MenuItem';
 import ImageUrlDialog from './ImageUrlDialog';
 import Image from 'next/image';
- 
+import { addBookToLibrary, getAuthors, getCategories, getPublishers } from '@/Services/BookRoutines';
+import { useRouter } from 'next/router';
 
 const drawerWidth = DashboardSize;
 
@@ -20,19 +21,106 @@ export default function AddBookManualComponent()
     const [showImageDialog, setShowImageDialog] = React.useState(false);
     const [bookImage, setBookImage] = React.useState('');  
     const [bookTitle, setBookTitle] = React.useState('');
-    const [authors, setAuthors] = React.useState('');
+    const [bookISBN, setBookISBN] = React.useState('');
+    const [authors, setAuthors] = React.useState([] as string[]);
     const [rating, setRating] = React.useState(0);
     const [category, setCategory] = React.useState('');
-    const [pageCount, setPageCount] = React.useState('');
+    const [pageCount, setPageCount] = React.useState(0);
     const [publisher, setPublisher] = React.useState('');
-    const [publishedDate, setPublishedDate] = React.useState('');
+    const [publishedDate, setPublishedDate] = React.useState(dayjs(new Date()));
     const [bookDescription, setBookDescription] = React.useState('');
     const [availability, setAvailability] = React.useState(true);
     const [IsFeaturedBook, setIsFeaturedBook] = React.useState(false);
+    const [showAlert, setShowAlert] = React.useState(false);
+    const [alertContent, setAlertContent] = React.useState<{ severity: "success" | "error" | "info" | "warning" | undefined, message: string }>({
+        severity: 'success', message: ''
+    });
+    const [AllAuthors, setAllAuthors] = React.useState<string[]>([]);
+    const [AllPublishers, setAllPublishers] = React.useState<string[]>([]);
+    const [AllCategories, setAllCategories] = React.useState<string[]>([]);
+
+    const router = useRouter();
+
+    React.useEffect(()=>{
+         const fetchData = async() => {
+            const authors = await getAuthors();
+            if(authors.success)
+            {
+                setAllAuthors(authors.data.flatMap((item: { authors: string }) => item.authors));
+            }
+            const Categories = await getCategories();
+            if(Categories.success)
+            {
+                setAllCategories(Categories.data);
+            }
+            const Publishers = await getPublishers();
+            if(Publishers.success)
+            {
+                setAllPublishers(Publishers.data);
+            }
+        }
+        fetchData();
+       
+    },[])
+
+
+    function onClear()
+    {
+        setBookImage('');
+        setBookTitle('');
+        setAuthors([]);
+        setRating(0);
+        setCategory('');
+        setPageCount(0);
+        setPublisher('');
+        setPublishedDate(dayjs());
+        setBookDescription('');
+        setAvailability(true);
+        setIsFeaturedBook(false);
+
+        setShowAlert(true);
+        setAlertContent({severity: 'info', message: 'Fields Cleared.'});
+    }
+
+    async function onAddBook()
+    {
+        if(!bookTitle  || !authors)
+        {
+            setShowAlert(true);
+            return setAlertContent({severity: 'error', message: 'Please fill in all required fields.'});
+        }
+        const response = await addBookToLibrary({
+            title: bookTitle || 'N/A',
+            authors: authors.length > 0 ? authors : ['N/A'],
+            description: bookDescription || 'N/A',
+            ISBN: bookISBN || 'N/A',
+            coverimage: bookImage || 'N/A',
+            availability: availability !== undefined ? availability : true,
+            category: category || 'N/A',
+            publisher: publisher || 'N/A',
+            publishedDate: publishedDate ? publishedDate.toDate() : new Date(),
+            pagecount: pageCount || 0,
+            rating: rating || 0,
+            isFeaturedBook: IsFeaturedBook !== undefined ? IsFeaturedBook : false
+          });
+        
+        if(response.success)
+        {
+            setShowAlert(true);
+            setAlertContent({severity: 'success', message: 'Book has been added successfully.'});
+            window.open(`/book/${response.book.id}`, '_blank');
+            onClear();
+        }
+        else
+        {
+            setShowAlert(true);
+            setAlertContent({severity: 'error', message: 'An error occurred while adding book.'});
+        }
+
+    }
 
     const onClose = () => 
     {
-        console.log("was called");
         setShowImageDialog(false);
     }  
 
@@ -40,6 +128,14 @@ export default function AddBookManualComponent()
     {
         setShowImageDialog(true);
     }
+
+    const handleCloseAlert = (event: React.SyntheticEvent<any, Event> | Event, reason?: string) => {
+        if (reason === 'clickaway') 
+        {
+          return;
+        }
+        setShowAlert(false);
+    };
 
     return (
         <ThemeProvider theme={theme}>
@@ -146,14 +242,21 @@ export default function AddBookManualComponent()
                                                     onChange={(e) => setBookTitle(e.target.value)}
                                                 />
                                         </Box>
-                                        <TextField
-                                            fullWidth
-                                            id="outlined-basic"
-                                            label="Authors"
-                                            variant="outlined"
-                                            sx={{mb:2}}
-                                            value={authors}
-                                            onChange={(e) => setAuthors(e.target.value)}
+
+                                        <Autocomplete
+                                                id="authors"
+                                                multiple
+                                                options={AllAuthors}
+                                                value={authors}
+                                                onChange={(event, newInputValue) => {
+                                                  setAuthors(newInputValue);
+                                                }}
+                                                renderInput={(params) => <TextField {...params} label="Authors" fullWidth variant="outlined" sx={{mb: 2}}/>}
+                                                renderTags={(value, getTagProps) =>
+                                                  value.map((option, index) => (
+                                                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                                                  ))
+                                                }
                                         />
 
                                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -165,16 +268,18 @@ export default function AddBookManualComponent()
                                             <Rating value={rating}onChange={(event, newValue) => { setRating(newValue !== null ? newValue : 0);}}/>
                                         </Box>
 
-                                        <TextField 
-                                                fullWidth
-                                                id="outlined-basic"
-                                                label="Category"
-                                                variant="outlined"
-                                                sx={{mb:2}}
-                                                value = {category}
-                                                onChange={(e) => setCategory(e.target.value)}
+                                        <Autocomplete
+                                                  id="combo-box-demo"
+                                                  options={AllCategories}
+                                                  value={category}
+                                                  freeSolo
+                                                  onInputChange={(event, newInputValue) => {
+                                                   setCategory(newInputValue);
+                                                  }}
+                                                  renderInput={(params) => <TextField {...params} label="Category" fullWidth variant="outlined" sx={{mb: 2}}/>}
                                         />
-                                           <TextField
+
+                                        <TextField
                                             fullWidth
                                             id="outlined-basic"
                                             label="Page Count"
@@ -183,27 +288,27 @@ export default function AddBookManualComponent()
                                             InputProps={{ inputProps: { min: 0 } }}
                                             sx={{mb:2}}
                                             value = {pageCount}
-                                            onChange={(e) => setPageCount(e.target.value)}
+                                            onChange={(e) => setPageCount(Number(e.target.value))}
                                         />
 
-                                        <TextField
-                                                fullWidth
-                                                id="outlined-basic"
-                                                label="Publisher"
-                                                variant="outlined"
-                                                sx={{mb:2}}
-                                                value = {publisher}
-                                                onChange={(e) => setPublisher(e.target.value)}
-                                        />
+                                        <Autocomplete
+                                                id="publishers"
+                                                options={AllPublishers}
+                                                value={publisher}
+                                                onInputChange={(event, newInputValue) => {
+                                                    setPublisher(newInputValue);
+                                                }}
+                                                renderInput={(params) => <TextField {...params} label="Publishers" fullWidth variant="outlined" sx={{mb: 2}}/>}
+                                        />  
 
                                          
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                             <DemoItem sx={{ mb:2 }}>
                                                 <DatePicker 
-                                                value={dayjs(publishedDate)} 
-                                                onChange={(newValue) => {
-                                                    setPublishedDate(newValue ? newValue.format('YYYY-MM-DD') : '');
-                                                }}
+                                                    value={dayjs(publishedDate || 'N/A')} 
+                                                    onChange={(newValue) => {
+                                                        setPublishedDate(newValue || dayjs());
+                                                    }}
                                                 />
                                             </DemoItem>
                                         </LocalizationProvider>
@@ -251,7 +356,7 @@ export default function AddBookManualComponent()
                                 </Grid>
 
                                 <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
-                                    <Button variant="outlined" sx={{mt:2, mr:2}}>
+                                    <Button variant="outlined" sx={{mt:2, mr:2}} onClick={onClear}>
                                         Clear Fields
                                     </Button>
                                     <Button variant="contained" sx={{mt:2}}>
@@ -263,6 +368,11 @@ export default function AddBookManualComponent()
                         </Box>
                     </Box>
                 </Box>
+                <Snackbar open={showAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
+                    <Alert onClose={handleCloseAlert} severity={alertContent.severity}>
+                        {alertContent.message}
+                    </Alert>
+                </Snackbar>
         </ThemeProvider>
     )
 }

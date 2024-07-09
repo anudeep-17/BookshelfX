@@ -130,19 +130,25 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
 
     async function addToshelf()
     {
+        if(!title || !authors)
+        {
+          setAlertOpen(true);
+          return setAlertContent({severity: 'error', message: "Title and Authors are required"});
+        }
+        
         const response = await addBookToLibrary({
-            title: title,
-            authors: authors.split(','),
-            description: description,
-            ISBN: book.ISBN,
-            coverimage: book.coverimage,
-            availability: availability,
-            category: category,
-            publisher: publisher,
-            publishedDate: publishedDate.toDate(),
-            pagecount: pageCount,
-            rating: rating,
-            isFeaturedBook: isFeaturedBook
+          title: title || 'N/A',
+          authors: authors ? authors.split(',') : ['N/A'],
+          description: description || 'N/A',
+          ISBN: book.ISBN || 'N/A',
+          coverimage: book.coverimage || 'N/A',
+          availability: availability || true,
+          category: category || 'N/A',
+          publisher: publisher || 'N/A',
+          publishedDate: publishedDate ? publishedDate.toDate() : new Date(),
+          pagecount: pageCount || 0,
+          rating: rating || 0,
+          isFeaturedBook: isFeaturedBook || false
         });
 
         if(response.success)
@@ -150,6 +156,7 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
             setAlertOpen(true);
             setAlertContent({severity: 'success', message: "book added to Libraiary successfully"});
             setAddedSuccessfully(true);
+            window.open(`/book/${response.book.id}`, '_blank');
         }
         else
         {
