@@ -2,7 +2,7 @@
 import React from 'react';
 import { DashboardSize } from "@/Components/DashboardSize";
 import theme from "@/Components/Themes";
-import { Alert, Autocomplete, Box, Button, Chip, CssBaseline, FormControl, Grid, InputLabel,  Paper, Rating, Select, Snackbar, TextField, ThemeProvider, Toolbar, Typography } from "@mui/material";
+import { Alert, Autocomplete, Box, Button, Chip, CssBaseline, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel,  Paper, Rating, Select, Snackbar, TextField, ThemeProvider, Toolbar, Typography } from "@mui/material";
 import dayjs from 'dayjs';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -12,7 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ImageUrlDialog from './ImageUrlDialog';
 import Image from 'next/image';
 import { addBookToLibrary, getAuthors, getCategories, getPublishers } from '@/Services/BookRoutines';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 const drawerWidth = DashboardSize;
 
@@ -35,6 +35,10 @@ export default function AddBookManualComponent()
     const [alertContent, setAlertContent] = React.useState<{ severity: "success" | "error" | "info" | "warning" | undefined, message: string }>({
         severity: 'success', message: ''
     });
+
+    const [confirmationText, setConfirmationText] = React.useState('' as string);
+    const [showConfirmationDialog, setshowConfirmationDialog] = React.useState(false);
+
     const [AllAuthors, setAllAuthors] = React.useState<string[]>([]);
     const [AllPublishers, setAllPublishers] = React.useState<string[]>([]);
     const [AllCategories, setAllCategories] = React.useState<string[]>([]);
@@ -89,6 +93,7 @@ export default function AddBookManualComponent()
             setShowAlert(true);
             return setAlertContent({severity: 'error', message: 'Please fill in all required fields.'});
         }
+
         const response = await addBookToLibrary({
             title: bookTitle || 'N/A',
             authors: authors.length > 0 ? authors : ['N/A'],
@@ -359,7 +364,7 @@ export default function AddBookManualComponent()
                                     <Button variant="outlined" sx={{mt:2, mr:2}} onClick={onClear}>
                                         Clear Fields
                                     </Button>
-                                    <Button variant="contained" sx={{mt:2}}>
+                                    <Button variant="contained" sx={{mt:2}} onClick={()=>{setshowConfirmationDialog(true)}}>
                                         Add Book
                                     </Button>
                                 </Box>
@@ -368,6 +373,47 @@ export default function AddBookManualComponent()
                         </Box>
                     </Box>
                 </Box>
+                {
+                    showConfirmationDialog && 
+                    <Dialog
+                        open={showConfirmationDialog}
+                        onClose={()=>{setshowConfirmationDialog(false)}}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            {"Adding Book To Shelf"}
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                <Typography variant= "body1" sx={{
+                                    mb:1, 
+                                    color: theme.palette.text.secondary,
+                                }}>
+                                    Please confirm all book Details by typing "ADDBOOK" in the text field below.
+                                </Typography>
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="name"
+                                    label="Confirmation"
+                                    type="text"
+                                    fullWidth
+                                    value = {confirmationText}
+                                    onChange={(e) => setConfirmationText(e.target.value)}
+                                />
+                            </DialogContentText>
+                            
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={()=>{setshowConfirmationDialog(false)}}>Cancel</Button>
+                            <Button onClick={() => {onAddBook(); setshowConfirmationDialog(false);}} autoFocus disabled={confirmationText!=="ADDBOOK"}>
+                              Submit
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                }
+
                 <Snackbar open={showAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
                     <Alert onClose={handleCloseAlert} severity={alertContent.severity}>
                         {alertContent.message}
