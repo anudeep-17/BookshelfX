@@ -23,6 +23,7 @@ import { addBookToLibrary, getAuthors, getCategories, getPublishers } from '@/Se
 import { DeleteBook, isBookAlreadyInShelf } from '@/Services/LibrarianRoutines';
 import bookcover from '@/assets/bookcover.png'
 import checkImage from '@/assets/checkImage.png'
+import { useRouter } from 'next/navigation';
 
 export default function BookDisplayDialog({open, handleClose, book, setAlertOpen, setAlertContent}: 
     {
@@ -45,6 +46,7 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
     const [publishedDate, setPublishedDate] = React.useState(dayjs(new Date(book.publishedDate)));
     const [isFeaturedBook, setIsFeaturedBook] = React.useState(book.isFeaturedBook);
     const [availability, setAvailability] = React.useState(book.availability);
+
     const [alreadyInShelf, setAlreadyInShelf] = React.useState(false);
     const [addedSuccessfully, setAddedSuccessfully] = React.useState(false);
 
@@ -64,6 +66,9 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
     const [AllPublishers, setAllPublishers] = React.useState<string[]>([]);
     const [AllCategories, setAllCategories] = React.useState<string[]>([]);
 
+    const [confirmationText, setConfirmationText] = React.useState('' as string);
+    const [showConfirmationDialog, setshowConfirmationDialog] = React.useState({open: false, task: "" as "add" | "remove"| "none"});
+    const router = useRouter();
     
 
     React.useEffect(()=>{
@@ -156,7 +161,7 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
             setAlertOpen(true);
             setAlertContent({severity: 'success', message: "book added to Libraiary successfully"});
             setAddedSuccessfully(true);
-            window.open(`/book/${response.book.id}`, '_blank');
+            // window.open(`/book/${response.book.id}`, '_blank');
         }
         else
         {
@@ -366,7 +371,7 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleClose}>Close</Button>
-                  <Button onClick={addToshelf} autoFocus disabled={alreadyInShelf}>
+                  <Button onClick={()=>{setshowConfirmationDialog({open: true, task: "add"});}} autoFocus disabled={alreadyInShelf}>
                     add to shelf
                   </Button>
                 </DialogActions>
@@ -391,14 +396,69 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                  <Button  autoFocus onClick={deleteFromShelf}>
+                  <Button  autoFocus onClick={() => {setshowConfirmationDialog({open: true, task: "remove"});}}>
                     Remove from shelf
                   </Button>
                   <Button onClick={handleClose}>Close</Button>
-                </DialogActions>
+              </DialogActions>
               </>
               }
             </Dialog>
+
+            {
+                    showConfirmationDialog && 
+                    <Dialog
+                        open={showConfirmationDialog.open}
+                        onClose={()=>{setshowConfirmationDialog({open: false, task: "none"});}}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                        fullWidth
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            {showConfirmationDialog.task === 'add' ? "Adding Book To Shelf": "Removing Book From Shelf"}
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                <Typography variant= "body1" sx={{
+                                    mb:1, 
+                                    color: theme.palette.text.secondary,
+                                }}>
+                                    {showConfirmationDialog.task === 'add' ? 
+                                      'Please confirm all book Details by typing the below text' : 
+                                      'Please confirm you want to remove the book by typing the below text'
+                                    }
+                                </Typography>
+                                <Typography variant='body1' sx={{
+                                  mb:1,
+                                  color: theme.palette.primary.main,
+                                }}>
+                                  {
+                                    showConfirmationDialog.task === 'add' ? 
+                                    `"ADDBOOK"` : 
+                                    `"DELETEBOOK"`
+                                  }
+                                </Typography>
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="name"
+                                    label="Confirmation"
+                                    type="text"
+                                    fullWidth
+                                    value = {confirmationText}
+                                    onChange={(e) => setConfirmationText(e.target.value)}
+                                />
+                            </DialogContentText>
+                            
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={()=>{setshowConfirmationDialog({open: false, task: "none"});}}>Cancel</Button>
+                            <Button onClick={() => {showConfirmationDialog.task === 'add'? addToshelf(): deleteFromShelf() ; setConfirmationText(''); setshowConfirmationDialog({open: false, task: "none"});}} autoFocus disabled={(showConfirmationDialog.task === 'add' && confirmationText !== "ADDBOOK") || (showConfirmationDialog.task === 'remove' && confirmationText !== "DELETEBOOK")}>
+                              Submit
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+              }
           </ThemeProvider>
         </React.Fragment>
       );

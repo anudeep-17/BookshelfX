@@ -113,7 +113,7 @@ export default function AddBookManualComponent()
         {
             setShowAlert(true);
             setAlertContent({severity: 'success', message: 'Book has been added successfully.'});
-            window.open(`/book/${response.book.id}`, '_blank');
+            // window.open(`/book/${response.book.id}`, '_blank');
             onClear();
         }
         else
