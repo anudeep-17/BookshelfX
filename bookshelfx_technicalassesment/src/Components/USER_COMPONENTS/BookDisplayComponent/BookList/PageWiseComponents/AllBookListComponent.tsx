@@ -91,7 +91,6 @@ export default function AllBooksListComponent()
                 setCategory(['All Books', ...data.data]);
             }
         };
-    
         fetchData();
     }, []);
 

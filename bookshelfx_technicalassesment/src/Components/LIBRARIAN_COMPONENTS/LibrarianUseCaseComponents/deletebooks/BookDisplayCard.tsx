@@ -3,13 +3,13 @@ import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import { Box, Button, ThemeProvider, Tooltip } from '@mui/material';
 import theme from '../../../Themes';
-import { Book  } from '../../../interfaceModels';
-import BookDisplayDialog from './BookDisplayDialog';
+import { BookDetails  } from '../../../interfaceModels';
 import bookcover from '@/assets/bookcover.png'
 
 
-export default function BookDisplayCard({book, setAlertOpen, setAlertContent}:{
-    book: Book
+export default function BookDisplayCard({book, setDeletionList, setAlertOpen, setAlertContent}:{
+    book: BookDetails,
+    setDeletionList: React.Dispatch<React.SetStateAction<BookDetails[]>>,
     setAlertOpen: React.Dispatch<React.SetStateAction<boolean>>
     setAlertContent: React.Dispatch<React.SetStateAction<{severity: "success" | "error" | "info" | "warning" | undefined; message: string;}>>
 }) 
@@ -23,6 +23,22 @@ export default function BookDisplayCard({book, setAlertOpen, setAlertContent}:{
     const handleClose = () => {
         setOpenDialog(false);
     };
+
+    const AddtoDeletionList = () => {
+        setDeletionList((prev) => {
+            if (prev.some((b) => b.id === book.id)) {
+  
+                setAlertOpen(true);
+                setAlertContent({severity: 'warning', message: 'Book is already in the deletion list'});
+                return prev;
+            } else {
+       
+                setAlertOpen(true);
+                setAlertContent({severity: 'success', message: 'Book added to deletion'});
+                return [...prev, book];
+            }
+        });
+    }
 
     return(
         <ThemeProvider theme={theme}>
@@ -81,13 +97,31 @@ export default function BookDisplayCard({book, setAlertOpen, setAlertContent}:{
                         }}>
                             {book.description.length > 100 ? `${book.description.substring(0, 100)}...` : book.description}
                         </Typography>
+                        
+                        
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            width: '100%',
+                            mt: 1,
+                            gap: 1
+                        }}>
+                            <Button variant="outlined" onClick={AddtoDeletionList}>
+                                Add to Deletion List
+                            </Button>
+                            <Button variant="contained">
+                                Delete Book
+                            </Button>
+                        </Box>
+                          
+                
                     </Box>
                     
                 </Box>
-                {
+                {/* {
                     openDialog &&
-                    <BookDisplayDialog open={openDialog}  book={book} handleClose={handleClose} setAlertOpen={setAlertOpen} setAlertContent={setAlertContent}/>
-                }
+                    // <BookDisplayDialog open={openDialog}  book={book} handleClose={handleClose} setAlertOpen={setAlertOpen} setAlertContent={setAlertContent}/>
+                } */}
                     
         </ThemeProvider>
     );

@@ -116,7 +116,7 @@ export default function AddBookFromGoogleComponent()
                             </Typography>
                             <Grid gridRow={1} container spacing={2}>
                                 <Grid item xs={12} sm={4}>
-                                    <Paper elevation={3} sx={{p:2, mb:2}}>
+                                    <Paper elevation={3} sx={{p:2, mb:2, position: 'sticky', top: 70}}>
                                             <Grid container spacing={2}>
                                                 <Grid item xs={12} sm={12}>
                                                     <FormControl fullWidth>

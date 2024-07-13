@@ -23,7 +23,7 @@ import { addBookToLibrary, getAuthors, getCategories, getPublishers } from '@/Se
 import { DeleteBook, isBookAlreadyInShelf } from '@/Services/LibrarianRoutines';
 import bookcover from '@/assets/bookcover.png'
 import checkImage from '@/assets/checkImage.png'
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function BookDisplayDialog({open, handleClose, book, setAlertOpen, setAlertContent}: 
     {
@@ -34,7 +34,9 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
         setAlertContent: React.Dispatch<React.SetStateAction<{severity: "success" | "error" | "info" | "warning" | undefined; message: string;}>>
     }) 
 {
-
+    const pathname = usePathname();
+    const currentPathname = pathname.split("/")[2];
+    
     const [isEditing, setIsEditing] = React.useState(false);
     const [title, setTitle] = React.useState(book.title);
     const [authors, setAuthors] = React.useState(book.authors.join(', '));
