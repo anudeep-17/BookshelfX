@@ -49,7 +49,7 @@ export async function isBookAlreadyInShelf(title: string, author: string[])
 
 export async function DeleteBook(title: string, authors: string[])
 {
-    console.log(title, authors);
+ 
     const response = await fetch(`/api/books/librarian/deleteBooks?title=${title}&authors=${authors.join(", ")}`,{
         method: 'DELETE',
         headers: {
@@ -58,4 +58,21 @@ export async function DeleteBook(title: string, authors: string[])
     });
     const data = await response.json();
     return data;
+}
+
+export async function DeleteBookList(books: { title: string, authors: string[] }[]) {
+    const results = [];
+
+    for (const book of books) {
+        const response = await fetch(`/api/books/librarian/deleteBooks?title=${book.title}&authors=${book.authors.join(", ")}`,{
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        results.push(data);
+    }
+
+    return results;
 }

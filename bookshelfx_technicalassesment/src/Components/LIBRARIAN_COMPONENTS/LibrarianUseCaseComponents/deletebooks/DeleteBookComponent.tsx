@@ -9,6 +9,7 @@ import { BookDetails } from '@/Components/interfaceModels';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import DrawerComponent from './DrawerComponent';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
+import { DeleteBook, DeleteBookList } from '@/Services/LibrarianRoutines';
 
 const drawerWidth = DashboardSize;
  
@@ -142,10 +143,60 @@ export default function DeleteBookComponent()
         setLoading(false);
     }
 
-    const handleDelete = async() => {
-        setLoading(true);
-        
+    const handleDelete = async({DeleteThisBook}:{DeleteThisBook: BookDetails}) => {
+        if(DeleteThisBook !== undefined)
+        {
+            setLoading(true);
+            const deleteBook = await DeleteBook(DeleteThisBook.title, DeleteThisBook.authors);
+            if(deleteBook.success)
+            {
+                setBooks(Books.filter((book) => book.ISBN !== DeleteThisBook.ISBN));
+                setAlertContent({severity: 'success', message: deleteBook.message});
+                setAlertOpen(true);
+            }
+            else
+            {
+                setAlertContent({severity: 'error', message: deleteBook.message});
+                setAlertOpen(true);
+            }
+        }
+        else
+        {
+            setAlertContent({severity: 'error', message: 'Book not found'});
+            setAlertOpen(true);
+        }
     }
+
+    const handleDeleteAll = async() => {
+        if(DeletionList.length !== 0)
+        {
+            setLoading(true);
+            const deleteBooks = await DeleteBookList(DeletionList.map((book) => ({title: book.title, authors: book.authors})));
+            if(deleteBooks.every((book) => book.success)) 
+            {
+                    setBooks(Books.filter((book) => !DeletionList.includes(book)));
+                    setAlertContent({severity: 'success', message: 'All books deleted successfully.'});
+                    setAlertOpen(true);
+                    setDeletionList([]);
+            }
+            else {
+                const unsuccessfulBooks = deleteBooks
+                    .filter((book) => !book.success)
+                    .map((book, index) => DeletionList[index]);
+            
+                setDeletionList(unsuccessfulBooks);
+                setAlertContent({severity: 'error', message: "Some books couldn't be deleted."});
+                setAlertOpen(true);
+            }
+        }
+        else
+        {
+            setAlertContent({severity: 'error', message: 'No books selected'});
+            setAlertOpen(true);
+        }
+    }
+
+ 
 
     return (
         <ThemeProvider theme={theme}>
