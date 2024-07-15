@@ -5,41 +5,19 @@ import { Box, Button, ThemeProvider, Tooltip } from '@mui/material';
 import theme from '../../../Themes';
 import { BookDetails  } from '../../../interfaceModels';
 import bookcover from '@/assets/bookcover.png'
-import BookDisplayDialog from './BookDisplayDialog';
+ 
 
 
-export default function BookDisplayCard({book, setDeletionList, setAlertOpen, setAlertContent, handleDeleteBook}:{
+export default function BookDisplayCard({book, setAlertOpen, setAlertContent}:{
     book: BookDetails,
-    setDeletionList: React.Dispatch<React.SetStateAction<BookDetails[]>>,
     setAlertOpen: React.Dispatch<React.SetStateAction<boolean>>
     setAlertContent: React.Dispatch<React.SetStateAction<{severity: "success" | "error" | "info" | "warning" | undefined; message: string;}>>
-    handleDeleteBook: (book: BookDetails) => void
 }) 
 {
     const [value, setValue] = React.useState<number | null>(book.rating || null);
-    
-    const [openDialog, setOpenDialog] = React.useState(false);
-    const handleClick = () => {
-        setOpenDialog(true);
-    };
-    const handleClose = () => {
-        setOpenDialog(false);
-    };
 
-    const AddtoDeletionList = () => {
-        setDeletionList((prev) => {
-            if (prev.some((b) => b.id === book.id)) {
-  
-                setAlertOpen(true);
-                setAlertContent({severity: 'warning', message: 'Book is already in the deletion list'});
-                return prev;
-            } else {
-       
-                setAlertOpen(true);
-                setAlertContent({severity: 'success', message: 'Book added to deletion'});
-                return [...prev, book];
-            }
-        });
+    const handleClick = () => {
+        window.open('/librarian/book/'+book.id+'?isEditing=true', '_self');
     }
 
     return(
@@ -108,23 +86,16 @@ export default function BookDisplayCard({book, setDeletionList, setAlertOpen, se
                             mt: 1,
                             gap: 1
                         }}>
-                            <Button variant="outlined" onClick={AddtoDeletionList}>
-                                Add to Deletion List
-                            </Button>
-                            <Button variant="contained" onClick={()=>handleDeleteBook(book)}>
-                                Delete Book
+                             
+                            <Button variant="contained" fullWidth onClick={handleClick}>
+                              Edit Book
                             </Button>
                         </Box>
                           
                 
                     </Box>
                     
-                </Box>
-                {
-                    openDialog &&
-                     <BookDisplayDialog open={openDialog}  book={book} handleClose={handleClose} setAlertOpen={setAlertOpen} setAlertContent={setAlertContent}/>
-                }
-                    
+                </Box>                    
         </ThemeProvider>
     );
 }

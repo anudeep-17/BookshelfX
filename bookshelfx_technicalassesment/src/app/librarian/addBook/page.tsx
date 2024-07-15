@@ -1,7 +1,7 @@
 import { CircularProgress } from '@mui/material';
 import dynamic from 'next/dynamic';
 
-const AddBooksComponent = dynamic(() => import('@/Components/LIBRARIAN_COMPONENTS/LibrarianUseCaseComponents/addbooks/AddBooksComponent'), { ssr: false, loading: () => <CircularProgress sx={{
+const AddBooksComponent = dynamic(() => import('@/Components/LIBRARIAN_COMPONENTS/LibrarianUseCaseComponents/LibrarianUseCaseComponent'), { ssr: false, loading: () => <CircularProgress sx={{
                                                                                                                                             position: 'absolute',
                                                                                                                                             top: '50%',
                                                                                                                                             left: '50%',

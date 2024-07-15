@@ -48,7 +48,6 @@ export default function WholeBookData({id}:{id: string})
             const data = await getBookByID(id);
             if (data.success) {
                 setBook(data.data);
-                console.log(data.data)
                 if(!data.data.availability)
                 {
                     setIsBookRented(true);

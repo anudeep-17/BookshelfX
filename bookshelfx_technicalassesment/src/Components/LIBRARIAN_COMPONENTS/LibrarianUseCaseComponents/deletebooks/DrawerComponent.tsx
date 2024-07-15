@@ -7,12 +7,13 @@ import { Chip, Alert, Box,  Drawer, Typography, Divider, Paper, IconButton, Tool
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import React from 'react';
 
-export default function DrawerComponent({open, setOpen, DeletionList,  setDeletionList}:
+export default function DrawerComponent({open, setOpen, DeletionList,  setDeletionList, handleDeleteAll}:
     {
         open: boolean,
         setOpen: React.Dispatch<React.SetStateAction<boolean>>,
         DeletionList:  BookDetails[],
         setDeletionList: React.Dispatch<React.SetStateAction<BookDetails[]>>,
+        handleDeleteAll: () => void
     }) {
    
     const toggleDrawer = (newOpen: boolean) => () => {
@@ -72,7 +73,7 @@ export default function DrawerComponent({open, setOpen, DeletionList,  setDeleti
                     mb:3,
                     mt:1
                 }} 
-                onClick={() => {}}>
+                onClick={handleDeleteAll}>
                     Delete Book(s) on this list
                 </Button>
             </Box>

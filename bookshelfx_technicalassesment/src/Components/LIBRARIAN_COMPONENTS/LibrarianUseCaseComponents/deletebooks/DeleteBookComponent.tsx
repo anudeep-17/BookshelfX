@@ -143,7 +143,7 @@ export default function DeleteBookComponent()
         setLoading(false);
     }
 
-    const handleDelete = async({DeleteThisBook}:{DeleteThisBook: BookDetails}) => {
+    const handleDeleteBook: (DeleteThisBook: BookDetails) => Promise<void> = async (DeleteThisBook) => {
         if(DeleteThisBook !== undefined)
         {
             setLoading(true);
@@ -377,7 +377,7 @@ export default function DeleteBookComponent()
                                                         /> :
                                                         (Object.keys(searchType).length !== 0 && searchResult.length !== 0 ? searchResult : Books).length !== 0 ?
                                                         (Object.keys(searchType).length !== 0 && searchResult.length !== 0 ? searchResult : Books).map((book) => (
-                                                            <BookDisplayCard key={book.ISBN} book={book} setDeletionList={setDeletionList} setAlertOpen={setAlertOpen} setAlertContent={setAlertContent} />
+                                                            <BookDisplayCard key={book.ISBN} book={book} setDeletionList={setDeletionList} setAlertOpen={setAlertOpen} setAlertContent={setAlertContent} handleDeleteBook={handleDeleteBook}/>
                                                         )):
                                                         <Typography variant="body1" color="text.secondary">
                                                             No books found
@@ -400,7 +400,7 @@ export default function DeleteBookComponent()
                     </Box>
                     {
                         isDeletionListOpen? 
-                        <DrawerComponent DeletionList={DeletionList} setDeletionList={setDeletionList} open={isDeletionListOpen} setOpen={setIsDeletionListOpen}/>
+                        <DrawerComponent DeletionList={DeletionList} setDeletionList={setDeletionList} open={isDeletionListOpen} setOpen={setIsDeletionListOpen} handleDeleteAll = {handleDeleteAll}/>
                         :
                         null
                     }
