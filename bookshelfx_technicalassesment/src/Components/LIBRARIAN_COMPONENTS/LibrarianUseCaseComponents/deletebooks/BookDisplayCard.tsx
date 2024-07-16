@@ -19,6 +19,7 @@ export default function BookDisplayCard({book, setDeletionList, setAlertOpen, se
     const [value, setValue] = React.useState<number | null>(book.rating || null);
     
     const [openDialog, setOpenDialog] = React.useState(false);
+    
     const handleClick = () => {
         setOpenDialog(true);
     };
@@ -26,7 +27,8 @@ export default function BookDisplayCard({book, setDeletionList, setAlertOpen, se
         setOpenDialog(false);
     };
 
-    const AddtoDeletionList = () => {
+    const AddtoDeletionList = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
         setDeletionList((prev) => {
             if (prev.some((b) => b.id === book.id)) {
   

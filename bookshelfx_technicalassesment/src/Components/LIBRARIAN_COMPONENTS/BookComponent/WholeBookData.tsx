@@ -2,7 +2,7 @@
 import React from 'react';
 import { Autocomplete, Box, Button, Chip, CssBaseline, FormControl, Grid, InputLabel, MenuItem, Paper, Rating, Select, Skeleton, TextField, ThemeProvider, Toolbar, Tooltip, Typography } from '@mui/material';
 import theme from '../../Themes';
-import { getBookByID, setAvailabilityofBook } from '@/Services/BookRoutines';
+import { getBookByID } from '@/Services/BookRoutines';
 import { DashboardSize } from "@/Components/DashboardSize";
 import EmblaCarousel from './EmblaCarousel'
 import { EmblaOptionsType } from 'embla-carousel'
@@ -31,7 +31,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { getAuthors, getCategories, getPublishers } from '@/Services/BookRoutines';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 
@@ -75,6 +75,9 @@ export default function WholeBookData({id}:{id: string})
     const [AllAuthors, setAllAuthors] = React.useState<string[]>([]);
     const [AllPublishers, setAllPublishers] = React.useState<string[]>([]);
     const [AllCategories, setAllCategories] = React.useState<string[]>([]);
+
+    const [confirmationText, setConfirmationText] = React.useState('' as string);
+    const [showConfirmationDialog, setshowConfirmationDialog] = React.useState({open: false, task: "" as "edit" | "remove"| "none"});
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -348,13 +351,13 @@ export default function WholeBookData({id}:{id: string})
                                         {book?.title}
                                     </Typography>
                                     <Box>
-                                        <IconButton sx={{mb: 1, mr:1}} >
+                                        <IconButton sx={{mb: 1, mr:1}} onClick={()=>{setIsEditing(true)}}>
                                             <Tooltip title="Edit book">
                                                 <EditIcon sx={{color: theme.palette.primary.main,}} />
                                             </Tooltip>
                                         </IconButton>
 
-                                        <IconButton sx={{mb: 1, mr:1}} >
+                                        <IconButton sx={{mb: 1, mr:1}} onClick={()=>{setshowConfirmationDialog({open:true, task:'remove'})}}>
                                             <Tooltip title="Delete Book">
                                                 <DeleteIcon sx={{color: theme.palette.primary.main,}} />
                                             </Tooltip>
@@ -604,7 +607,7 @@ export default function WholeBookData({id}:{id: string})
                 </Snackbar>
               </Box>
               
-            {/* {book && <ChatboxComponent book={book}/>} */}
+            {book && <ChatboxComponent book={book} role={"librarian"}/>}
                         
         </Box>
         </ThemeProvider>

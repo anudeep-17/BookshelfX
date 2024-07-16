@@ -71,7 +71,6 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
     const [confirmationText, setConfirmationText] = React.useState('' as string);
     const [showConfirmationDialog, setshowConfirmationDialog] = React.useState({open: false, task: "" as "add" | "remove"| "none"});
     const router = useRouter();
-    
 
     React.useEffect(()=>{
          const fetchData = async() => {

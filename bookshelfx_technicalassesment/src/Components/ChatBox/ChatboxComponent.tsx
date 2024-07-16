@@ -15,29 +15,36 @@ import { ChatGPTSupport } from '@/Services/ChatGPTRoutines';
 import Chip from '@mui/material/Chip';
 import Badge from '@mui/material/Badge';
 
-export default function ChatboxComponent({book}: {book: Book}) {
+export default function ChatboxComponent({book, role, informationFromLibrarian}: {book: Book, role?: string, informationFromLibrarian?: string[]}) {
     
     const [anchorEl, setAnchorEl] = React.useState<EventTarget & HTMLButtonElement | null>(null);
     const [fabOpen, setFabOpen] = React.useState(false);
     const [popoverOpen, setPopoverOpen] = React.useState(false);
     const [UserTyping, setUserTyping] = React.useState<string>('');
-    const [Messages, setMessage] = React.useState<Array<{role: string, content: string}>>([
+    const [Messages, setMessage] = React.useState<Array<{role: string, content: string}>>(role && role === 'librarian'? [
+        { role: 'system', content: 'you are a librarian.' },
+        { role: 'system', content: 'you can assist with editing books, providing information about books, authors, genres, and publishers.' },
+        { role: 'system', content: `we are currently editing the book titled "${book.title}" by ${book.authors.join(", ")}. Be ready to provide editing suggestions, answer questions, and offer insights about this book.` },
+        { role: 'assistant', content: 'Hi there, This is Monika, your librarian assistant. I am here to help you with editing and provide valuable insights about the book.' },
+        { role: 'assistant', content: `Feel free to ask me anything about the editing process or about "${book.title}" by ${book.authors.join(", ")}.` },
+    ]:[
         { role: 'system', content: 'you are a library assistant.' },
         { role: 'system', content: 'you can provide information about books, authors, genres, and publishers.' },
         { role: 'system', content: `we are talking about ${book.title} by ${book.authors.join(", ")} be ready to answer questions, queries, and provide insights and about this book`},
         { role: 'assistant',  content: 'Hi there, This is Monika, I am here to help you improve our reading Journey.' },
         { role: 'assistant', content: `Feel free to ask me anything about ${book.title} by ${book.authors.join(", ")}` },
     ]);
+
     const [showBadge, setShowBadge] = React.useState(false);
 
-    const preselectedMessages = [
+    const preselectedMessages = role && role === 'librarian'? [] : [
         "What are the benefits of reading this work?",
         "Could you offer an overview of the content?",
         "What are the central topics explored?",
         "What distinguishes the author’s viewpoint in this narrative?"
     ];
 
-    const onSelectionMessages = [
+    const onSelectionMessages = role && role === 'librarian'? [] : [
         `What specific benefits can readers gain from engaging with the narrative and themes of '${book.title}' by ${book.authors.join(", ")}?`,
         `Could you summarize the key elements and storyline encapsulated within '${book.title}' by ${book.authors.join(", ")}?`,
         `What are the primary themes and messages that '${book.title}' by ${book.authors.join(", ")} seeks to convey to its audience?`,
@@ -53,7 +60,7 @@ export default function ChatboxComponent({book}: {book: Book}) {
         setFabOpen(true);
         setTimeout(() => {
             setPopoverOpen(true);
-        }, 300); // 1000 milliseconds = 1 second delay
+        }, 300); 
     };
 
     const handleClose = () => {
@@ -120,7 +127,7 @@ export default function ChatboxComponent({book}: {book: Book}) {
             setShowBadge(true);
         }, 1000);
 
-        return () => clearTimeout(timer); // This will clear the timer when the component unmounts
+        return () => clearTimeout(timer);  
     }, []);
     
     
