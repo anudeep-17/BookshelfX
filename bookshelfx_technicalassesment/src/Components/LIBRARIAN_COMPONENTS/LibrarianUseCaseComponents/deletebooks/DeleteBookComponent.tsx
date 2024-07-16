@@ -151,6 +151,10 @@ export default function DeleteBookComponent()
             if(deleteBook.success)
             {
                 setBooks(Books.filter((book) => book.ISBN !== DeleteThisBook.ISBN));
+                if(searchResult.length !== 0)
+                {
+                    setSearchResult(searchResult.filter((book) => book.ISBN !== DeleteThisBook.ISBN));
+                }
                 setAlertContent({severity: 'success', message: deleteBook.message});
                 setAlertOpen(true);
             }
@@ -175,6 +179,10 @@ export default function DeleteBookComponent()
             if(deleteBooks.every((book) => book.success)) 
             {
                     setBooks(Books.filter((book) => !DeletionList.includes(book)));
+                    if(searchResult.length !== 0)
+                    {
+                        setSearchResult(searchResult.filter((book) => !DeletionList.includes(book)));
+                    }
                     setAlertContent({severity: 'success', message: 'All books deleted successfully.'});
                     setAlertOpen(true);
                     setDeletionList([]);

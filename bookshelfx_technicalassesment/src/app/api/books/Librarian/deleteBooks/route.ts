@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { database } from "../../../prismaConfig";
+import { de } from "@faker-js/faker";
 
 export async function DELETE(req: Request) 
 {
@@ -13,7 +14,8 @@ export async function DELETE(req: Request)
             return NextResponse.json({success: false, message: "All fields are required"}, {status: 400});
         }
 
-        const deleteBooks = await database.bookDetails.findFirst({
+        
+        const deleteBooks = await database.bookDetails.deleteMany({
             where: {
                 title: title,
                 authors: {
