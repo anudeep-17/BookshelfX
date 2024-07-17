@@ -130,7 +130,7 @@ export default function BookDisplayCard({book, setDeletionList, setAlertOpen, se
 
                 {
                     openConfirmationDialog &&
-                    <DeleteConfirmationDialog openDialog={openConfirmationDialog} setOpenDialog={setOpenConfirmationDialog}  handleDeleteBook={() => handleDeleteBook(book)}/>
+                    <DeleteConfirmationDialog openDialog={openConfirmationDialog} book = {book} setOpenDialog={setOpenConfirmationDialog}  handleDeleteBook={handleDeleteBook}/>
                 }
         </ThemeProvider>
     );

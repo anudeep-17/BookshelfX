@@ -43,15 +43,20 @@ export interface User {
     favoriteCategories?: string[];
 }
 
-export interface BookRentalDetails
-{
+export interface BookRentalDetails {
     id: number;
     bookId: number;
     userId: number;
     rentalDate: string;
     returnDate: string;
     returned: boolean;
-    book: Book;  
+    isOverdue: boolean;
+    librarianId?: number;
+    createdAt: string;
+    updatedAt: string;
+    book: Book;
+    user?: User;
+    librarian?: User;
 }
 
 export interface BookReview {

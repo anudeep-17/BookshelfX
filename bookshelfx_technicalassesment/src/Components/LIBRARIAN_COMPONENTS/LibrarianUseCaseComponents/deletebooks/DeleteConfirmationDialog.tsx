@@ -3,10 +3,11 @@ import theme from "@/Components/Themes";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, ThemeProvider, Typography } from "@mui/material";
 import { BookDetails } from "@/Components/interfaceModels";
 
-export default function DeleteConfirmationDialog({openDialog, setOpenDialog, handleDeleteBook}:{
+export default function DeleteConfirmationDialog({book, openDialog, setOpenDialog, handleDeleteBook}:{
+    book: BookDetails,
     openDialog: boolean,
     setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>,
-    handleDeleteBook: (book: BookDetails) => void
+    handleDeleteBook: (book:BookDetails) => void
 }) 
 {
     const [confirmationText, setConfirmationText] = React.useState<string>('');
@@ -59,7 +60,7 @@ export default function DeleteConfirmationDialog({openDialog, setOpenDialog, han
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={() => {setConfirmationText(''); handleClose()}} autoFocus disabled={ confirmationText !== "DELETEBOOK" }>
+                    <Button onClick={() => {handleDeleteBook(book);setConfirmationText(''); handleClose()}} autoFocus disabled={ confirmationText !== "DELETEBOOK" }>
                         Submit
                     </Button>
                 </DialogActions>

@@ -33,6 +33,7 @@ import { getAuthors, getCategories, getPublishers } from '@/Services/BookRoutine
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import DialogComponentForHistory from './DialogComponentForHistory';
 
 
 const drawerWidth = DashboardSize;
@@ -75,6 +76,9 @@ export default function WholeBookData({id}:{id: string})
     const [AllAuthors, setAllAuthors] = React.useState<string[]>([]);
     const [AllPublishers, setAllPublishers] = React.useState<string[]>([]);
     const [AllCategories, setAllCategories] = React.useState<string[]>([]);
+
+    const [viewRentalHistory, setViewRentalHistory] = React.useState(false);
+    const [viewFavouritedBy, setViewFavouritedBy] = React.useState(false);
 
     const [confirmationText, setConfirmationText] = React.useState('' as string);
     const [showConfirmationDialog, setshowConfirmationDialog] = React.useState({open: false, task: "" as "edit" | "remove"| "none"});
@@ -562,7 +566,15 @@ export default function WholeBookData({id}:{id: string})
                                                 {isFeaturedBook ? 'Yes, Featured Book' : 'No, currently not featured book'}
                                             </span>
                                             </Typography>
-                                     
+                                            
+                                            <Box sx={{display: 'flex', flexDirection: 'row', gap: 1 , alignItems: 'center'}}>
+                                                <Button variant='outlined' sx={{mb:2}} onClick={()=>{setViewRentalHistory(true)}}>
+                                                    View Rental History
+                                                </Button>
+                                                <Button variant='outlined' sx={{mb:2}} onClick={()=>{setViewFavouritedBy(true)}}>
+                                                    View Favourited By
+                                                </Button>
+                                            </Box>
                                             </>
                                     }
                             </Grid>
@@ -590,6 +602,7 @@ export default function WholeBookData({id}:{id: string})
                            <Skeleton variant="text" sx={{mb:1}} animation="wave" />
                            <Skeleton variant="text" sx={{mb:1}} animation="wave"  />
                            <Skeleton variant="rectangular" width={100} height={40} sx={{mb:2}} animation="wave"/>
+                           <Skeleton variant="rectangular" width={100} height={40} sx={{mb:2}} animation="wave"/>
                          </Grid>
                          <Grid item xs={12} sm={12}>
                            <Skeleton variant="text" sx={{mb:1}}  animation="wave" />
@@ -608,7 +621,12 @@ export default function WholeBookData({id}:{id: string})
               </Box>
               
             {book && <ChatboxComponent book={book} role={"librarian"}/>}
-                        
+            {
+                viewRentalHistory && book && <DialogComponentForHistory book={book} openDialog={viewRentalHistory} setOpenDialog={setViewRentalHistory} currentCase="RentalHistory"/>
+            }
+            {
+                viewFavouritedBy && book && <DialogComponentForHistory book={book} openDialog={viewFavouritedBy} setOpenDialog={setViewFavouritedBy} currentCase="FavouritedBy"/>
+            }
         </Box>
         </ThemeProvider>
     )

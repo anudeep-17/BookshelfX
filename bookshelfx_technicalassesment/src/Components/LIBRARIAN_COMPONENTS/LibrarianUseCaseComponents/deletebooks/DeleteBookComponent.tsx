@@ -150,10 +150,13 @@ export default function DeleteBookComponent()
             const deleteBook = await DeleteBook(DeleteThisBook.title, DeleteThisBook.authors);
             if(deleteBook.success)
             {
-                setBooks(Books.filter((book) => book.ISBN !== DeleteThisBook.ISBN));
-                if(searchResult.length !== 0)
+                if(Object.keys(searchType).length === 0) 
                 {
-                    setSearchResult(searchResult.filter((book) => book.ISBN !== DeleteThisBook.ISBN));
+                    setPage(1);
+                } 
+                else if(searchResult.length !== 0 || Object.keys(searchType).length !== 0)
+                {
+                   handleClickofSearch();
                 }
                 setAlertContent({severity: 'success', message: deleteBook.message});
                 setAlertOpen(true);
@@ -178,8 +181,11 @@ export default function DeleteBookComponent()
             const deleteBooks = await DeleteBookList(DeletionList.map((book) => ({title: book.title, authors: book.authors})));
             if(deleteBooks.every((book) => book.success)) 
             {
-                    setBooks(Books.filter((book) => !DeletionList.includes(book)));
-                    if(searchResult.length !== 0)
+                    if(Object.keys(searchType).length === 0) 
+                    {
+                        setPage(1);
+                    } 
+                    else if(searchResult.length !== 0 || Object.keys(searchType).length !== 0)
                     {
                         setSearchResult(searchResult.filter((book) => !DeletionList.includes(book)));
                     }
