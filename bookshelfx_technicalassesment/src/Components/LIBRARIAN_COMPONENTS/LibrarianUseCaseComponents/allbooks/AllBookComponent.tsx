@@ -5,9 +5,6 @@ import React from 'react';
 import { DashboardSize } from "@/Components/DashboardSize";
 import { getAllBooksCount, getAuthors, getBooks, getCategories, getPublishers, searchBook } from '@/Services/BookRoutines';
 import { BookDetails } from '@/Components/interfaceModels';
-import ChecklistIcon from '@mui/icons-material/Checklist';
-import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
-import { DeleteBook, DeleteBookList } from '@/Services/LibrarianRoutines';
 import BookDisplayCard from './BookDisplayCard';
 
 

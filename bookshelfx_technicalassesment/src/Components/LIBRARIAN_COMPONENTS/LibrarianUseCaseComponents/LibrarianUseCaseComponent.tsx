@@ -6,6 +6,7 @@ import AddBooksComponent from "./addbooks/AddBooksComponent";
 import DeleteBookComponent from "./deletebooks/DeleteBookComponent";
 import EditBookComponent from "./editbooks/EditBookComponent";
 import AllBookComponent from "./allbooks/AllBookComponent";
+import CloseUserRentalsComponenet from "./CloseUserRentals/CloseUserRentalsComponent";
 
 export default function LibrarianUseCaseComponent() {
     const pathname = usePathname();
@@ -24,6 +25,9 @@ export default function LibrarianUseCaseComponent() {
             :
             currentUseCase === "allBooks" ?
             <AllBookComponent/>
+            :
+            currentUseCase === "closeuserrentals" ?
+            <CloseUserRentalsComponenet/>
             :
             null
         }
