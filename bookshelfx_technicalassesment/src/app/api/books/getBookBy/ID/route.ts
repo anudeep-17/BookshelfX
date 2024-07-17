@@ -21,6 +21,9 @@ export async function GET(req: Request)
                 rentals: {
                     orderBy: {
                       rentalDate: 'desc'
+                    }, 
+                    include : {
+                        user: true
                     }
                 },
                 favoritedBy: true,

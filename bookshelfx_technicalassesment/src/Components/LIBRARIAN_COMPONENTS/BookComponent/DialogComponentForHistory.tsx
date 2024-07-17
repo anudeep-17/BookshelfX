@@ -1,9 +1,11 @@
 import React from "react";
 import theme from "@/Components/Themes";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, ThemeProvider, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Paper, TextField, ThemeProvider, Typography } from "@mui/material";
 import { BookDetails } from "@/Components/interfaceModels";
 import { Accordion, AccordionSummary, AccordionDetails  } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+
 
 export default function  DialogComponentForHistory({book, openDialog, setOpenDialog, currentCase}:{
     book: BookDetails,
@@ -12,6 +14,11 @@ export default function  DialogComponentForHistory({book, openDialog, setOpenDia
     currentCase: string
 }) 
 {
+    const [showDetails, setShowDetails] = React.useState(false);
+    const handleClick = () => {
+        setShowDetails(!showDetails);
+    };
+
     const handleClose = () => {
         setOpenDialog(false);
     };
@@ -42,39 +49,65 @@ export default function  DialogComponentForHistory({book, openDialog, setOpenDia
                         </Typography>
                         {
                             currentCase === 'RentalHistory'?
-                            book.rentals.map((rental, index) => (
-                                <Accordion key={index} defaultExpanded={index === 0} sx={{
-                                    mb: 1
-                                }}>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls={`panel${index}-content`}
-                                        id={`panel${index}-header`}
-                                    >
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                color: theme.palette.primary.main
-                                            }}
-                                        >Rental: {index + 1}</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <Typography variant="body1">Rental ID: {rental.id}</Typography>
-                                        <Typography variant="body1">Rented By User: {rental.userId}</Typography>
-                                        <Typography variant="body1">Rental Date: {new Date(rental.rentalDate).toLocaleString()}</Typography>
-                                        <Typography variant="body1">Return Date: {new Date(rental.returnDate).toLocaleString()}</Typography>
-                                        <Typography variant="body1">Returned: {rental.returned ? 'Yes' : 'No'}</Typography>
-                                        <Typography variant="body1">Is Overdue: {rental.isOverdue ? 'Yes' : 'No'}</Typography>
-                                        <Typography variant="body1">Rental Closed by Librarian: {rental.librarianId}</Typography>
-                                    </AccordionDetails>
-                                </Accordion>
-                            ))
+                             book.rentals.length > 0? 
+                                book.rentals.map((rental, index) => (
+                                    <Accordion key={index} defaultExpanded={index === 0} sx={{
+                                        mb: 1
+                                    }}>
+                                        <AccordionSummary
+                                            expandIcon={<ExpandMoreIcon />}
+                                            aria-controls={`panel${index}-content`}
+                                            id={`panel${index}-header`}
+                                        >
+                                            <Typography
+                                                variant="h6"
+                                                sx={{
+                                                    color: theme.palette.primary.main
+                                                }}
+                                            >Rental: {index + 1}</Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                            <Typography variant="body1">Rental ID: {rental.id}</Typography>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleClick}>
+                                                <Typography variant="body1">
+                                                    Rented By User: {rental.userId}
+                                                </Typography>
+                                                {showDetails ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                            </Box>
+
+                                            {showDetails && (
+                                                <Box sx={{
+                                                    ml: 2, 
+                                                    mr: 2,
+                                                    mb: 1,
+                                                    mt:1
+                                                }}>
+                                                    <Paper elevation={3} sx={{p:1}}>
+                                                        <Typography variant="body2" sx={{mb:1, color: theme.palette.primary.main}}>User Email: {rental.user?.email} </Typography>
+                                                        <Typography variant="body2" sx={{color: theme.palette.primary.main}}>User Name: {rental.user?.name}</Typography>
+                                                    </Paper>
+                                                </Box>
+                                            )}
+                                            <Typography variant="body1">Rental Date: {new Date(rental.rentalDate).toLocaleString()}</Typography>
+                                            <Typography variant="body1">Return Date: {new Date(rental.returnDate).toLocaleString()}</Typography>
+                                            <Typography variant="body1">Returned: {rental.returned ? 'Yes' : 'No'}</Typography>
+                                            <Typography variant="body1">Is Overdue: {rental.isOverdue ? 'Yes' : 'No'}</Typography>
+                                            <Typography variant="body1">Rental Closed by Librarian: {rental.librarianId}</Typography>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                )):
+                                <Typography variant="body1" sx={{
+                                    color: theme.palette.primary.main
+                                }}>No Rentals found for this book</Typography>
                             :
-                            book.favoritedBy?.map((favorite, index) => (
+                            book.favoritedBy?.length !== 0 ? book.favoritedBy?.map((favorite, index) => (
                                 <Typography key={index} variant="body1" sx={{
                                     color: theme.palette.primary.main
                                 }}>User ID: {favorite.userId}</Typography>
-                            ))
+                            )):
+                            <Typography variant="body1" sx={{
+                                color: theme.palette.primary.main
+                            }}>No users have favourited this book</Typography>
                         }
                     </DialogContentText>
                     
