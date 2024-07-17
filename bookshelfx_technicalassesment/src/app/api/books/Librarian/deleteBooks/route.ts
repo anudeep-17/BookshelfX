@@ -13,23 +13,55 @@ export async function DELETE(req: Request)
         {
             return NextResponse.json({success: false, message: "All fields are required"}, {status: 400});
         }
+        const authorsArray = authors ? authors.split(",") : undefined;
 
         
-        const deleteBooks = await database.bookDetails.deleteMany({
+        const book = await database.bookDetails.findFirst({
             where: {
                 title: title,
                 authors: {
-                    hasSome: authors ? authors.split(",") : undefined
+                    hasSome: authorsArray
                 }
             }
         });
+        
+        if(book)
+        {
+           await database.bookRentalDetails.deleteMany({
+                where: {
+                    id: book.id
+                }
+            });
+        
+            await database.bookReview.deleteMany({
+                where: {
+                    bookId: book.id
+                }
+            });        
+        
+            await database.favoriteBook.deleteMany({
+                where: {
+                    bookId: book.id
+                }
+            });
+        
+            const deleteBook = await database.bookDetails.delete({
+                where: {
+                    id: book.id
+                } 
+            });
 
-        if(!deleteBooks)
+            if(!deleteBook)
+            {
+                return NextResponse.json({success: false, message: "No books found to delete"}, {status: 404});
+            }
+
+            return NextResponse.json({success: true, message:"All books deleted successfully"}, {status: 200});
+        }
+        else
         {
             return NextResponse.json({success: false, message: "No books found to delete"}, {status: 404});
         }
-
-        return NextResponse.json({success: true, message:"All books deleted successfully"}, {status: 200});
     }
     catch(err)
     {

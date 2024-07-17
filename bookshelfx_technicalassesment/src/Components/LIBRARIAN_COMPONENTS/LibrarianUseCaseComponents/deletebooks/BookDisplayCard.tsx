@@ -6,6 +6,7 @@ import theme from '../../../Themes';
 import { BookDetails  } from '../../../interfaceModels';
 import bookcover from '@/assets/bookcover.png'
 import BookDisplayDialog from './BookDisplayDialog';
+import DeleteConfirmationDialog from './DeleteConfirmationDialog';
 
 
 export default function BookDisplayCard({book, setDeletionList, setAlertOpen, setAlertContent, handleDeleteBook}:{
@@ -17,7 +18,7 @@ export default function BookDisplayCard({book, setDeletionList, setAlertOpen, se
 }) 
 {
     const [value, setValue] = React.useState<number | null>(book.rating || null);
-    
+    const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
     const [openDialog, setOpenDialog] = React.useState(false);
     
     const handleClick = () => {
@@ -113,7 +114,7 @@ export default function BookDisplayCard({book, setDeletionList, setAlertOpen, se
                             <Button variant="outlined" onClick={AddtoDeletionList}>
                                 Add to Deletion List
                             </Button>
-                            <Button variant="contained" onClick={()=>handleDeleteBook(book)}>
+                            <Button variant="contained" onClick={(event : React.MouseEvent<HTMLButtonElement> )=>{ event.stopPropagation(); setOpenConfirmationDialog(true)}}>
                                 Delete Book
                             </Button>
                         </Box>
@@ -126,7 +127,11 @@ export default function BookDisplayCard({book, setDeletionList, setAlertOpen, se
                     openDialog &&
                      <BookDisplayDialog open={openDialog}  book={book} handleClose={handleClose} setAlertOpen={setAlertOpen} setAlertContent={setAlertContent}/>
                 }
-                    
+
+                {
+                    openConfirmationDialog &&
+                    <DeleteConfirmationDialog openDialog={openConfirmationDialog} setOpenDialog={setOpenConfirmationDialog}  handleDeleteBook={() => handleDeleteBook(book)}/>
+                }
         </ThemeProvider>
     );
 }
