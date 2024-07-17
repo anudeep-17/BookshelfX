@@ -123,7 +123,7 @@ export default function WholeBookData({id}:{id: string})
                 setEditedAvailability(book.availability);
             }
         }
-    }, [book]);
+    }, [book, isEditing]);
 
     React.useEffect(()=>{
         const fetchData = async() => {
@@ -310,7 +310,42 @@ export default function WholeBookData({id}:{id: string})
           </Dialog>
         )
     }
-        
+    
+    const onRentalHistory = () => {
+        if(book?.rentals.length === 0)
+        {
+            return "No Rentals found for this book";
+        }
+        else
+        {
+            let rentalhistory = book?.rentals.map((rental, index) => (
+                `Rental Number: ${index + 1}: 
+                Rental ID: ${rental.id}
+                Rented By User: ${rental.userId}
+                Rental Date: ${new Date(rental.rentalDate).toLocaleString()}
+                Return Date: ${new Date(rental.returnDate).toLocaleString()}
+                Returned: ${rental.returned ? 'Yes' : 'No'}
+                Is Overdue: ${rental.isOverdue ? 'Yes' : 'No'}
+                Rental Closed by Librarian: ${rental.librarianId}`
+            )).join('\n\n');
+            return "Rental History: "+rentalhistory;
+        }
+    }
+
+    const onFavoriteBy = () => {
+        if(book?.favoritedBy?.length === 0)
+        {
+            return "No users have favourited this book";
+        }
+        else
+        {
+            let favoritedBy = book?.favoritedBy?.map((favorite, index) => (
+                `User ${index + 1}: 
+                User ID: ${favorite.userId}`
+            )).join('\n\n');
+            return "Book is favourited by: "+favoritedBy;
+        }
+    }
      
     return(
         <ThemeProvider theme={theme}>
@@ -493,7 +528,7 @@ export default function WholeBookData({id}:{id: string})
                                                 <Button variant='contained' sx={{mb:2, mr:2}}>
                                                     Update Book
                                                 </Button>
-                                                <Button variant='outlined' sx={{mb:2}}>
+                                                <Button variant='outlined' sx={{mb:2}} onClick={()=>{setIsEditing(false)}}>
                                                     Cancel
                                                 </Button>
                                             </>
@@ -620,7 +655,7 @@ export default function WholeBookData({id}:{id: string})
                 </Snackbar>
               </Box>
               
-            {book && <ChatboxComponent book={book} role={"librarian"}/>}
+            {book && <ChatboxComponent book={book} role={"librarian"} informationFromLibrarian={onRentalHistory() + " " + onFavoriteBy()}/>}
             {
                 viewRentalHistory && book && <DialogComponentForHistory book={book} openDialog={viewRentalHistory} setOpenDialog={setViewRentalHistory} currentCase="RentalHistory"/>
             }

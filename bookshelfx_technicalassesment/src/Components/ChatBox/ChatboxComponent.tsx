@@ -15,7 +15,7 @@ import { ChatGPTSupport } from '@/Services/ChatGPTRoutines';
 import Chip from '@mui/material/Chip';
 import Badge from '@mui/material/Badge';
 
-export default function ChatboxComponent({book, role, informationFromLibrarian}: {book: Book, role?: string, informationFromLibrarian?: string[]}) {
+export default function ChatboxComponent({book, role, informationFromLibrarian}: {book: Book, role?: string, informationFromLibrarian?: string}) {
     
     const [anchorEl, setAnchorEl] = React.useState<EventTarget & HTMLButtonElement | null>(null);
     const [fabOpen, setFabOpen] = React.useState(false);
@@ -25,6 +25,7 @@ export default function ChatboxComponent({book, role, informationFromLibrarian}:
         { role: 'system', content: 'you are a librarian.' },
         { role: 'system', content: 'you can assist with editing books, providing information about books, authors, genres, and publishers.' },
         { role: 'system', content: `we are currently editing the book titled "${book.title}" by ${book.authors.join(", ")}. Be ready to provide editing suggestions, answer questions, and offer insights about this book.` },
+        { role: 'system', content: `Information From Librarian: ${informationFromLibrarian}`},
         { role: 'assistant', content: 'Hi there, This is Monika, your librarian assistant. I am here to help you with editing and provide valuable insights about the book.' },
         { role: 'assistant', content: `Feel free to ask me anything about the editing process or about "${book.title}" by ${book.authors.join(", ")}.` },
     ]:[
@@ -215,7 +216,7 @@ export default function ChatboxComponent({book, role, informationFromLibrarian}:
                                     height: Messages.length > 6 ? 'auto' : 400,
                                 }}
                             >
-                                {Messages.slice(3).map((message, index) => (
+                                {Messages.slice(role === 'librarian'? 4 : 3).map((message, index) => (
                                     message.role === 'assistant' ? (
                                         <Box
                                         key={index}

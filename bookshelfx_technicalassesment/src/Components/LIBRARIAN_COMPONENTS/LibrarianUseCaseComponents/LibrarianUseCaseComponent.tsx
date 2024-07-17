@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import AddBooksComponent from "./addbooks/AddBooksComponent";
 import DeleteBookComponent from "./deletebooks/DeleteBookComponent";
 import EditBookComponent from "./editbooks/EditBookComponent";
+import AllBookComponent from "./allbooks/AllBookComponent";
 
 export default function LibrarianUseCaseComponent() {
     const pathname = usePathname();
@@ -20,6 +21,9 @@ export default function LibrarianUseCaseComponent() {
             :
             currentUseCase === "editBook" ?
             <EditBookComponent/>
+            :
+            currentUseCase === "allBooks" ?
+            <AllBookComponent/>
             :
             null
         }
