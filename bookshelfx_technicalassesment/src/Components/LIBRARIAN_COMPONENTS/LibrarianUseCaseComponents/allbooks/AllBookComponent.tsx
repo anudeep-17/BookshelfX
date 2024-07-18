@@ -31,32 +31,7 @@ export default function AllBookComponent()
         severity: 'success', message: ''
     });
 
-    const [AllAuthors, setAllAuthors] = React.useState<string[]>([]);
-    const [AllPublishers, setAllPublishers] = React.useState<string[]>([]);
-    const [AllCategories, setAllCategories] = React.useState<string[]>([]);
-
-    React.useEffect(()=>{
-        const fetchData = async() => {
-           const authors = await getAuthors();
-           if(authors.success)
-           {
-               setAllAuthors(authors.data.flatMap((item: { authors: string }) => item.authors));
-           }
-           const Categories = await getCategories();
-           if(Categories.success)
-           {
-               setAllCategories(Categories.data);
-           }
-           const Publishers = await getPublishers();
-           if(Publishers.success)
-           {
-               setAllPublishers(Publishers.data);
-           }
-       }
-       fetchData();
-      
-   },[])
-
+     
     React.useEffect(() => {
         const fetchCount = async () => {
             setLoading(true);
@@ -95,45 +70,7 @@ export default function AllBookComponent()
         setAlertOpen(false);
     };
 
-    const handleClickofSearch = async() => {
-        const author = Author.length === 0 ? '' : Author.join(',');
-        setLoading(true);
-        const searchHistory = await searchBook(Title, author, Category, Publisher);
-        if(searchHistory.success && searchHistory.data.length !== 0)
-        {
-            setSearchResult(searchHistory.data);
-        }
-        else if (searchHistory.success && searchHistory.data.length === 0)
-        {
-            setSearchResult([]);
-            setAlertContent({severity: 'info', message: 'No books found'});
-            setAlertOpen(true);
-        }
-        else
-        {
-            setAlertContent({severity: 'error', message: searchHistory.message});
-            setAlertOpen(true);
-        }
-       
-
-        let types = {} as { [key: string]: string };
-
-        if (Title !== '') {
-            types['Title'] = Title;
-        }
-        if (Author.length > 0) {
-            types['Author'] = Author.join(', ');
-        }
-        if (Category !== '') {
-            types['Category'] = Category;
-        }
-        if (Publisher !== '') {
-            types['Publisher'] = Publisher;
-        }
-       
-        setSearchType(types);
-        setLoading(false);
-    }
+     
 
     return (
         <ThemeProvider theme={theme}>

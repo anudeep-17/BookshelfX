@@ -46,7 +46,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
-
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 
 
 const drawerWidth = DashboardSize;
@@ -161,7 +161,7 @@ export default function Navbar()
       icon: <FavoriteBorderIcon />,
     },
     {
-      text: 'Close Active User Rentals',
+      text: 'User Rental Details',
       path: '/librarian/closeuserrentals',
       icon:  <DoDisturbAltIcon/>,
     },
@@ -234,7 +234,7 @@ export default function Navbar()
             <Divider variant="middle" />
             
             <List>
-              {UserDrawer.slice(6).map((item, index) => (
+              {(pathname.split("/")[1] === 'Reader'? UserDrawer : LibrarianDrawer).slice(6).map((item, index) => (
                 <ListItem key={item.text} disablePadding>
                   <ListItemButton sx={{ 
                     borderRadius: '4px', // Make edges curved

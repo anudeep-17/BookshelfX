@@ -76,3 +76,29 @@ export async function DeleteBookList(books: { title: string, authors: string[] }
 
     return results;
 }
+
+//=========================================================================================================================================================
+
+export async function getAllActiveRentalDetails()
+{
+    const response = await fetch(`/api/books/librarian/getAllActiveRentalDetails`,{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const data = await response.json();
+    return data;
+}
+
+export async function getAllRentalDetails()
+{
+    const response = await fetch(`/api/books/librarian/getAllClosedRentalDetails`,{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const data = await response.json();
+    return data;
+}
