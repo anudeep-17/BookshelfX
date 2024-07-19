@@ -1,5 +1,6 @@
+'use client';
 import React from "react";
-import { Chip, Alert, Box, Button, CircularProgress, CssBaseline, Grid, Pagination, Paper, Snackbar, TextField, ThemeProvider, Toolbar, Typography, Tooltip, FormControl, IconButton, Badge, Autocomplete } from "@mui/material";
+import { Chip, Alert, Box, Button, CircularProgress, CssBaseline, Grid, Pagination, Paper, Snackbar, TextField, ThemeProvider, Toolbar, Typography, Tooltip, FormControl, IconButton, Badge, Autocomplete, TablePagination } from "@mui/material";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,11 +10,17 @@ import TableRow from '@mui/material/TableRow';
 import theme from "@/Components/Themes";
 import { DashboardSize } from "@/Components/DashboardSize";
 import { BookRentalDetails } from "@/Components/interfaceModels";
-import { getAllActiveRentalDetails, getAllRentalDetails } from "@/Services/LibrarianRoutines";
+import { getAllActiveRentalDetails, getAllClosedRentalDetails } from "@/Services/LibrarianRoutines";
 const drawerWidth = DashboardSize;
+import TableSortLabel from '@mui/material/TableSortLabel';
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function CloseUserRentalsComponenet()
 {
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
     function createData(rental: BookRentalDetails) {
         return {
             id: rental.id,
@@ -35,6 +42,11 @@ export default function CloseUserRentalsComponenet()
     const [ActiveRentalData , setActiveRentalData] = React.useState<BookRentalDetails[]>([]);
     const [AllRentalData, setAllRentalData] = React.useState<BookRentalDetails[]>([]);
 
+    const [TotalClosedRentalRows, setClosedRentalRows] = React.useState(0);
+
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    
     const [Loading, setLoading] = React.useState(false);
     
     const [CurrentView, setCurrentView] = React.useState('active');
@@ -44,7 +56,14 @@ export default function CloseUserRentalsComponenet()
         severity: 'success', message: ''
     });
 
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
 
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
     const handleCloseAlert = (event: React.SyntheticEvent<any, Event> | Event, reason?: string) => {
         if (reason === 'clickaway') 
@@ -54,13 +73,19 @@ export default function CloseUserRentalsComponenet()
         setAlertOpen(false);
     };
 
+    React.useEffect(() => {
+        if(searchParams.has('ViewClosedRentals') && searchParams.get('ViewClosedRentals') === 'true')
+        {
+            setCurrentView('closed');
+        }
+    },[]);
 
     React.useEffect(() => {
          const fetchData = async () => {
             let data;
             if(CurrentView === 'active')
             {
-                data = await getAllActiveRentalDetails();
+                data = await getAllActiveRentalDetails(page , rowsPerPage);
                 if(data.success)
                 {
                     setActiveRentalData(data.data);
@@ -73,10 +98,11 @@ export default function CloseUserRentalsComponenet()
             }
             else
             {
-                data = await getAllRentalDetails();
+                data = await getAllClosedRentalDetails(page+1, rowsPerPage);
                 if(data.success)
                 {
                     setAllRentalData(data.data);
+                    setClosedRentalRows(data.totalRentals);    
                 }
                 else
                 {
@@ -89,15 +115,37 @@ export default function CloseUserRentalsComponenet()
          setLoading(true);
          fetchData();
          setLoading(false);
-    }, [CurrentView]);
+    }, [CurrentView, page, rowsPerPage]);
     
     React.useEffect(() => {
         const rows = ActiveRentalData.map((rental) => {
             return createData(rental);
         });
-        console.log(rows);
+        
     }, [ActiveRentalData]);
 
+    const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
+    const [orderBy, setOrderBy] = React.useState<keyof BookRentalDetails>('id');
+
+    const handleSort = (property: keyof BookRentalDetails) => (event: React.MouseEvent<unknown>) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+
+        const sortedAllRentalData = [...AllRentalData].sort((a, b) => {
+            if (a[property] !== undefined && b[property] !== undefined) {
+                if (a[property]! < b[property]!) {
+                    return order === 'asc' ? -1 : 1;
+                }
+                if (a[property]! > b[property]!) {
+                    return order === 'asc' ? 1 : -1;
+                }
+            }
+            return 0;
+        });
+        setAllRentalData(sortedAllRentalData);
+    };
+    
     return (
         <ThemeProvider theme={theme}>
            <CssBaseline />  
@@ -140,7 +188,15 @@ export default function CloseUserRentalsComponenet()
                                 <Typography variant="h4" sx={{color: theme.palette.primary.main}}>
                                     {CurrentView === 'active'? " All Active Rentals" : "All Closed Rentals"}
                                 </Typography>
-                                <Button variant="outlined" color="primary" onClick={()=>{CurrentView === "active" ? setCurrentView('closed'): setCurrentView('active')}}>
+                                <Button variant="outlined" color="primary"onClick={() => {
+                                            if (CurrentView === "active") {
+                                                setCurrentView('closed');
+                                                router.push( pathname + '?ViewClosedRentals=true');
+                                            } else {
+                                                setCurrentView('active');
+                                                router.push( pathname );
+                                            }
+                                        }}>
                                     {CurrentView === 'active'? "View All Closed Rentals": "View All Active Rentals"}
                                 </Button>
                             </Box>
@@ -149,14 +205,62 @@ export default function CloseUserRentalsComponenet()
                                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>Rental ID</TableCell>
-                                            <TableCell align="right">Book ID</TableCell>
-                                            <TableCell align="right">User ID</TableCell>
-                                            <TableCell align="right">Rental Date</TableCell>
-                                            <TableCell align="right">Return Date</TableCell>
-                                            <TableCell align="right">Returned</TableCell>
-                                            <TableCell align="right">Is Overdue</TableCell>
-                                            {CurrentView === 'active' ? null: <TableCell align="right">Librarian ID</TableCell>}
+                                        <TableCell>
+                                            <TableSortLabel
+                                                active={orderBy === 'id'}
+                                                direction={orderBy === 'id' && order !== 'asc' ? order : 'asc'}
+                                                onClick={handleSort('id')}
+                                            >
+                                                Rental ID
+                                            </TableSortLabel>
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <TableSortLabel
+                                                active={orderBy === 'bookId'}
+                                                direction={orderBy === 'bookId' ? order : 'asc'}
+                                                onClick={handleSort('bookId')}
+                                            >
+                                                Book ID
+                                            </TableSortLabel>
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <TableSortLabel
+                                                active={orderBy === 'userId'}
+                                                direction={orderBy === 'userId' ? order : 'asc'}
+                                                onClick={handleSort('userId')}
+                                            >
+                                                User ID
+                                            </TableSortLabel>
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <TableSortLabel
+                                                active={orderBy === 'rentalDate'}
+                                                direction={orderBy === 'rentalDate' ? order : 'asc'}
+                                                onClick={handleSort('rentalDate')}
+                                            >
+                                                Rental Date
+                                            </TableSortLabel>
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <TableSortLabel
+                                                active={orderBy === 'returnDate'}
+                                                direction={orderBy === 'returnDate' ? order : 'asc'}
+                                                onClick={handleSort('returnDate')}
+                                            >
+                                                Return Date
+                                            </TableSortLabel>
+                                        </TableCell>
+                                        <TableCell align="right">Returned</TableCell>
+                                        <TableCell align="right">Is Overdue</TableCell>
+                                        {CurrentView === 'active' ? null:  <TableCell align="right">
+                                            <TableSortLabel
+                                                active={orderBy === 'librarianId'}
+                                                direction={orderBy === 'librarianId' ? order : 'asc'}
+                                                onClick={handleSort('librarianId')}
+                                            >
+                                                 Librarian ID
+                                            </TableSortLabel>
+                                        </TableCell>}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -214,8 +318,26 @@ export default function CloseUserRentalsComponenet()
                                                 </TableCell>
                                             </TableRow>
                                         )
-                                    ))} 
+                                    ))}    
+                                    <TableRow
+                                                     
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell colSpan={8} align="center">
+                                            <TablePagination
+                                                rowsPerPageOptions={[10, 25, 100]}
+                                                component="div"
+                                                count={CurrentView === 'active' ? ActiveRentalData.length: TotalClosedRentalRows}
+                                                rowsPerPage={rowsPerPage}
+                                                page={page}
+                                                onPageChange={handleChangePage}
+                                                onRowsPerPageChange={handleChangeRowsPerPage}
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                   
                                     </TableBody>
+                                
                                 </Table>
                                 </TableContainer>
                         </Box>

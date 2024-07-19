@@ -79,9 +79,9 @@ export async function DeleteBookList(books: { title: string, authors: string[] }
 
 //=========================================================================================================================================================
 
-export async function getAllActiveRentalDetails()
+export async function getAllActiveRentalDetails(page: number, rowsPerPage: number)
 {
-    const response = await fetch(`/api/books/librarian/getAllActiveRentalDetails`,{
+    const response = await fetch(`/api/books/librarian/getAllActiveRentalDetails?page=${page}&rowsPerPage=${rowsPerPage}`,{
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -91,9 +91,9 @@ export async function getAllActiveRentalDetails()
     return data;
 }
 
-export async function getAllRentalDetails()
+export async function getAllClosedRentalDetails(page: number, rowsPerPage: number)
 {
-    const response = await fetch(`/api/books/librarian/getAllClosedRentalDetails`,{
+    const response = await fetch(`/api/books/librarian/getAllClosedRentalDetails?page=${page}&rowsPerPage=${rowsPerPage}`,{
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
