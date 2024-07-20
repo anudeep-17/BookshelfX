@@ -5,7 +5,12 @@ export async function POST(req: Request)
 {   
     try {
         const { bookId, availability, userId } = await req.json();
-      
+        
+        if(!bookId || !availability || !userId)
+        {
+            return NextResponse.json({success: false, message: "Missing required fields"}, {status: 400});
+        }
+
         // Fetch the current book details
         const currentBook = await database.bookDetails.findUnique({
           where: { id: bookId },
@@ -23,31 +28,35 @@ export async function POST(req: Request)
           return NextResponse.json({ success: false, message: "Book is already unavailable" }, { status: 400 });
         }
       
-        // Check if the user already has an open rental on this book
-        if (!availability) {
+        // Check if any user already has an open rental on this book
+        if (!availability) 
+        {
           const openRental = currentBook.rentals.find(rental => !rental.returned);
-          if (openRental) {
+          if (openRental) 
+          {
             return NextResponse.json({ success: false, message: "A user already has an open rental on this book" }, { status: 400 });
           }
         }
+
         // Update the book availability
         const result = await database.bookDetails.update({
           where: { id: bookId },
           data: { availability: availability },
         });
-      
+        
         if (!availability) {
             let rentalDate = new Date();
-            let returnDate = new Date();
-            returnDate.setDate(returnDate.getDate() + 5);
+            let expectedreturnDate = new Date();
+            expectedreturnDate.setDate(expectedreturnDate.getDate() + 5);
             const addtoRentals = await database.bookRentalDetails.create({
                 data: {
                     bookId,
                     userId,
                     rentalDate,
-                    returnDate,
+                    expectedReturnDate: expectedreturnDate,
+                    userInitiatedReturn: false,
                     returned: false,
-                    isOverdue: false, // The book is being rented, so it's not overdue
+                    isOverdue: false,  
                 },
             });
             if(!addtoRentals)
@@ -66,7 +75,7 @@ export async function POST(req: Request)
                     returned: false,
                 },
             });
-            const overdue = rentalDetails ? rentalDetails.returnDate < currentDate : false;
+            const overdue = rentalDetails ? rentalDetails.expectedReturnDate < currentDate : false;
             const removefromRentals = await database.bookRentalDetails.updateMany({
                 where: {
                     bookId: Number(bookId),
@@ -74,7 +83,9 @@ export async function POST(req: Request)
                 },
                 data: {
                     returned: true,
-                    isOverdue: overdue, // If the return date is greater than 5 days, set overdue to true, else false
+                    returnDate: currentDate, // Set the return date to the current date
+                    isOverdue: overdue, // If the expected return date is less than the current date, set overdue to true, else false
+                    userInitiatedReturn: true,
                 },
             });
 

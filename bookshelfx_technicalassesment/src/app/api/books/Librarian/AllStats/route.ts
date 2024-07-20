@@ -68,16 +68,19 @@ export async function GET(req: Request)
                          },
                      },
                  },
-             }).then(librarian => {
+            }).then(librarian => {
                 const rentalsByMonth = librarian?.authorizedRentals.reduce((acc: {[key: number]: number}, rental) => {
-                    const month = new Date(rental.returnDate).getMonth();
-                    if (!acc[month]) {
-                        acc[month] = 0;
+                    const returnDate = rental.returnDate;
+                    if (returnDate) {
+                        const month = new Date(returnDate).getMonth();
+                        if (!acc[month]) {
+                            acc[month] = 0;
+                        }
+                        acc[month]++;
                     }
-                    acc[month]++;
                     return acc;
                 }, {});
-            
+                
                 return rentalsByMonth;
             });
          }
