@@ -10,7 +10,7 @@ export default function NumberOfReturnAuthorized({librarianClosedRentals}: {
 {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-    const data = months.map((month, index) => librarianClosedRentals[index] || 0);
+    const data = months.map((month, index) => (librarianClosedRentals ? librarianClosedRentals[index] : 0) || 0);
      
     return(
         <ThemeProvider theme={theme}>

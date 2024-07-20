@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { database } from "../../../prismaConfig";
-import { de } from "@faker-js/faker";
+ 
 
 export async function DELETE(req: Request) 
 {

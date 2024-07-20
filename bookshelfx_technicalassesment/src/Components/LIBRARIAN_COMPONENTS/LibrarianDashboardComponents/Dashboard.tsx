@@ -64,7 +64,7 @@ export default function Dashboard_Home()
                         <Grid item xs={12} sm={2}>
                            
                                 {
-                                    stats.totalBooks   && stats.totalUsers !== undefined ?
+                                    stats.totalBooks !== undefined && stats.totalUsers !== undefined ?
                                     <Box
                                         sx={{
                                             display: 'flex',
@@ -136,9 +136,11 @@ export default function Dashboard_Home()
                                     </Paper>
                                 </Box>
                                 :
-                                <Typography variant="h6" color="textSecondary" gutterBottom>
-                                    No Data
-                                </Typography>
+                                <Paper elevation={3} sx={{alignContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center'}}>
+                                    <Typography variant="h6" color="textSecondary" gutterBottom>
+                                        No Data
+                                    </Typography>
+                                </Paper>
                             }
                         </Grid>
                         <Grid item xs={12} sm={12}>

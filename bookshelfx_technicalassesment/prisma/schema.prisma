@@ -53,7 +53,9 @@ model BookRentalDetails {
   user            User     @relation("RentedByUser", fields: [userId], references: [id])
   userId          Int
   rentalDate      DateTime
-  returnDate      DateTime
+  expectedReturnDate DateTime
+  returnDate      DateTime?
+  userInitiatedReturn   Boolean
   returned        Boolean
   isOverdue       Boolean
   librarian       User?    @relation("AuthorizedByLibrarian", fields: [librarianId], references: [id])
