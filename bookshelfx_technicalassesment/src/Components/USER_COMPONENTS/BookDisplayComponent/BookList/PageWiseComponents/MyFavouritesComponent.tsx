@@ -8,7 +8,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {BookDetails, BookCardProps} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { getBook, getCategories, getFavBooksByUser} from '@/Services/BookRoutines';
+import {getFavBooksByUser} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
@@ -38,6 +38,7 @@ export default function MyFavouritesComponent()
             {
                 const data = await getFavBooksByUser(Number(userID));
                 if (data.success) {
+                    console.log(data.data);
                     setFavBooks(data.data);
                 }
             }
@@ -237,7 +238,7 @@ export default function MyFavouritesComponent()
                                                         description={book.book.description}
                                                         rating={book.book.rating}
                                                         authors={book.book.authors}
-                                                        availability={book.availability}
+                                                        availability={book.book.availability}
                                                         onClick={() => handleBookClick(book.book.id as number)}
                                                     />
                                                 );

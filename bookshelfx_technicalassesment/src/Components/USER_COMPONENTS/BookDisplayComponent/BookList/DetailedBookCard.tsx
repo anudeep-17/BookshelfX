@@ -8,6 +8,7 @@ import { BookCardProps } from '../../../interfaceModels';
 
 export default function DetailedBookCard({coverimage, title, description, rating, authors, availability, onClick}: BookCardProps) {
     const [value, setValue] = React.useState<number | null>(rating || null);
+    
     return(
         <ThemeProvider theme={theme}>
             <Tooltip title={!availability ? "Not Available":null} followCursor>

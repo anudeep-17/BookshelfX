@@ -38,13 +38,13 @@ export async function POST(req: Request)
           }
         }
 
-        // Update the book availability
-        const result = await database.bookDetails.update({
-          where: { id: bookId },
-          data: { availability: availability },
-        });
-        
         if (!availability) {
+            
+            const result = await database.bookDetails.update({
+                where: { id: bookId },
+                data: { availability: availability },
+              });
+
             let rentalDate = new Date();
             let expectedreturnDate = new Date();
             expectedreturnDate.setDate(expectedreturnDate.getDate() + 5);
