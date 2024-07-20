@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
-    "@prisma/client": "^5.15.0",
+    "@prisma/client": "^5.17.0",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie": "^0.6.0",
     "@types/js-cookie": "^3.0.6",
@@ -60,7 +60,7 @@
     "i": "^0.3.7",
     "npm": "^10.8.2",
     "postcss": "^8",
-    "prisma": "^5.15.0",
+    "prisma": "^5.17.0",
     "sequelize-cli": "^6.6.2",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
