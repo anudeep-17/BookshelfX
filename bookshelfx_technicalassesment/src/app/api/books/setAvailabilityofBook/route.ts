@@ -37,30 +37,52 @@ export async function POST(req: Request)
         });
       
         if (!availability) {
-          let rentalDate = new Date();
-          let returnDate = new Date();
-          returnDate.setDate(returnDate.getDate() + 5);
-          const addtoRentals = await database.bookRentalDetails.create({
-            data: {
-              bookId,
-              userId,
-              rentalDate,
-              returnDate,
-              returned: false,
-            },
-          });
-          return NextResponse.json({ success: true, message: "Availability updated and rental added" }, { status: 200 });
+            let rentalDate = new Date();
+            let returnDate = new Date();
+            returnDate.setDate(returnDate.getDate() + 5);
+            const addtoRentals = await database.bookRentalDetails.create({
+                data: {
+                    bookId,
+                    userId,
+                    rentalDate,
+                    returnDate,
+                    returned: false,
+                    isOverdue: false, // The book is being rented, so it's not overdue
+                },
+            });
+            if(!addtoRentals)
+            {
+                return NextResponse.json({ success: false, message: "Rental not added" }, { status: 400 });
+            }
+
+            return NextResponse.json({ success: true, message: "Availability updated and rental added" }, { status: 200 });
+            
         } else {
-          const removefromRentals = await database.bookRentalDetails.updateMany({
-            where: {
-              bookId: Number(bookId),
-              userId: Number(userId),
-            },
-            data: {
-              returned: true,
-            },
-          });
-          return NextResponse.json({ success: true, message: "Availability updated and rental returned" }, { status: 200 });
+            const currentDate = new Date();
+            const rentalDetails = await database.bookRentalDetails.findFirst({
+                where: {
+                    bookId: Number(bookId),
+                    userId: Number(userId),
+                    returned: false,
+                },
+            });
+            const overdue = rentalDetails ? rentalDetails.returnDate < currentDate : false;
+            const removefromRentals = await database.bookRentalDetails.updateMany({
+                where: {
+                    bookId: Number(bookId),
+                    userId: Number(userId),
+                },
+                data: {
+                    returned: true,
+                    isOverdue: overdue, // If the return date is greater than 5 days, set overdue to true, else false
+                },
+            });
+
+            if(!removefromRentals)
+            {
+                return NextResponse.json({ success: false, message: "No rental found for this user" }, { status: 400 });
+            }
+            return NextResponse.json({ success: true, message: "Availability updated and rental returned" }, { status: 200 });
         }
     }
     catch(err)

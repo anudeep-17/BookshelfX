@@ -85,9 +85,10 @@ export default function CloseUserRentalsComponenet()
             let data;
             if(CurrentView === 'active')
             {
-                data = await getAllActiveRentalDetails(page , rowsPerPage);
+                data = await getAllActiveRentalDetails(page+1, rowsPerPage);
                 if(data.success)
                 {
+                    console.log(data.data);
                     setActiveRentalData(data.data);
                 }
                 else
@@ -114,6 +115,7 @@ export default function CloseUserRentalsComponenet()
          }
          setLoading(true);
          fetchData();
+        
          setLoading(false);
     }, [CurrentView, page, rowsPerPage]);
     

@@ -11,6 +11,7 @@ export async function GET(req: Request)
         //total number of books
         const totalBooks = await database.bookDetails.count();
         const totalUsers = await database.user.count();
+        
         //total number of rented books vs total available books
         const rentedBooks = await database.bookDetails.count({
             where: {
