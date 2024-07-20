@@ -30,6 +30,7 @@ import ChatboxComponent from '@/Components/ChatBox/ChatboxComponent';
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 import bookcover from '@/assets/bookcover.png'
 import { BookDetails } from '../../interfaceModels';
+import RentalConfirmationDialog from './RentalConfirmationDialog';
 
 const drawerWidth = DashboardSize;
 const OPTIONS: EmblaOptionsType = { loop: true }
@@ -42,12 +43,14 @@ export default function WholeBookData({id}:{id: string})
     const [confetti, setConfetti] = React.useState(false);
     const [isBookRented, setIsBookRented] = React.useState(false);
     const [isBookRentedByCurrentUser, setIsBookRentedByCurrentUser] = React.useState(false);
-    
+    const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
+    const [CurrentRentalStatus, setCurrentRentalStatus] = React.useState('');
+
     React.useEffect(() => {
         const fetchData = async () => {
             const data = await getBookByID(id);
             if (data.success) {
-                setBook(data.data);
+                setBook(data.data)
                 if(!data.data.availability)
                 {
                     setIsBookRented(true);
@@ -55,7 +58,6 @@ export default function WholeBookData({id}:{id: string})
                 if(data.data.rentals.length > 0)
                 {
                     const user = Cookies.get('user');
-                    setIsBookRented(true)
                     const userID = user ? JSON.parse(user).id.toString() : '';
                     if (data.data.rentals[0].userId ===  Number(userID) && !data.data.rentals[0].returned) {
                         setIsBookRentedByCurrentUser(true);
@@ -477,16 +479,16 @@ export default function WholeBookData({id}:{id: string})
                                 }
                                 {
                                     isBookRented?
-                                    isBookRentedByCurrentUser ?
-                                    <Button variant="contained" color="primary" sx={{mb:1, mt:1}} onClick={handleClickonReturn}>
+                                    (isBookRentedByCurrentUser ?
+                                    <Button variant="contained" color="primary" sx={{mb:1, mt:1}} onClick={()=>{setOpenConfirmationDialog(true); setCurrentRentalStatus('returning')}}>
                                         Return The Book
                                     </Button>
                                     :
                                     <Button variant="contained" color="primary" sx={{mb:1, mt:1}} disabled>
                                         Book Not Available
-                                    </Button>
+                                    </Button>)
                                     :
-                                    <Button variant="outlined" color="primary" sx={{mb:1, mt:1}} onClick={handleClickonCheckout}>
+                                    <Button variant="outlined" color="primary" sx={{mb:1, mt:1}} onClick={()=>{setOpenConfirmationDialog(true); setCurrentRentalStatus('renting')}}>
                                         Checkout Book
                                     </Button>
                                 }
@@ -531,6 +533,16 @@ export default function WholeBookData({id}:{id: string})
               </Box>
               
             {book && <ChatboxComponent book={book}/>}
+
+            {
+                openConfirmationDialog &&
+                <RentalConfirmationDialog 
+                openDialog={openConfirmationDialog} setOpenDialog={setOpenConfirmationDialog} 
+                task={CurrentRentalStatus} 
+                handleCheckout={handleClickonCheckout}
+                handleReturn={handleClickonReturn}
+                />
+            }
                         
         </Box>
         </ThemeProvider>
