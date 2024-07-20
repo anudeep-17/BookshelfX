@@ -1,9 +1,8 @@
 import React from "react";
 import theme from "@/Components/Themes";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, ThemeProvider, Typography } from "@mui/material";
-import { BookDetails } from "@/Components/interfaceModels";
 
-export default function RentalConfirmationDialog({openDialog, setOpenDialog, task}:{
+export default function RentalConfirmationDialog({openDialog, setOpenDialog, task, handleCheckout, handleReturn}:{
     openDialog: boolean,
     setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>,
     task: string,
@@ -15,7 +14,7 @@ export default function RentalConfirmationDialog({openDialog, setOpenDialog, tas
     const handleClose = () => {
         setOpenDialog(false);
     };
-
+    
     return(
         <ThemeProvider theme={theme}>
             <Dialog
@@ -63,7 +62,7 @@ export default function RentalConfirmationDialog({openDialog, setOpenDialog, tas
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button 
-                        onClick={() => {setConfirmationText(''); handleClose()}}
+                        onClick={() => {(task === 'renting'? handleCheckout() : handleReturn()); setConfirmationText(''); handleClose()}}
                         autoFocus 
                         disabled={task === 'renting' ? confirmationText !== "RENTBOOK" : confirmationText !== "RETURNBOOK"}
                     >

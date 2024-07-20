@@ -50,6 +50,7 @@ export default function WholeBookData({id}:{id: string})
         const fetchData = async () => {
             const data = await getBookByID(id);
             if (data.success) {
+                console.log(data.data);
                 setBook(data.data)
                 if(!data.data.availability)
                 {
@@ -59,9 +60,10 @@ export default function WholeBookData({id}:{id: string})
                 {
                     const user = Cookies.get('user');
                     const userID = user ? JSON.parse(user).id.toString() : '';
+                    console.log(data.data.rentals[0].userId ===  Number(userID) && !data.data.rentals[0].returned);
                     if (data.data.rentals[0].userId ===  Number(userID) && !data.data.rentals[0].returned) {
+                        console.log('Book is rented by current user');
                         setIsBookRentedByCurrentUser(true);
-                         
                       } else {
                         setIsBookRentedByCurrentUser(false);
                       }
@@ -328,6 +330,7 @@ export default function WholeBookData({id}:{id: string})
         }
         else
         {
+            console.log(result);
             setAlert({severity: "error", message: "Failed to checkout book"});
             setAlertOpen(true);
         }

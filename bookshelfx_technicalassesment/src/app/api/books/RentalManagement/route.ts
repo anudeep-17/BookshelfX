@@ -5,8 +5,8 @@ export async function POST(req: Request)
 {   
     try {
         const { bookId, availability, userId } = await req.json();
-        
-        if(!bookId || !availability || !userId)
+        console.log(bookId, availability, userId);
+        if(!bookId || availability === undefined || !userId)
         {
             return NextResponse.json({success: false, message: "Missing required fields"}, {status: 400});
         }
@@ -38,13 +38,8 @@ export async function POST(req: Request)
           }
         }
 
-        if (!availability) {
-            
-            const result = await database.bookDetails.update({
-                where: { id: bookId },
-                data: { availability: availability },
-              });
-
+        if (!availability) 
+        {
             let rentalDate = new Date();
             let expectedreturnDate = new Date();
             expectedreturnDate.setDate(expectedreturnDate.getDate() + 5);
@@ -59,7 +54,13 @@ export async function POST(req: Request)
                     isOverdue: false,  
                 },
             });
-            if(!addtoRentals)
+
+            const result = await database.bookDetails.update({
+                where: { id: bookId },
+                data: { availability: availability },
+            });
+
+            if(!addtoRentals || !result)
             {
                 return NextResponse.json({ success: false, message: "Rental not added" }, { status: 400 });
             }
@@ -89,7 +90,12 @@ export async function POST(req: Request)
                 },
             });
 
-            if(!removefromRentals)
+            const result = await database.bookDetails.update({
+                where: { id: bookId },
+                data: { availability: availability },
+            });
+
+            if(!removefromRentals || !result)
             {
                 return NextResponse.json({ success: false, message: "No rental found for this user" }, { status: 400 });
             }

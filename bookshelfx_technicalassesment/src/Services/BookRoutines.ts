@@ -91,7 +91,7 @@ export async function getBookByID(id: string)
 //================================================================================================= Rental ROUTINES ================================================================================================
 export async function setAvailabilityofBook(bookId: number, availability: boolean, userId:number)
 {
-    const response = await fetch(`/api/books/setAvailabilityofBook`, {
+    const response = await fetch(`/api/books/RentalManagement`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
