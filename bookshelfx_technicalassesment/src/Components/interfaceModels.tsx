@@ -48,7 +48,9 @@ export interface BookRentalDetails {
     bookId: number;
     userId: number;
     rentalDate: string;
-    returnDate: string;
+    expectedReturnDate: string;
+    returnDate?: string;
+    userInitiatedReturn: boolean;
     returned: boolean;
     isOverdue: boolean;
     librarianId?: number;
@@ -73,6 +75,7 @@ export interface FavoriteBook {
 
 
 //=======================================================Component Props=======================================================
+
 export interface BookCardProps {
     id?: number;
     coverimage: string;

@@ -12,24 +12,16 @@ export async function GET(req:Request)
             return NextResponse.json({success: false, message: "User ID is required"}, {status: 400});
         }
 
-        const userRentals = await database.user.findUnique({
-            where: {
-                id: Number(userId),
-              },
-              include: {
-                rentals: {
-                  select: {
-                    id: true,
-                    bookId: true,
-                    userId: true,
-                    rentalDate: true,
-                    returnDate: true,
-                  },
-                },
-              },
-          });
-
-          return NextResponse.json({success: true, data: userRentals}, {status: 200});
+        const userWithRentalsAndBooks = await database.user.findUnique({
+          where: { id: Number(userId) },
+          include: { 
+            rentals: {
+              include: { book: true }
+            }
+          },
+        });
+  
+          return NextResponse.json({success: true, data: userWithRentalsAndBooks}, {status: 200});
     }
     catch(err)
     {

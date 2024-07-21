@@ -18,7 +18,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
+import NoBookCover from '@/assets/bookcover.png'
 
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 
@@ -42,12 +42,13 @@ export default function UserRentalBookComponent()
       const user = JSON.parse(userCookie);
       userID = user?.id;
     }
- 
+    
 
     useEffect(() => {
         const fetchData = async () => {
             const data = await getRentalsofUser(Number(userID));
-            console.log(data.data.rentals);
+            console.log(data.data);
+            console.log(data.data.rentals.filter((rental: BookRentalDetails) => rental.returned === false))
             if(data.success)
             {
                 setRentalBookWholeDetails(data.data.rentals);
@@ -79,13 +80,7 @@ export default function UserRentalBookComponent()
     {
         setFilterDrawerOpen(newOpen);
     };
-
-    const [drawerOpen, setDrawerOpen] = React.useState(true);
-
-    // Add a new function to toggle the drawer
-    const toggleDrawerForRentals = (open:boolean) => () => {
-        setDrawerOpen(open);
-    };
+ 
 
     const handleDateClick = (date: string) => {
         setSelectedRentalDates(date);
@@ -282,8 +277,8 @@ export default function UserRentalBookComponent()
                                                                 <ListItemButton
                                                                     selected={selectedRentalDates === date}
                                                                     sx={{ 
+                                                                        width:'100%',
                                                                         borderRadius: '4px', // Make edges curved
-                                                                        m:2,
                                                                         display: 'flex', // Add this
                                                                         justifyContent: 'center', // Add this
                                                                         '&:hover': {
@@ -420,7 +415,7 @@ export default function UserRentalBookComponent()
                                             RentalBooks.map((book: Book) => (
                                                 <DetailedBookCard
                                                     key={book.id}
-                                                    coverimage={book.coverimage}
+                                                    coverimage={book.coverimage !== 'N/A'? book.coverimage : NoBookCover.src}
                                                     title={book.title}
                                                     description={book.description}
                                                     rating={book.rating}
@@ -452,7 +447,7 @@ export default function UserRentalBookComponent()
                                                         color: 'text.secondary'
                                                     }}
                                                 >
-                                                    No current Rentals
+                                                    Select a Date to view Rental Books
                                                 </Typography>
                                             </Box>
                                         ) 

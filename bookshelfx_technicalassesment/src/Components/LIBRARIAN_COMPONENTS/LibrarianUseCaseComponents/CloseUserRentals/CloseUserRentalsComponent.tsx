@@ -14,6 +14,9 @@ import { getAllActiveRentalDetails, getAllClosedRentalDetails } from "@/Services
 const drawerWidth = DashboardSize;
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 export default function CloseUserRentalsComponenet()
 {
@@ -27,6 +30,8 @@ export default function CloseUserRentalsComponenet()
             bookId: rental.bookId,
             userId: rental.userId,
             rentalDate: rental.rentalDate,
+            expectedReturnDate: rental.expectedReturnDate,
+            userInitiatedReturn: rental.userInitiatedReturn,
             returnDate: rental.returnDate,
             returned: rental.returned,
             isOverdue: rental.isOverdue,
@@ -40,7 +45,7 @@ export default function CloseUserRentalsComponenet()
     }
     
     const [ActiveRentalData , setActiveRentalData] = React.useState<BookRentalDetails[]>([]);
-    const [AllRentalData, setAllRentalData] = React.useState<BookRentalDetails[]>([]);
+    const [ClosedRentalData, setClosedRentalData] = React.useState<BookRentalDetails[]>([]);
 
     const [TotalClosedRentalRows, setClosedRentalRows] = React.useState(0);
 
@@ -102,7 +107,7 @@ export default function CloseUserRentalsComponenet()
                 data = await getAllClosedRentalDetails(page+1, rowsPerPage);
                 if(data.success)
                 {
-                    setAllRentalData(data.data);
+                    setClosedRentalData(data.data);
                     setClosedRentalRows(data.totalRentals);    
                 }
                 else
@@ -119,12 +124,6 @@ export default function CloseUserRentalsComponenet()
          setLoading(false);
     }, [CurrentView, page, rowsPerPage]);
     
-    React.useEffect(() => {
-        const rows = ActiveRentalData.map((rental) => {
-            return createData(rental);
-        });
-        
-    }, [ActiveRentalData]);
 
     const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
     const [orderBy, setOrderBy] = React.useState<keyof BookRentalDetails>('id');
@@ -134,7 +133,9 @@ export default function CloseUserRentalsComponenet()
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
 
-        const sortedAllRentalData = [...AllRentalData].sort((a, b) => {
+        let currentViewData = CurrentView === 'active' ? ActiveRentalData : ClosedRentalData;
+
+        const sortedData = [...currentViewData].sort((a, b) => {
             if (a[property] !== undefined && b[property] !== undefined) {
                 if (a[property]! < b[property]!) {
                     return order === 'asc' ? -1 : 1;
@@ -145,9 +146,72 @@ export default function CloseUserRentalsComponenet()
             }
             return 0;
         });
-        setAllRentalData(sortedAllRentalData);
+
+        if (CurrentView === 'active') 
+        {
+            setActiveRentalData(sortedData);
+        } 
+        else 
+        {
+            setClosedRentalData(sortedData);
+        }
     };
-    
+
+
+    const exportPDF = () => 
+    {
+        const doc = new jsPDF();
+        doc.setFontSize(30);
+        let text = 'BookShelfX';
+        let textWidth = doc.getTextWidth(text);
+        let pageCenter = doc.internal.pageSize.getWidth() / 2;
+        doc.text(text, pageCenter - textWidth / 2, 15);
+
+        doc.setFontSize(15);
+        text = CurrentView === 'closed' ? 'Closed Rental Data': 'Active Rental Data';
+        textWidth = doc.getTextWidth(text);
+        doc.text(text, pageCenter - textWidth / 2, 30);
+
+        const tableColumn = CurrentView ==='closed'? 
+            ["ID", "Book ID", "User ID", "Rental Date", "Expected Return Date", "Return Date", "Returned", "Is Overdue", "Librarian ID"]:
+            ["ID", "Book ID", "User ID", "Rental Date", "Expected Return Date", "Return Date", "Return Initiated By User", "Returned", "Is Overdue"];
+
+        const tableRows: (string | number | boolean)[][] = []; // Each row is an array of string, number, or boolean
+
+        const dataToExport = CurrentView === 'active' ? ActiveRentalData : ClosedRentalData;
+
+        dataToExport.forEach(rental => {
+        const rentalData: (string | number | boolean)[] = CurrentView === 'closed' ? [ // Each rentalData is an array of string, number, or boolean
+            rental.id,
+            rental.bookId,
+            rental.userId,
+            new Date(rental.rentalDate).toLocaleDateString(),
+            new Date(rental.expectedReturnDate).toLocaleDateString(),
+            rental.returnDate? new Date(rental.returnDate).toLocaleDateString() : 'N/A',
+            rental.returned,
+            rental.isOverdue,
+            rental.librarianId? rental.librarianId : 'N/A',
+          
+        ]:
+        [
+            rental.id,
+            rental.bookId,
+            rental.userId,
+            new Date(rental.rentalDate).toLocaleDateString(),
+            new Date(rental.expectedReturnDate).toLocaleDateString(),
+            rental.returnDate? new Date(rental.returnDate).toLocaleDateString() : 'N/A',
+            rental.userInitiatedReturn,
+            rental.returned,
+            rental.isOverdue,
+        ]
+        tableRows.push(rentalData);
+        }
+        );
+
+        autoTable(doc, { startY: 45, tableWidth: 'auto', head: [tableColumn], body: tableRows });
+        doc.save("rental_data.pdf");
+    };
+
     return (
         <ThemeProvider theme={theme}>
            <CssBaseline />  
@@ -190,7 +254,17 @@ export default function CloseUserRentalsComponenet()
                                 <Typography variant="h4" sx={{color: theme.palette.primary.main}}>
                                     {CurrentView === 'active'? " All Active Rentals" : "All Closed Rentals"}
                                 </Typography>
-                                <Button variant="outlined" color="primary"onClick={() => {
+                                <Box sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    gap:2                            
+                                }}>
+                                    <Tooltip title="Export Rental Records as PDF">
+                                        <IconButton onClick={exportPDF}>
+                                            <PictureAsPdfIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Button variant="outlined" color="primary"onClick={() => {
                                             if (CurrentView === "active") {
                                                 setCurrentView('closed');
                                                 router.push( pathname + '?ViewClosedRentals=true');
@@ -199,8 +273,11 @@ export default function CloseUserRentalsComponenet()
                                                 router.push( pathname );
                                             }
                                         }}>
-                                    {CurrentView === 'active'? "View All Closed Rentals": "View All Active Rentals"}
-                                </Button>
+                                        {CurrentView === 'active'? "View All Closed Rentals": "View All Active Rentals"}
+                                    </Button>
+                               
+                                </Box>
+                             
                             </Box>
                             
                             <TableContainer component={Paper}>
@@ -211,7 +288,7 @@ export default function CloseUserRentalsComponenet()
                                             <TableSortLabel
                                                 active={orderBy === 'id'}
                                                 direction={orderBy === 'id' && order !== 'asc' ? order : 'asc'}
-                                                onClick={handleSort('id')}
+                                                onClick={handleSort('id',)}
                                             >
                                                 Rental ID
                                             </TableSortLabel>
@@ -245,6 +322,16 @@ export default function CloseUserRentalsComponenet()
                                         </TableCell>
                                         <TableCell align="right">
                                             <TableSortLabel
+                                                active={orderBy === 'expectedReturnDate'}
+                                                direction={orderBy === 'expectedReturnDate' ? order : 'asc'}
+                                                onClick={handleSort('expectedReturnDate')}
+                                            >
+                                              Expected Return Date
+                                            </TableSortLabel>
+                                        </TableCell>
+                                     
+                                        <TableCell align="right">
+                                            <TableSortLabel
                                                 active={orderBy === 'returnDate'}
                                                 direction={orderBy === 'returnDate' ? order : 'asc'}
                                                 onClick={handleSort('returnDate')}
@@ -252,6 +339,11 @@ export default function CloseUserRentalsComponenet()
                                                 Return Date
                                             </TableSortLabel>
                                         </TableCell>
+
+                                        {
+                                            CurrentView === 'active' ?   <TableCell align="right">Return Initiated By User</TableCell>: null
+                                        }
+
                                         <TableCell align="right">Returned</TableCell>
                                         <TableCell align="right">Is Overdue</TableCell>
                                         {CurrentView === 'active' ? null:  <TableCell align="right">
@@ -262,7 +354,12 @@ export default function CloseUserRentalsComponenet()
                                             >
                                                  Librarian ID
                                             </TableSortLabel>
-                                        </TableCell>}
+                                        </TableCell>}          
+                                        
+                                        {
+                                            CurrentView === 'active' ? <TableCell align="right">Close Rental</TableCell> : null
+                                        }                          
+
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -279,15 +376,21 @@ export default function CloseUserRentalsComponenet()
                                                     <TableCell align="right">{rental.bookId}</TableCell>
                                                     <TableCell align="right">{rental.userId}</TableCell>
                                                     <TableCell align="right">{new Date(rental.rentalDate).toLocaleString()}</TableCell>
-                                                    <TableCell align="right">{new Date(rental.returnDate).toLocaleString()}</TableCell>
+                                                    <TableCell align="right">{new Date(rental.expectedReturnDate).toLocaleString()}</TableCell>
+                                                    <TableCell align="right">{rental.returnDate ? new Date(rental.returnDate).toLocaleString() : 'N/A'}</TableCell>
+                                                    <TableCell align="right">{rental.userInitiatedReturn ? 'Yes' : 'No'}</TableCell>
                                                     <TableCell align="right">{rental.returned ? 'Yes' : 'No'}</TableCell>
                                                     <TableCell align="right">{rental.isOverdue ? 'Yes' : 'No'}</TableCell>
-                                                    <TableCell align="right">{rental.librarianId}</TableCell>
+                                                    <TableCell align="right">
+                                                        <Button variant="contained" color="primary"  disabled ={!rental.userInitiatedReturn}>
+                                                            Close Rental
+                                                        </Button>
+                                                    </TableCell>
                                                 </TableRow>
                                             ))
                                         ) : (
                                             <TableRow>
-                                                <TableCell colSpan={8} align="center">
+                                                <TableCell colSpan={10} align="center">
                                                     <Typography variant="h6" sx={{color: theme.palette.text.secondary}}>
                                                         No active rentals found
                                                     </Typography>
@@ -295,8 +398,8 @@ export default function CloseUserRentalsComponenet()
                                             </TableRow>
                                         )
                                     ) : (
-                                        AllRentalData.length > 0 ? (
-                                            AllRentalData.map((rental) => (
+                                        ClosedRentalData.length > 0 ? (
+                                            ClosedRentalData.map((rental) => (
                                                 <TableRow
                                                     key={rental.id}
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -305,7 +408,8 @@ export default function CloseUserRentalsComponenet()
                                                     <TableCell align="right">{rental.bookId}</TableCell>
                                                     <TableCell align="right">{rental.userId}</TableCell>
                                                     <TableCell align="right">{new Date(rental.rentalDate).toLocaleString()}</TableCell>
-                                                    <TableCell align="right">{new Date(rental.returnDate).toLocaleString()}</TableCell>
+                                                    <TableCell align="right">{new Date(rental.expectedReturnDate).toLocaleString()}</TableCell>
+                                                    <TableCell align="right">{rental.returnDate ? new Date(rental.returnDate).toLocaleString() : 'N/A'}</TableCell>
                                                     <TableCell align="right">{rental.returned ? 'Yes' : 'No'}</TableCell>
                                                     <TableCell align="right">{rental.isOverdue ? 'Yes' : 'No'}</TableCell>
                                                     <TableCell align="right">{rental.librarianId}</TableCell>
@@ -313,7 +417,7 @@ export default function CloseUserRentalsComponenet()
                                             ))
                                         ) : (
                                             <TableRow>
-                                                <TableCell colSpan={8} align="center">
+                                                <TableCell colSpan={9} align="center">
                                                     <Typography variant="h6" sx={{color: theme.palette.text.secondary}}>
                                                         No rentals found
                                                     </Typography>
@@ -325,7 +429,7 @@ export default function CloseUserRentalsComponenet()
                                                      
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell colSpan={8} align="center">
+                                        <TableCell colSpan={10} align="center">
                                             <TablePagination
                                                 rowsPerPageOptions={[10, 25, 100]}
                                                 component="div"
