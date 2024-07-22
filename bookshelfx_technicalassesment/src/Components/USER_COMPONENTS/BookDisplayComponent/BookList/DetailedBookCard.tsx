@@ -6,11 +6,22 @@ import theme from '../../../Themes';
 import { BookCardProps } from '../../../interfaceModels';
 import bookcover from '@/assets/bookcover.png';
 import Cookies from 'js-cookie';
-import { isbookrentedbycurrentuser } from '@/Services/BookRoutines';
+import { isbookrentedbycurrentuser, setAvailabilityofBook } from '@/Services/BookRoutines';
+import RentalConfirmationDialog from '@/Components/USER_COMPONENTS/RentalConfirmationDialog';
 
-export default function DetailedBookCard({bookID, coverimage, title, description, rating, authors, availability, onClick}: BookCardProps) {
+
+export default function DetailedBookCard({bookID, coverimage, title, description, rating, authors, availability, onClick, setAlert,setAlertOpen }: BookCardProps 
+                                        & { 
+                                            setAlert: React.Dispatch<React.SetStateAction<{severity: 'success' | 'error', message: string}>>,
+                                            setAlertOpen: React.Dispatch<React.SetStateAction<boolean>>
+                                        })
+{
+
     const [value, setValue] = React.useState<number | null>(rating || null);
+    const [isBookRented, setIsBookRented] = React.useState<boolean>(availability ? false : true);
     const [isRentedBytheSameUser, setIsRentedBytheSameUser] = React.useState<boolean>(false);   
+    const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
+
     let userID: number | null = null;
     const userCookie = Cookies.get('user');
     if (userCookie !== undefined) {
@@ -24,6 +35,38 @@ export default function DetailedBookCard({bookID, coverimage, title, description
         }
         fetchData();
     }, []);
+
+    const handleClickonCheckout = async () => {
+        const result = await setAvailabilityofBook(Number(bookID), false, Number(userID));
+        if(result.success)
+        {
+            setAlert({severity: "success", message: "Book checked out successfully"});
+            setAlertOpen(true);
+            setIsBookRented(true);
+            setIsRentedBytheSameUser(true);
+        }
+        else
+        {
+            setAlert({severity: "error", message: "Failed to checkout book"});
+            setAlertOpen(true);
+        }
+    }
+
+    const handleClickonReturn = async () => {
+        const result = await setAvailabilityofBook(Number(bookID), true, Number(userID));
+        if(result.success)
+        {
+            setAlert({severity: "success", message: "Book returned successfully"});
+            setAlertOpen(true);
+            setIsBookRented(false);
+            setIsRentedBytheSameUser(false);
+        }
+        else
+        {
+            setAlert({severity: "error", message: "Failed to return book"});
+            setAlertOpen(true);
+        }
+    }
 
     return(
         <ThemeProvider theme={theme}>
@@ -42,7 +85,7 @@ export default function DetailedBookCard({bookID, coverimage, title, description
                             cursor: 'pointer',
                             
                         },
-                        backgroundColor: availability ? 'initial' : '#cccccc',
+                        backgroundColor: !isBookRented ? 'initial' : '#cccccc',
                         borderRadius: '10px 10px 10px 10px', // Make top borders curved
                     }}
                     onClick={onClick}
@@ -87,14 +130,26 @@ export default function DetailedBookCard({bookID, coverimage, title, description
                             </Typography>
 
                             <Button variant="contained" color="primary" sx={{ mb:1 }}
-                                    disabled={!availability && !isRentedBytheSameUser}
-                            >
+                                    disabled={isBookRented  && !isRentedBytheSameUser}
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        setOpenConfirmationDialog(true);
+                                    }}>
                                 {isRentedBytheSameUser ? "Return Book" : "Checkout"}
                             </Button>
                         </Box>
         
                     </Box>
                 </Tooltip>
+                    {
+                        openConfirmationDialog &&
+                        <RentalConfirmationDialog 
+                            openDialog={openConfirmationDialog} setOpenDialog={setOpenConfirmationDialog} 
+                            task={isRentedBytheSameUser ? 'returning' : 'renting'} 
+                            handleCheckout={handleClickonCheckout}
+                            handleReturn={handleClickonReturn}
+                        />
+                    }
         </ThemeProvider>
     );
 }

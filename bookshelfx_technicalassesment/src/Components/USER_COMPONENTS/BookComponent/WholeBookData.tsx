@@ -30,7 +30,7 @@ import ChatboxComponent from '@/Components/ChatBox/ChatboxComponent';
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 import bookcover from '@/assets/bookcover.png'
 import { BookDetails } from '../../interfaceModels';
-import RentalConfirmationDialog from './RentalConfirmationDialog';
+import RentalConfirmationDialog from '../RentalConfirmationDialog';
 
 const drawerWidth = DashboardSize;
 const OPTIONS: EmblaOptionsType = { loop: true }
@@ -330,7 +330,6 @@ export default function WholeBookData({id}:{id: string})
         }
         else
         {
-            console.log(result);
             setAlert({severity: "error", message: "Failed to checkout book"});
             setAlertOpen(true);
         }
