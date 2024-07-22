@@ -90,12 +90,7 @@ export async function POST(req: Request)
                 },
             });
 
-            const result = await database.bookDetails.update({
-                where: { id: bookId },
-                data: { availability: availability },
-            });
-
-            if(!removefromRentals || !result)
+            if(!removefromRentals)
             {
                 return NextResponse.json({ success: false, message: "No rental found for this user" }, { status: 400 });
             }

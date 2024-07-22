@@ -60,7 +60,6 @@ export default function WholeBookData({id}:{id: string})
                 {
                     const user = Cookies.get('user');
                     const userID = user ? JSON.parse(user).id.toString() : '';
-                    console.log(data.data.rentals[0].userId ===  Number(userID) && !data.data.rentals[0].returned);
                     if (data.data.rentals[0].userId ===  Number(userID) && !data.data.rentals[0].returned) {
                         console.log('Book is rented by current user');
                         setIsBookRentedByCurrentUser(true);
