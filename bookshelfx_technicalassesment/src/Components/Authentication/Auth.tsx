@@ -25,7 +25,7 @@ export default function Auth()
                     <Box sx={{
                             position: 'relative', // make this box positioned
                             width: ['100%', '50%'], // full width on small screens, half width on larger screens
-                            minHeight: ['25vh','98vh'], 
+                            minHeight: ['25vh','100vh'], 
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
@@ -43,14 +43,15 @@ export default function Auth()
                     alignItems: 'center',
                     alignContent: 'center',
                     flexDirection: ['column', 'column'], // column layout for small screens, row layout for larger screens
+                    p:{xs:2,sm:0}
                     }}>
                         <Box sx={{
                             flexDirection: 'row', // column layout for small screens, row layout for larger screens
-                            mb: 7
+                            mb: 6
                         }}>
                             <Typography variant="h3" letterSpacing={4}
                                 sx={{
-                                    mb:4,
+                                    mb:{xs:2, sm:4},
                                     fontFamily: 'Sedan, serif',
                                     color: theme.palette.text.disabled,
                                     display: 'inline' // Add this to keep them on the same line
@@ -60,7 +61,7 @@ export default function Auth()
                             </Typography>
                             <Typography variant="h2" letterSpacing={4}
                                 sx={{
-                                    mb:4,
+                                    mb:{xs:2, sm:4},
                                     fontFamily: 'Roboto, sans-serif',
                                     color: theme.palette.text.secondary, // Change this to the color you want for "X"
                                     display: 'inline' // Add this to keep them on the same line

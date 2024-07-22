@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String
+  role      String   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  favoriteCategories String[]
+  Avatar     String?
+  rentals   BookRentalDetails[] @relation("RentedByUser")
+  authorizedRentals BookRentalDetails[] @relation("AuthorizedByLibrarian")
+  reviews   BookReview[]  @relation("UserToReviews")
+  favoriteBooks  FavoriteBook[] @relation("BookToFavorites")
+}
+
+model BookDetails {
+  id              Int                @id @default(autoincrement())
+  ISBN            String
+  coverimage      String
+  title           String
+  authors         String[]
+  description     String
+  availability    Boolean
+  category        String
+  publisher       String
+  publishedDate   DateTime 
+  pagecount       Int
+  rating          Float
+  isFeaturedBook  Boolean
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  rentals         BookRentalDetails[] @relation("BookToRentals")
+  reviews         BookReview[]       @relation("BookToReviews")
+  favoritedBy     FavoriteBook[]     @relation("BookToFavorites")
+
+  @@unique([title, authors])
+} 
+
+model BookRentalDetails {
+  id              Int      @id @default(autoincrement())
+  book            BookDetails @relation("BookToRentals", fields: [bookId], references: [id])
+  bookId          Int
+  user            User     @relation("RentedByUser", fields: [userId], references: [id])
+  userId          Int
+  rentalDate      DateTime
+  expectedReturnDate DateTime
+  returnDate      DateTime?
+  userInitiatedReturn   Boolean
+  returned        Boolean
+  isOverdue       Boolean
+  librarian       User?    @relation("AuthorizedByLibrarian", fields: [librarianId], references: [id])
+  librarianId     Int?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model BookReview {
+  book      BookDetails @relation("BookToReviews", fields: [bookId], references: [id])
+  bookId    Int
+  user      User     @relation("UserToReviews", fields: [userId], references: [id])
+  userId    Int
+  review    String
+  rating    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@id([userId, bookId])
+  @@unique([userId, bookId])
+}
+
+model FavoriteBook {
+  user   User   @relation("BookToFavorites", fields: [userId], references: [id])
+  userId Int
+  book   BookDetails   @relation("BookToFavorites", fields: [bookId], references: [id])
+  bookId Int
+  @@id([userId, bookId])
+  @@unique([userId, bookId])
+}
