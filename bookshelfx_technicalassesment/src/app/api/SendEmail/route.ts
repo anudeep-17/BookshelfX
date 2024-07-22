@@ -11,10 +11,16 @@ export async function GET(req: Request)
     try
     {
         const {data} = await resend.emails.send({
-            from: 'Acme <onboarding@resend.dev>',
+            from: 'Monika - BookShelfX Library Assistant <noreply@bookshelfx.store>',
             to: ['anudeepsai88@gmail.com'],
             subject: 'Rental Receipt from BookshelfX: Confirmation of your rental, hopefully you enjoy the book!',
-            html: RentalRecipt,
+            html: RentalRecipt({
+                BookTitle: "48 laws of power",
+                BookAuthors: ["robert greene"],
+                BookRentalDate: "2021-09-01",
+                BookExpectedReturnDate: "2021-09-30",
+                TotalBooksinlibrary: 281
+            })
         });
         console.log(data);
         return NextResponse.json(data);
