@@ -17,7 +17,7 @@ export async function GET(req: Request)
 
         const allRentalDetails = await database.bookRentalDetails.findMany({
             where: {
-                returned: false,
+                returned: false, 
             },
             include: {
                 book: true,

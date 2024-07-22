@@ -102,3 +102,16 @@ export async function getAllClosedRentalDetails(page: number, rowsPerPage: numbe
     const data = await response.json();
     return data;
 }
+
+export async function CloseRental(bookID:number, RentalID: number, userID: number)
+{
+    const response = await fetch(`/api/books/librarian/closeRental`,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({bookID, rentalID: RentalID, userID})
+    });
+    const data = await response.json();
+    return data;
+}

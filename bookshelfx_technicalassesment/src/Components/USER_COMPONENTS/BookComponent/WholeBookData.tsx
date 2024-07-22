@@ -45,6 +45,7 @@ export default function WholeBookData({id}:{id: string})
     const [isBookRentedByCurrentUser, setIsBookRentedByCurrentUser] = React.useState(false);
     const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
     const [CurrentRentalStatus, setCurrentRentalStatus] = React.useState('');
+    const [BookReturnUnderReview, setBookReturnUnderReview] = React.useState(false);
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -60,10 +61,16 @@ export default function WholeBookData({id}:{id: string})
                 {
                     const user = Cookies.get('user');
                     const userID = user ? JSON.parse(user).id.toString() : '';
-                    if (data.data.rentals[0].userId ===  Number(userID) && !data.data.rentals[0].returned) {
-                        console.log('Book is rented by current user');
+                    if (data.data.rentals[0].userId ===  Number(userID) && !data.data.rentals[0].returned && !data.data.rentals[0].userInitiatedReturn) 
+                    {
                         setIsBookRentedByCurrentUser(true);
-                      } else {
+                    } else if(data.data.rentals[0].userId ===  Number(userID) && !data.data.rentals[0].returned && data.data.rentals[0].userInitiatedReturn) 
+                      {
+                        setIsBookRentedByCurrentUser(true);
+                        setBookReturnUnderReview(true);
+                      }
+                      else 
+                      {
                         setIsBookRentedByCurrentUser(false);
                       }
                 }
@@ -345,6 +352,7 @@ export default function WholeBookData({id}:{id: string})
             setAlertOpen(true);
             setIsBookRented(false); 
             setIsBookRentedByCurrentUser(false);
+            setBookReturnUnderReview(true);
         }
         else
         {
@@ -479,15 +487,20 @@ export default function WholeBookData({id}:{id: string})
                                     isBookRented && confetti && <Fireworks autorun={{ speed: 1, duration: 1000}}/>
                                 }
                                 {
-                                    isBookRented?
+                                    isBookRented ?
                                     (isBookRentedByCurrentUser ?
-                                    <Button variant="contained" color="primary" sx={{mb:1, mt:1}} onClick={()=>{setOpenConfirmationDialog(true); setCurrentRentalStatus('returning')}}>
-                                        Return The Book
-                                    </Button>
+                                        BookReturnUnderReview ?
+                                        <Button variant="contained" color="secondary" sx={{mb:1, mt:1}} disabled>
+                                            Return Under Review
+                                        </Button>
+                                        :
+                                        <Button variant="contained" color="primary" sx={{mb:1, mt:1}} onClick={()=>{setOpenConfirmationDialog(true); setCurrentRentalStatus('returning')}}>
+                                            Return The Book
+                                        </Button>
                                     :
-                                    <Button variant="contained" color="primary" sx={{mb:1, mt:1}} disabled>
-                                        Book Not Available
-                                    </Button>)
+                                        <Button variant="contained" color="primary" sx={{mb:1, mt:1}} disabled>
+                                            Book Not Available
+                                        </Button>)
                                     :
                                     <Button variant="outlined" color="primary" sx={{mb:1, mt:1}} onClick={()=>{setOpenConfirmationDialog(true); setCurrentRentalStatus('renting')}}>
                                         Checkout Book

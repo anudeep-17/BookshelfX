@@ -83,7 +83,7 @@ export async function POST(req: Request)
                     userId: Number(userId),
                 },
                 data: {
-                    returned: true,
+                    returned: false,
                     returnDate: currentDate, // Set the return date to the current date
                     isOverdue: overdue, // If the expected return date is less than the current date, set overdue to true, else false
                     userInitiatedReturn: true,
