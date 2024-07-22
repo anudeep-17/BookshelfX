@@ -233,6 +233,7 @@ export default function MyFavouritesComponent()
                                                 return (
                                                     <DetailedBookCard
                                                         key={index}
+                                                        bookID={Number(book.id)}
                                                         coverimage={book.book.coverimage}
                                                         title={book.book.title}
                                                         description={book.book.description}

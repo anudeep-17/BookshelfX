@@ -415,6 +415,7 @@ export default function UserRentalBookComponent()
                                             RentalBooks.map((book: Book) => (
                                                 <DetailedBookCard
                                                     key={book.id}
+                                                    bookID={Number(book.id)}
                                                     coverimage={book.coverimage !== 'N/A'? book.coverimage : NoBookCover.src}
                                                     title={book.title}
                                                     description={book.description}

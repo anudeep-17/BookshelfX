@@ -3,13 +3,31 @@ import { Box, CssBaseline, Rating, ThemeProvider, Tooltip } from '@mui/material'
 import theme from '../../Themes';
 import { ImageCardProps } from '../../interfaceModels';
 import bookcover from '@/assets/bookcover.png';
+import Cookies from 'js-cookie';
+import { isbookrentedbycurrentuser } from '@/Services/BookRoutines';
 
-export default function ImageCard({image, rating, title, availability, onMouseEnter, onClick}: ImageCardProps) 
+
+export default function ImageCard({bookID, image, rating, title, availability, onMouseEnter, onClick}: ImageCardProps) 
 {
+    const [isRentedBytheSameUser, setIsRentedBytheSameUser] = React.useState<boolean>(false);   
+    let userID: number | null = null;
+    const userCookie = Cookies.get('user');
+    if (userCookie !== undefined) {
+        userID = Number(JSON.parse(userCookie).id);
+    }
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const response =  await isbookrentedbycurrentuser(bookID || 0, userID || 0);  
+            setIsRentedBytheSameUser(response.success);
+        }
+        fetchData();
+    }, []);
+
     return(
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <Tooltip title={!availability ? "Not Available":null} followCursor>
+            <Tooltip title={isRentedBytheSameUser ? "Already Rented" : (!availability ? "Not Available" : null)} followCursor>
             <Box sx={{ 
                 minHeight: 180,
                 minWidth: 120,

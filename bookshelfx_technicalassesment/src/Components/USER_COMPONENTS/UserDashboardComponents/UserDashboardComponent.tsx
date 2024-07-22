@@ -208,6 +208,7 @@ export default function UserDashboardComponent() {
                                                     BookData.map((book, index) => (
                                                         <BookCard
                                                             key={index}
+                                                            bookID={Number(book.id)}
                                                             coverimage={book?.coverimage !== 'N/A' ? book?.coverimage : bookcover.src}
                                                             title={book?.title}
                                                             description={book?.description}
@@ -338,6 +339,7 @@ export default function UserDashboardComponent() {
                                                     categoryWiseBookData[selectedCategory].map((book, index) => (
                                                         <ImageCard 
                                                             key={index} 
+                                                            bookID={Number(book.id)}
                                                             image={book.coverimage !== 'N/A' ? book.coverimage : bookcover.src} 
                                                             rating={book.rating} 
                                                             title={book.title} 

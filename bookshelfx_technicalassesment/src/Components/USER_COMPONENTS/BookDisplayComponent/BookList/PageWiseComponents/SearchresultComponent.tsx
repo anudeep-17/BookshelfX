@@ -279,6 +279,7 @@ export default function Searchresultcomponent()
                                                 return (
                                                     <DetailedBookCard
                                                         key={book.id}
+                                                        bookID={Number(book.id)}
                                                         coverimage={book.coverimage}
                                                         title={book.title}
                                                         description={book.description}

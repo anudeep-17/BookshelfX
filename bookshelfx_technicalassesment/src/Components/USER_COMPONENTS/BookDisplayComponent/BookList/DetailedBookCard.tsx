@@ -5,13 +5,29 @@ import { Badge, Box, Button, ThemeProvider, Tooltip } from '@mui/material';
 import theme from '../../../Themes';
 import { BookCardProps } from '../../../interfaceModels';
 import bookcover from '@/assets/bookcover.png';
+import Cookies from 'js-cookie';
+import { isbookrentedbycurrentuser } from '@/Services/BookRoutines';
 
-export default function DetailedBookCard({coverimage, title, description, rating, authors, availability, onClick}: BookCardProps) {
+export default function DetailedBookCard({bookID, coverimage, title, description, rating, authors, availability, onClick}: BookCardProps) {
     const [value, setValue] = React.useState<number | null>(rating || null);
-    
+    const [isRentedBytheSameUser, setIsRentedBytheSameUser] = React.useState<boolean>(false);   
+    let userID: number | null = null;
+    const userCookie = Cookies.get('user');
+    if (userCookie !== undefined) {
+        userID = Number(JSON.parse(userCookie).id);
+    }
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const response =  await isbookrentedbycurrentuser(bookID || 0, userID || 0);  
+            setIsRentedBytheSameUser(response.success);
+        }
+        fetchData();
+    }, []);
+
     return(
         <ThemeProvider theme={theme}>
-            <Tooltip title={!availability ? "Not Available":null} followCursor>
+            <Tooltip title={isRentedBytheSameUser ? "Already Rented" : (!availability ? "Not Available" : null)} followCursor>
                 <Box sx={{ 
                         display: 'flex',
                         flexDirection: 'column',
@@ -70,12 +86,10 @@ export default function DetailedBookCard({coverimage, title, description, rating
                                 {description.length > 100 ? `${description.substring(0, 100)}...` : description}
                             </Typography>
 
-                            <Button variant="contained" color="primary" sx={{
-                                mb:1
-                            }}
-                            disabled = {!availability}
+                            <Button variant="contained" color="primary" sx={{ mb:1 }}
+                                    disabled={!availability && !isRentedBytheSameUser}
                             >
-                                Checkout
+                                {isRentedBytheSameUser ? "Return Book" : "Checkout"}
                             </Button>
                         </Box>
         

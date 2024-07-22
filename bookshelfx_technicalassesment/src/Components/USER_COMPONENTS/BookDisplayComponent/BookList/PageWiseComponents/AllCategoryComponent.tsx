@@ -292,6 +292,7 @@ export default function AllCategoryBookListComponent()
                                               ? categoryWiseBooks.map((book: BookDetails) => (
                                                   <DetailedBookCard
                                                     key={book.id}
+                                                    bookID={Number(book.id)}
                                                     coverimage={book.coverimage}
                                                     title={book.title}
                                                     description={book.description}

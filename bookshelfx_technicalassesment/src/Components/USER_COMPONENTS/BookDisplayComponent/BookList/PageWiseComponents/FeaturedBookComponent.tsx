@@ -4,10 +4,10 @@ import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import {Book, BookCardProps, BookDetails} from '@/Components/interfaceModels';
+import {BookDetails} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { getBooks, getCategories, getFeaturedBooks, getFeaturedBooksCount} from '@/Services/BookRoutines';
+import { getFeaturedBooks, getFeaturedBooksCount} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
@@ -234,9 +234,10 @@ export default function FeaturedBookComponent()
                                             <>
                                             </>
                                             ) : books.length > 0 ? (
-                                                books.map((book: BookCardProps) => (
+                                                books.map((book: BookDetails) => (
                                                     <DetailedBookCard
                                                         key={book.id}
+                                                        bookID={Number(book.id)}
                                                         coverimage={book.coverimage}
                                                         title={book.title}
                                                         description={book.description}

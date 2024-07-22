@@ -321,16 +321,17 @@ export default function AllBooksListComponent()
                                         {
                                             selectedCategory === null || selectedCategory === 'All Books'
                                             ? (books.length > 0 
-                                                ? books.map((book: BookCardProps) => (
+                                                ? books.map((book: BookDetails) => (
                                                     <DetailedBookCard
-                                                    key={book.id}
-                                                    coverimage={book.coverimage}
-                                                    title={book.title}
-                                                    description={book.description}
-                                                    rating={book.rating}
-                                                    authors={book.authors}
-                                                    availability={book.availability}
-                                                    onClick= {() => handleBookClick(book.id as number)}
+                                                        key={book.id}
+                                                        bookID={Number(book.id)}
+                                                        coverimage={book.coverimage}
+                                                        title={book.title}
+                                                        description={book.description}
+                                                        rating={book.rating}
+                                                        authors={book.authors}
+                                                        availability={book.availability}
+                                                        onClick= {() => handleBookClick(book.id as number)}
                                                     />
                                                 ))
                                                 : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
@@ -340,6 +341,7 @@ export default function AllBooksListComponent()
                                                 ? categoryWiseBooks.map((book: BookDetails) => (
                                                     <DetailedBookCard
                                                     key={book.id}
+                                                    bookID={Number(book.id)}
                                                     coverimage={book.coverimage}
                                                     title={book.title}
                                                     description={book.description}

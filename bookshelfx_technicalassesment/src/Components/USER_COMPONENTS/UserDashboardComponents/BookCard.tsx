@@ -4,13 +4,28 @@ import { Box, ThemeProvider, Tooltip } from '@mui/material';
 import theme from '../../Themes';
 import { BookCardProps } from '../../interfaceModels';
 import BookCover from '@/assets/bookcover.png'
+import Cookies from 'js-cookie';
+import { isbookrentedbycurrentuser } from '@/Services/BookRoutines';
 
-export default function BookCard({coverimage, title, rating, authors, availability, onMouseEnter, onClick}: BookCardProps) {
-    const [value, setValue] = React.useState<number | null>(rating || null);
+export default function BookCard({bookID, coverimage, title, rating, authors, availability, onMouseEnter, onClick}: BookCardProps) {
+    const [isRentedBytheSameUser, setIsRentedBytheSameUser] = React.useState<boolean>(false);   
+    let userID: number | null = null;
+    const userCookie = Cookies.get('user');
+    if (userCookie !== undefined) {
+        userID = Number(JSON.parse(userCookie).id);
+    }
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const response =  await isbookrentedbycurrentuser(bookID || 0, userID || 0);  
+            setIsRentedBytheSameUser(response.success);
+        }
+        fetchData();
+    }, []);
 
     return(
         <ThemeProvider theme={theme}>
-        <Tooltip title={!availability ? "Not Available":null} followCursor>
+        <Tooltip title={isRentedBytheSameUser ? "Already Rented" : (!availability ? "Not Available" : null)} followCursor>
           <Box sx={{ 
                 display: 'flex',
                 flexDirection: 'column',

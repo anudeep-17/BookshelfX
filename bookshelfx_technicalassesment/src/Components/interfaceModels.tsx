@@ -78,6 +78,7 @@ export interface FavoriteBook {
 
 export interface BookCardProps {
     id?: number;
+    bookID: number;
     coverimage: string;
     title: string;
     description: string;
@@ -90,6 +91,7 @@ export interface BookCardProps {
 }
 
 export interface ImageCardProps {
+    bookID: number;
     image: string;
     title: string;
     rating: number;
