@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, Pagination, Skeleton, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Alert, Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, Pagination, Skeleton, Snackbar, SnackbarCloseReason, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
@@ -11,6 +11,7 @@ import { getFeaturedBooks, getFeaturedBooksCount} from '@/Services/BookRoutines'
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
+import Fireworks from 'react-canvas-confetti/dist/presets/fireworks';
 
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false, 
 loading: ()=> <Skeleton variant="rectangular" width={'30%'} height={600} animation="wave" /> });
@@ -27,6 +28,15 @@ export default function FeaturedBookComponent()
     const [countofBooks, setCountofBooks] = React.useState<number>(0);
     const [isLoading, setIsLoading] = React.useState(true);
 
+    const [alert, setAlert] = React.useState<{severity: 'success' | 'error', message: string}>({severity: 'success', message: ""});
+    const [Alertopen, setAlertOpen] = React.useState(false);  
+    
+    const handleAlertClose = (event: React.SyntheticEvent<any, Event> | Event, reason?: SnackbarCloseReason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setAlertOpen(false);
+    };
 
     React.useEffect(() => {
         const fetchData = async() =>{
@@ -245,6 +255,8 @@ export default function FeaturedBookComponent()
                                                         authors={book.authors}
                                                         availability={book.availability}
                                                         onClick= {() => handleBookClick(book.id as number)}
+                                                        setAlert={setAlert}
+                                                        setAlertOpen={setAlertOpen}
                                                     />
                                                 ))
                                             ) : (
@@ -281,6 +293,15 @@ export default function FeaturedBookComponent()
                                 </Grid>
                         </Grid>
                 </Box>
+                <Snackbar open={Alertopen} autoHideDuration={3000} onClose={handleAlertClose}>
+                    <Alert onClose={handleAlertClose} severity={alert?.severity} sx={{ width: '100%' }}>
+                        {alert.message}
+                    </Alert>
+                </Snackbar>
+                {
+                    alert.severity === 'success' && alert.message === 'Book checked out successfully' ? 
+                    <Fireworks autorun={{ speed: 1, duration: 1000}}/> : null
+                }
             </Box>
         </motion.div>
         </ThemeProvider>

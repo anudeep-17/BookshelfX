@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, Pagination, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Alert, Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, Pagination, Snackbar, SnackbarCloseReason, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import Chip from '@mui/material/Chip';
@@ -13,8 +13,9 @@ import {getCategories, getBooksByCategory, getBooksCountByCategory} from '@/Serv
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
-import { on } from 'events';
-
+ 
+import Fireworks from 'react-canvas-confetti/dist/presets/fireworks';
+ 
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 
 export default function AllCategoryBookListComponent()
@@ -31,7 +32,10 @@ export default function AllCategoryBookListComponent()
 
     const[bookCount, setBookCount] = React.useState<number>(0);
     const [offset, setOffset] = React.useState<number>(0);
-
+    
+    const [alert, setAlert] = React.useState<{severity: 'success' | 'error', message: string}>({severity: 'success', message: ""});
+    const [Alertopen, setAlertOpen] = React.useState(false);  
+    
     React.useEffect(() => {
         const fetchData = async () => {
             const data = await getBooksCountByCategory(selectedCategory? selectedCategory : '');
@@ -83,6 +87,14 @@ export default function AllCategoryBookListComponent()
     const onCategorySelection = (category: string) => {
         setSelectedCategory(category);
     }   
+
+    const handleAlertClose = (event: React.SyntheticEvent<any, Event> | Event, reason?: SnackbarCloseReason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setAlertOpen(false);
+    };
+
 
     return(
         <ThemeProvider theme={theme}>
@@ -300,7 +312,9 @@ export default function AllCategoryBookListComponent()
                                                     authors={book.authors}
                                                     availability= {book.availability}
                                                     onClick= {() => handleBookClick(book.id as number)}
-                                                  />
+                                                    setAlert={setAlert}
+                                                    setAlertOpen={setAlertOpen}
+                                                    />
                                                 ))
                                               : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
                                                   No Books Found
@@ -338,6 +352,15 @@ export default function AllCategoryBookListComponent()
                                 </Grid>
                         </Grid>
                 </Box>
+                <Snackbar open={Alertopen} autoHideDuration={3000} onClose={handleAlertClose}>
+                    <Alert onClose={handleAlertClose} severity={alert?.severity} sx={{ width: '100%' }}>
+                        {alert.message}
+                    </Alert>
+                </Snackbar>
+                {
+                    alert.severity === 'success' && alert.message === 'Book checked out successfully' ? 
+                    <Fireworks autorun={{ speed: 1, duration: 1000}}/> : null
+                }
             </Box>
         </motion.div>
         </ThemeProvider>

@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect } from 'react';
-import { Box, Button, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Alert, Box, Button, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Snackbar, SnackbarCloseReason, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
@@ -19,6 +19,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import NoBookCover from '@/assets/bookcover.png'
+import Fireworks from 'react-canvas-confetti/dist/presets/fireworks';
 
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 
@@ -32,6 +33,17 @@ export default function UserRentalBookComponent()
     const [openRentals, setOpenRentals] = React.useState<BookRentalDetails[]>([]);
     const [closedRentals, setClosedRentals] = React.useState<BookRentalDetails[]>([]);
     const [selectedRentalDates, setSelectedRentalDates] = React.useState<string>();
+
+    const [alert, setAlert] = React.useState<{severity: 'success' | 'error', message: string}>({severity: 'success', message: ""});
+    const [Alertopen, setAlertOpen] = React.useState(false);  
+    
+    const handleAlertClose = (event: React.SyntheticEvent<any, Event> | Event, reason?: SnackbarCloseReason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setAlertOpen(false);
+    };
+
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -423,6 +435,8 @@ export default function UserRentalBookComponent()
                                                     authors={book.authors}
                                                     availability={book.availability}
                                                     onClick= {() => handleBookClick(book.id as number)}
+                                                    setAlert={setAlert}
+                                                    setAlertOpen={setAlertOpen}
                                                 />
                                             ))
                                         ) : (
@@ -459,6 +473,15 @@ export default function UserRentalBookComponent()
 
                         </Grid>
                 </Box>
+                <Snackbar open={Alertopen} autoHideDuration={3000} onClose={handleAlertClose}>
+                    <Alert onClose={handleAlertClose} severity={alert?.severity} sx={{ width: '100%' }}>
+                        {alert.message}
+                    </Alert>
+                </Snackbar>
+                {
+                    alert.severity === 'success' && alert.message === 'Book checked out successfully' ? 
+                    <Fireworks autorun={{ speed: 1, duration: 1000}}/> : null
+                }
             </Box>
         </motion.div>
         </ThemeProvider>

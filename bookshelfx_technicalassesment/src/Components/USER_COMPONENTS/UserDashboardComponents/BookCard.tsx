@@ -8,10 +8,12 @@ import Cookies from 'js-cookie';
 import { isbookrentedbycurrentuser } from '@/Services/BookRoutines';
 
 export default function BookCard({bookID, coverimage, title, rating, authors, availability, onMouseEnter, onClick}: BookCardProps) {
+    
     const [isRentedBytheSameUser, setIsRentedBytheSameUser] = React.useState<boolean>(false);   
     let userID: number | null = null;
     const userCookie = Cookies.get('user');
-    if (userCookie !== undefined) {
+    if (userCookie !== undefined) 
+    {
         userID = Number(JSON.parse(userCookie).id);
     }
 
