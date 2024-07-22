@@ -83,7 +83,7 @@ export interface BookCardProps {
     description: string;
     authors: string[];
     rating?: number;
-    availability?: boolean;
+    availability: boolean;
     onLearnMore?: () => void;
     onMouseEnter?: () => void;
     onClick?: () => void;
@@ -93,6 +93,7 @@ export interface ImageCardProps {
     image: string;
     title: string;
     rating: number;
+    availability: boolean;
     onMouseEnter?: () => void;
     onClick?: () => void;
 }

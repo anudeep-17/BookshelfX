@@ -110,6 +110,20 @@ export async function getRentalsofUser(userID: number)
     return data;
 }
 
+export async function isbookrentedbycurrentuser(bookID:number, userID:number)
+{
+    const response = await fetch(`/api/books/RentalManagement/IsItRentedByCurrentUser`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({bookID, userID})
+    });
+    
+    const data = await response.json();
+    return data;
+}
+
 //---------------------------------------------------------------------------------------------- Search Book ROUTINES-----------------------------------------------------------------------------------------------
 
 export async function searchBook(title?: string, author?: string, category?: string, publisher?: string)

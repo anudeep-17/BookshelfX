@@ -4,7 +4,7 @@ import Rating from '@mui/material/Rating';
 import { Badge, Box, Button, ThemeProvider, Tooltip } from '@mui/material';
 import theme from '../../../Themes';
 import { BookCardProps } from '../../../interfaceModels';
-
+import bookcover from '@/assets/bookcover.png';
 
 export default function DetailedBookCard({coverimage, title, description, rating, authors, availability, onClick}: BookCardProps) {
     const [value, setValue] = React.useState<number | null>(rating || null);
@@ -34,7 +34,7 @@ export default function DetailedBookCard({coverimage, title, description, rating
     
                         <Box sx={{ 
                             height: 400, // Increased size
-                            backgroundImage: `url(${coverimage})`,
+                            backgroundImage: `url(${coverimage === 'N/A'? bookcover.src : coverimage})`, // Add image
                             backgroundSize: 'cover', // Add this to fit the image
                             backgroundPosition: 'center', // Add this to center the image
                             borderRadius: '10px 10px 0 0', // Make top borders curved

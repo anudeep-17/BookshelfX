@@ -1,17 +1,19 @@
 import * as React from 'react';
-import { Box, CssBaseline, Rating, ThemeProvider } from '@mui/material';
+import { Box, CssBaseline, Rating, ThemeProvider, Tooltip } from '@mui/material';
 import theme from '../../Themes';
 import { ImageCardProps } from '../../interfaceModels';
+import bookcover from '@/assets/bookcover.png';
 
-export default function ImageCard({image, rating, title, onMouseEnter, onClick}: ImageCardProps) 
+export default function ImageCard({image, rating, title, availability, onMouseEnter, onClick}: ImageCardProps) 
 {
     return(
         <ThemeProvider theme={theme}>
             <CssBaseline />
+            <Tooltip title={!availability ? "Not Available":null} followCursor>
             <Box sx={{ 
                 minHeight: 180,
                 minWidth: 120,
-                backgroundImage: `url(${image})`,
+                backgroundImage: `url(${image === 'N/A'? bookcover.src : image})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 mb:2,
@@ -56,6 +58,7 @@ export default function ImageCard({image, rating, title, onMouseEnter, onClick}:
                     {title?.length > 8 ? `${title.substring(0, 8)}...` : title}
                 </Box>
             </Box>
+            </Tooltip>
         </ThemeProvider>
     )
 }

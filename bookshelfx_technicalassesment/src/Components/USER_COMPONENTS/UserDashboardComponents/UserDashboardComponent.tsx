@@ -74,7 +74,8 @@ export default function UserDashboardComponent() {
     const [categoryWiseBookData, setCategoryWiseBookData] = React.useState<{ [key: string]: BookDetails[] }>({});
 
     useEffect(() => {
-        async function fetchData() {
+        async function fetchData() 
+        {
             const tempData: { [key: string]: BookDetails[] } = {};
             for (const category of categories) {
                 const data = await getBooksByCategory(category);
@@ -212,6 +213,7 @@ export default function UserDashboardComponent() {
                                                             description={book?.description}
                                                             rating={book?.rating}
                                                             authors={book?.authors}
+                                                            availability={book?.availability}
                                                             onMouseEnter={() => {setBook(book as BookDetails)}}
                                                             onClick={() => handleBookClick(book.id as number)}
                                                         />
@@ -339,6 +341,7 @@ export default function UserDashboardComponent() {
                                                             image={book.coverimage !== 'N/A' ? book.coverimage : bookcover.src} 
                                                             rating={book.rating} 
                                                             title={book.title} 
+                                                            availability={book.availability}
                                                             onMouseEnter={() => setBook(book as BookDetails)}
                                                             onClick={() => handleBookClick(book?.id as number)}
                                                         />

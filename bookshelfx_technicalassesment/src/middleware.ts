@@ -17,6 +17,7 @@ export function middleware(request: NextRequest)
         '/api/user/authenticate',
         '/api/user/getRentalsofUser',
         '/api/user/updatePassword',
+        '/api/SendEmail',
       ];
       
       const LibrarianRoutes = [

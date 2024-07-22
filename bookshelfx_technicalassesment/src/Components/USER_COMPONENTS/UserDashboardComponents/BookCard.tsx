@@ -1,15 +1,16 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import { Box, ThemeProvider } from '@mui/material';
+import { Box, ThemeProvider, Tooltip } from '@mui/material';
 import theme from '../../Themes';
 import { BookCardProps } from '../../interfaceModels';
+import BookCover from '@/assets/bookcover.png'
 
-
-export default function BookCard({coverimage, title, rating, authors, onMouseEnter, onClick}: BookCardProps) {
+export default function BookCard({coverimage, title, rating, authors, availability, onMouseEnter, onClick}: BookCardProps) {
     const [value, setValue] = React.useState<number | null>(rating || null);
 
     return(
         <ThemeProvider theme={theme}>
+        <Tooltip title={!availability ? "Not Available":null} followCursor>
           <Box sx={{ 
                 display: 'flex',
                 flexDirection: 'column',
@@ -25,13 +26,14 @@ export default function BookCard({coverimage, title, rating, authors, onMouseEnt
                     cursor: 'pointer',
                 },
                 borderRadius: '10px 10px 10px 10px',
+                backgroundColor: availability ? 'initial' : '#cccccc',
             }}
             onMouseEnter={onMouseEnter}
             onClick={onClick}
             >
                 <Box sx={{ 
                     height: 230, // Increased size
-                    backgroundImage: `url(${coverimage})`,
+                    backgroundImage: `url(${coverimage === 'N/A'? BookCover.src : coverimage})`, // Add image
                     backgroundSize: 'cover', // Add this to fit the image
                     backgroundPosition: 'center', // Add this to center the image
                     borderRadius: '10px 10px 0 0', // Make top borders curved
@@ -57,6 +59,7 @@ export default function BookCard({coverimage, title, rating, authors, onMouseEnt
                     </Typography>
                 </Box>
             </Box>
+            </Tooltip>
         </ThemeProvider>
     );
 }
