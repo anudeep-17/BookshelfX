@@ -51,7 +51,6 @@ export default function WholeBookData({id}:{id: string})
         const fetchData = async () => {
             const data = await getBookByID(id);
             if (data.success) {
-                console.log(data.data);
                 setBook(data.data)
                 if(!data.data.availability)
                 {
@@ -65,14 +64,14 @@ export default function WholeBookData({id}:{id: string})
                     {
                         setIsBookRentedByCurrentUser(true);
                     } else if(data.data.rentals[0].userId ===  Number(userID) && !data.data.rentals[0].returned && data.data.rentals[0].userInitiatedReturn) 
-                      {
+                    {
                         setIsBookRentedByCurrentUser(true);
                         setBookReturnUnderReview(true);
-                      }
-                      else 
-                      {
+                    }
+                    else 
+                    {
                         setIsBookRentedByCurrentUser(false);
-                      }
+                    }
                 }
                 if(data.data.favoritedBy.length > 0)
                 {

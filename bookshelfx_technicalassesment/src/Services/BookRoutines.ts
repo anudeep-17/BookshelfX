@@ -124,6 +124,32 @@ export async function isbookrentedbycurrentuser(bookID:number, userID:number)
     return data;
 }
 
+export async function isuserReturnInitiated(bookID:number)
+{
+    const response = await fetch(`/api/books/RentalManagement/isuserReturnInitiated`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({bookID})
+    });
+    const data = await response.json();
+    return data;
+
+}
+
+export async function isbookrentedByUserPreviously(bookID:number, userID:number)
+{
+    const response = await fetch(`/api/books/RentalManagement/isBookRentedByUserPreviously`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({bookID, userID})
+    });
+    const data = await response.json();
+    return data;
+}
 //---------------------------------------------------------------------------------------------- Search Book ROUTINES-----------------------------------------------------------------------------------------------
 
 export async function searchBook(title?: string, author?: string, category?: string, publisher?: string)

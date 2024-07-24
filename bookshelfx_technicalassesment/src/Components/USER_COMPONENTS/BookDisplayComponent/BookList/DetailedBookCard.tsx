@@ -6,7 +6,7 @@ import theme from '../../../Themes';
 import { BookCardProps } from '../../../interfaceModels';
 import bookcover from '@/assets/bookcover.png';
 import Cookies from 'js-cookie';
-import { isbookrentedbycurrentuser, setAvailabilityofBook } from '@/Services/BookRoutines';
+import { isbookrentedByUserPreviously, isbookrentedbycurrentuser, isuserReturnInitiated, setAvailabilityofBook } from '@/Services/BookRoutines';
 import RentalConfirmationDialog from '@/Components/USER_COMPONENTS/RentalConfirmationDialog';
 
 
@@ -21,6 +21,8 @@ export default function DetailedBookCard({bookID, coverimage, title, description
     const [isBookRented, setIsBookRented] = React.useState<boolean>(availability ? false : true);
     const [isRentedBytheSameUser, setIsRentedBytheSameUser] = React.useState<boolean>(false);   
     const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
+    const [IsuserReturnInitiated, setIsuserReturnInitiated] = React.useState<boolean>(false);
+    const [BookIsPreviouslyRented, setBookIsPreviouslyRented] = React.useState<boolean>(false);
 
     let userID: number | null = null;
     const userCookie = Cookies.get('user');
@@ -35,6 +37,22 @@ export default function DetailedBookCard({bookID, coverimage, title, description
         }
         fetchData();
     }, []);
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const response = await isuserReturnInitiated(bookID || 0);
+            setIsuserReturnInitiated(response.success);
+        }
+        fetchData();
+    },[])
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const response = await isbookrentedByUserPreviously(bookID || 0, userID || 0);
+            setBookIsPreviouslyRented(response.success);
+        }
+        fetchData();
+    },[])
 
     const handleClickonCheckout = async () => {
         const result = await setAvailabilityofBook(Number(bookID), false, Number(userID));
@@ -70,7 +88,7 @@ export default function DetailedBookCard({bookID, coverimage, title, description
 
     return(
         <ThemeProvider theme={theme}>
-            <Tooltip title={isRentedBytheSameUser ? "Already Rented" : (!availability ? "Not Available" : null)} followCursor>
+            <Tooltip title={isRentedBytheSameUser ? (IsuserReturnInitiated ? "Return Under Review" : "Already Rented") : (!availability ? "Not Available" : null)} followCursor>
                 <Box sx={{ 
                         display: 'flex',
                         flexDirection: 'column',
@@ -129,14 +147,31 @@ export default function DetailedBookCard({bookID, coverimage, title, description
                                 {description.length > 100 ? `${description.substring(0, 100)}...` : description}
                             </Typography>
 
-                            <Button variant="contained" color="primary" sx={{ mb:1 }}
-                                    disabled={isBookRented  && !isRentedBytheSameUser}
-                                    onClick={(event) => {
-                                        event.stopPropagation();
-                                        setOpenConfirmationDialog(true);
-                                    }}>
-                                {isRentedBytheSameUser ? "Return Book" : "Checkout"}
-                            </Button>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    mt: 1, 
+                                    mb:1
+                                }}
+                            >
+                                <Button variant="contained" color="primary"  
+                                        disabled={isBookRented && (!isRentedBytheSameUser || (isRentedBytheSameUser && IsuserReturnInitiated))}
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            setOpenConfirmationDialog(true);
+                                        }}>
+                                    {isRentedBytheSameUser ? (IsuserReturnInitiated ? "Book Return Under Review" : "Return Book") : "Checkout"}
+                                </Button>
+                                {
+                                    BookIsPreviouslyRented && !isRentedBytheSameUser && !IsuserReturnInitiated && 
+                                    <Button variant='outlined'>
+                                        Leave a Review
+                                    </Button>
+                                }
+                            </Box>
+                            
                         </Box>
         
                     </Box>
