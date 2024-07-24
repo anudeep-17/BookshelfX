@@ -26,7 +26,7 @@ export default function DialogToDisplayInformation(
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
                 fullWidth
-            >
+            > 
                 <DialogTitle id="alert-dialog-title">
                     {DetailsAbout === 'book'? "Book Details" : "User Details"}
                 </DialogTitle>

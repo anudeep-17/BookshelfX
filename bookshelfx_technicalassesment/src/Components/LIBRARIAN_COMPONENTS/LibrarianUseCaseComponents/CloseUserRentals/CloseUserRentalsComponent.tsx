@@ -287,11 +287,15 @@ export default function CloseUserRentalsComponenet()
                                     gap:2                            
                                 }}>
                                     <Tooltip title="Export Rental Records as PDF">
-                                        <IconButton onClick={exportPDF} disabled={CurrentView === 'active'? ActiveRentalData.length<=0 : ClosedRentalData.length<=0}>
-                                            <PictureAsPdfIcon sx={{
-                                                color: theme.palette.text.secondary
-                                            }}/>
-                                        </IconButton>
+                                    <IconButton 
+                                        onClick={exportPDF} 
+                                        disabled={CurrentView === 'active'? ActiveRentalData.length<=0 : ClosedRentalData.length<=0}
+
+                                    >
+                                        <PictureAsPdfIcon color="inherit" sx={{
+                                            color: CurrentView === 'active'? ActiveRentalData.length<=0 ? 'grey[10]' : 'primary' : ClosedRentalData.length<=0 ? 'grey[10]' : theme.palette.text.secondary
+                                        }}  /> 
+                                    </IconButton>
                                     </Tooltip>
                                     <Button variant="outlined" color="primary"onClick={() => {
                                             if (CurrentView === "active") {
