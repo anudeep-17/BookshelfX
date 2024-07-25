@@ -415,6 +415,7 @@ export default function WholeBookData({id}:{id: string})
         }
         
     }
+    
     return(
         <ThemeProvider theme={theme}>
         <Box sx={{ 
