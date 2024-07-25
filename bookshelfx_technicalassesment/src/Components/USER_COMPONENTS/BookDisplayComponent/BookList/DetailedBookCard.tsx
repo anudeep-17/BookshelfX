@@ -3,11 +3,13 @@ import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import { Badge, Box, Button, ThemeProvider, Tooltip } from '@mui/material';
 import theme from '../../../Themes';
-import { BookCardProps } from '../../../interfaceModels';
+import { BookCardProps, BookReview } from '../../../interfaceModels';
 import bookcover from '@/assets/bookcover.png';
 import Cookies from 'js-cookie';
 import { isbookrentedByUserPreviously, isbookrentedbycurrentuser, isuserReturnInitiated, setAvailabilityofBook } from '@/Services/BookRoutines';
-import RentalConfirmationDialog from '@/Components/USER_COMPONENTS/RentalConfirmationDialog';
+import RentalConfirmationDialog from '@/Components/USER_COMPONENTS/RentaConfirmationDialogComponent/RentalConfirmationDialog';
+import ReviewConfirmationDialog from '../../ReviewComponent/reviewDialogComponent';
+import { CheckIfAReveiwIsAlreadyGivenForTheBook, addAReviewToBook } from '@/Services/UserRoutines';
 
 
 export default function DetailedBookCard({bookID, coverimage, title, description, rating, authors, availability, onClick, setAlert,setAlertOpen }: BookCardProps 
@@ -18,11 +20,17 @@ export default function DetailedBookCard({bookID, coverimage, title, description
 {
 
     const [value, setValue] = React.useState<number | null>(rating || null);
+
     const [isBookRented, setIsBookRented] = React.useState<boolean>(availability ? false : true);
     const [isRentedBytheSameUser, setIsRentedBytheSameUser] = React.useState<boolean>(false);   
-    const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
     const [IsuserReturnInitiated, setIsuserReturnInitiated] = React.useState<boolean>(false);
     const [BookIsPreviouslyRented, setBookIsPreviouslyRented] = React.useState<boolean>(false);
+
+    const [alreadyReviewed, setAlreadyReviewed] = React.useState<boolean>(false);
+
+    const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
+    const [reviewDialog, setReviewDialog] = React.useState<{open: boolean, task: string}>({open: false, task: ''});
+    const [reviewByUser, setReviewByUser] = React.useState<BookReview>({bookId: 0, userId: 0, rating: 0, review: ''});
 
     let userID: number | null = null;
     const userCookie = Cookies.get('user');
@@ -54,6 +62,35 @@ export default function DetailedBookCard({bookID, coverimage, title, description
         fetchData();
     },[])
 
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const response = await CheckIfAReveiwIsAlreadyGivenForTheBook(bookID || 0, userID || 0)
+            setAlreadyReviewed(response.success)
+            if(response.success)
+            {
+                setReviewByUser(response.review);
+            }
+        }
+        fetchData();
+    },[])
+    
+    //=======================================================================================================
+
+    const handleReviewSubmission = async (rating: number, review: string) => 
+    {
+        const response = await addAReviewToBook({bookId: bookID || 0, userID: userID || 0, rating: rating, review: review});
+        if(response.success)
+        {
+            setAlert({severity: "success", message: "Review submitted successfully"});
+            setAlertOpen(true);
+        }
+        else
+        {
+            setAlert({severity: "error", message: "Failed to submit review"});
+            setAlertOpen(true);
+        }
+        
+    }
     const handleClickonCheckout = async () => {
         const result = await setAvailabilityofBook(Number(bookID), false, Number(userID));
         if(result.success)
@@ -150,10 +187,12 @@ export default function DetailedBookCard({bookID, coverimage, title, description
                             <Box
                                 sx={{
                                     display: 'flex',
+                                    flexDirection: 'row',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
+                                    alignContent: 'center',
                                     mt: 1, 
-                                    mb:1
+                                    mb:1,
                                 }}
                             >
                                 <Button variant="contained" color="primary"  
@@ -165,10 +204,23 @@ export default function DetailedBookCard({bookID, coverimage, title, description
                                     {isRentedBytheSameUser ? (IsuserReturnInitiated ? "Book Return Under Review" : "Return Book") : "Checkout"}
                                 </Button>
                                 {
-                                    BookIsPreviouslyRented && !isRentedBytheSameUser && !IsuserReturnInitiated && 
-                                    <Button variant='outlined'>
-                                        Leave a Review
-                                    </Button>
+                                    BookIsPreviouslyRented && !isRentedBytheSameUser && !IsuserReturnInitiated && (
+                                        alreadyReviewed ? (
+                                            <Button variant='outlined' onClick={(event)=>{
+                                                event.stopPropagation();
+                                                setReviewDialog({open: true, task: 'viewing'});
+                                            }}>
+                                                Edit Review
+                                            </Button>
+                                        ) : (
+                                            <Button variant='outlined' onClick={(event)=>{
+                                                event.stopPropagation();
+                                                setReviewDialog({open: true, task: 'reviewing'});
+                                            }}>
+                                                Leave a Review
+                                            </Button>
+                                        )
+                                    )
                                 }
                             </Box>
                             
@@ -184,6 +236,16 @@ export default function DetailedBookCard({bookID, coverimage, title, description
                             handleCheckout={handleClickonCheckout}
                             handleReturn={handleClickonReturn}
                         />
+                    }
+                    {
+                        reviewDialog.open &&
+                         <ReviewConfirmationDialog
+                            openDialog={reviewDialog.open}
+                            setOpenDialog={setReviewDialog}
+                            task={reviewDialog.task}
+                            handleLeaveReview={handleReviewSubmission}
+                            Userreview={reviewByUser}
+                         />
                     }
         </ThemeProvider>
     );

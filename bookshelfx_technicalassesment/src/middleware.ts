@@ -11,6 +11,7 @@ export function middleware(request: NextRequest)
         '/Reader/*',
         '/api/books/*',
         '/api/chatGPT',
+        '/api/user/reviewBook/*',
         '/api/user/addUser',
         '/api/user/getUser',
         '/api/user/favouriteBook/*',

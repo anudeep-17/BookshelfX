@@ -30,7 +30,7 @@ import ChatboxComponent from '@/Components/ChatBox/ChatboxComponent';
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 import bookcover from '@/assets/bookcover.png'
 import { BookDetails } from '../../interfaceModels';
-import RentalConfirmationDialog from '../RentalConfirmationDialog';
+import RentalConfirmationDialog from '../RentaConfirmationDialogComponent/RentalConfirmationDialog';
 
 const drawerWidth = DashboardSize;
 const OPTIONS: EmblaOptionsType = { loop: true }
