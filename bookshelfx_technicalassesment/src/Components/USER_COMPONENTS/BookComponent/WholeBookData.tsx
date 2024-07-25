@@ -2,8 +2,8 @@
 import React from 'react';
 import { Box, Button, CssBaseline, Grid, Paper, Rating, Skeleton, ThemeProvider, Toolbar, Tooltip, Typography } from '@mui/material';
 import theme from '../../Themes';
-import { Book } from '../../interfaceModels';
-import { getBookByID, setAvailabilityofBook } from '@/Services/BookRoutines';
+import { Book, BookReview } from '../../interfaceModels';
+import { getBookByID, isbookrentedByUserPreviously, setAvailabilityofBook } from '@/Services/BookRoutines';
 import { DashboardSize } from "@/Components/DashboardSize";
 import EmblaCarousel from './EmblaCarousel'
 import { EmblaOptionsType } from 'embla-carousel'
@@ -31,6 +31,8 @@ import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 import bookcover from '@/assets/bookcover.png'
 import { BookDetails } from '../../interfaceModels';
 import RentalConfirmationDialog from '../RentaConfirmationDialogComponent/RentalConfirmationDialog';
+import { CheckIfAReveiwIsAlreadyGivenForTheBook, addAReviewToBook } from '@/Services/UserRoutines';
+import ReviewConfirmationDialog from '../ReviewComponent/reviewDialogComponent';
 
 const drawerWidth = DashboardSize;
 const OPTIONS: EmblaOptionsType = { loop: true }
@@ -47,6 +49,11 @@ export default function WholeBookData({id}:{id: string})
     const [CurrentRentalStatus, setCurrentRentalStatus] = React.useState('');
     const [BookReturnUnderReview, setBookReturnUnderReview] = React.useState(false);
 
+    const [BookIsPreviouslyRented, setBookIsPreviouslyRented] = React.useState(false);
+    const [AlreadyReviewed, setAlreadyReviewed] = React.useState(false);
+    const [reviewDialog, setReviewDialog] = React.useState<{open: boolean, task: string}>({open: false, task: ''});
+    const [reviewByUser, setReviewByUser] = React.useState<BookReview>({bookId: 0, userId: 0, rating: 0, review: ''});
+    
     React.useEffect(() => {
         const fetchData = async () => {
             const data = await getBookByID(id);
@@ -89,6 +96,32 @@ export default function WholeBookData({id}:{id: string})
     
         return () => clearTimeout(timeoutId);  
     }, [id]);
+
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const user = Cookies.get('user');
+            const userID = user ? JSON.parse(user).id.toString() : '';
+            const response = await isbookrentedByUserPreviously(Number(id) || 0, Number(userID) || 0);
+            setBookIsPreviouslyRented(response.success);
+        }
+        fetchData();
+    },[])
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const user = Cookies.get('user');
+            const userID = user ? JSON.parse(user).id.toString() : '';
+            const response = await CheckIfAReveiwIsAlreadyGivenForTheBook(Number(id) || 0, Number(userID) || 0)
+            setAlreadyReviewed(response.success);
+            if(response.success)
+            {
+                setReviewByUser(response.review);
+            }
+        }
+        fetchData();
+    },[])
+
 
     const [open, setOpen] = React.useState(false);
     const [alert, setAlert] = React.useState<{severity: 'success' | 'error', message: string}>({severity: 'success', message: ""});
@@ -361,6 +394,27 @@ export default function WholeBookData({id}:{id: string})
     }
     
 
+    const handleReviewSubmission = async (rating: number, review: string) => 
+    {
+        const user = Cookies.get('user');
+        const userID = user ? JSON.parse(user).id.toString() : '';
+        const response = await addAReviewToBook({bookId: Number(id) || 0, userID: Number(userID) || 0, rating: rating, review: review});
+        if(response.success)
+        {
+            setAlreadyReviewed(true);
+            setReviewByUser({bookId: Number(id) || 0, userId: Number(userID) || 0, rating: rating, review: review});
+            setAlert({severity: "success", message: "Review submitted successfully"});
+            setAlertOpen(true);
+            setReviewDialog({open: false, task: ''});
+        }
+        else
+        {
+            setAlert({severity: "error", message: "Failed to submit review"});
+            setAlertOpen(true);
+            setReviewDialog({open: false, task: ''});
+        }
+        
+    }
     return(
         <ThemeProvider theme={theme}>
         <Box sx={{ 
@@ -485,26 +539,51 @@ export default function WholeBookData({id}:{id: string})
                                 {
                                     isBookRented && confetti && <Fireworks autorun={{ speed: 1, duration: 1000}}/>
                                 }
-                                {
-                                    isBookRented ?
-                                    (isBookRentedByCurrentUser ?
-                                        BookReturnUnderReview ?
-                                        <Button variant="contained" color="secondary" sx={{mb:1, mt:1}} disabled>
-                                            Return Under Review
-                                        </Button>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        alignContent: 'center',
+                                        mb:1, 
+                                        gap:2
+                                    }}
+                                >
+                                    {
+                                        isBookRented ?
+                                        (isBookRentedByCurrentUser ?
+                                            BookReturnUnderReview ?
+                                            <Button variant="contained" color="secondary" sx={{mb:1, mt:1}} disabled>
+                                                Return Under Review
+                                            </Button>
+                                            :
+                                            <Button variant="contained" color="primary" sx={{mb:1, mt:1}} onClick={()=>{setOpenConfirmationDialog(true); setCurrentRentalStatus('returning')}}>
+                                                Return The Book
+                                            </Button>
                                         :
-                                        <Button variant="contained" color="primary" sx={{mb:1, mt:1}} onClick={()=>{setOpenConfirmationDialog(true); setCurrentRentalStatus('returning')}}>
-                                            Return The Book
+                                            <Button variant="contained" color="primary" sx={{mb:1, mt:1}} disabled>
+                                                Book Not Available
+                                            </Button>)
+                                        :
+                                        <Button variant="outlined" color="primary" sx={{mb:1, mt:1}} onClick={()=>{setOpenConfirmationDialog(true); setCurrentRentalStatus('renting')}}>
+                                            Checkout Book
                                         </Button>
-                                    :
-                                        <Button variant="contained" color="primary" sx={{mb:1, mt:1}} disabled>
-                                            Book Not Available
-                                        </Button>)
-                                    :
-                                    <Button variant="outlined" color="primary" sx={{mb:1, mt:1}} onClick={()=>{setOpenConfirmationDialog(true); setCurrentRentalStatus('renting')}}>
-                                        Checkout Book
-                                    </Button>
-                                }
+                                    }
+                                    {
+                                        BookIsPreviouslyRented && !isBookRentedByCurrentUser ?
+                                        AlreadyReviewed ?
+                                        <Button variant="contained" sx={{mb:1, mt:1}} onClick={()=>{setReviewDialog({open: true, task: 'viewing'})}}>
+                                            view/EDIT Review
+                                        </Button>
+                                       :
+                                        <Button variant="outlined" color="primary" sx={{mb:1, mt:1}} onClick={()=>{setReviewDialog({open: true, task: 'reviewing'})}}>
+                                            Leave a Review
+                                        </Button>
+                                       :
+                                       null
+                                    }
+                                </Box>
+
                             </Grid>
                             <Grid item xs={12} sm={12}>
                                 <Typography variant="h5" sx={{mb:1, color: theme.palette.primary.main}}>
@@ -556,7 +635,16 @@ export default function WholeBookData({id}:{id: string})
                 handleReturn={handleClickonReturn}
                 />
             }
-                        
+            {
+                BookIsPreviouslyRented && !isBookRentedByCurrentUser && reviewDialog.open &&
+                <ReviewConfirmationDialog 
+                    openDialog={reviewDialog.open}
+                    setOpenDialog={setReviewDialog}
+                    task={reviewDialog.task}
+                    handleLeaveReview={handleReviewSubmission}
+                    Userreview={reviewByUser}
+                />
+            }
         </Box>
         </ThemeProvider>
     )
