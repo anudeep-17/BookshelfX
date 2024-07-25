@@ -4,9 +4,9 @@ import { database } from "@/app/api/prismaConfig";
 export async function POST(req: Request)
 { 
     try{
-        const {bookID} = await req.json();
+        const {bookID, userID} = await req.json();
 
-        if(!bookID)
+        if(!bookID || !userID)
         {
             return NextResponse.json({success: false, message: "Missing required fields"}, {status: 400});
         }
@@ -14,6 +14,7 @@ export async function POST(req: Request)
         const isbookrentedbycurrentuser = await database.bookRentalDetails.findFirst({
             where: {
                 bookId: bookID,
+                userId: userID,
                 returned: false,
                 userInitiatedReturn: true
             }

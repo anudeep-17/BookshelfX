@@ -124,14 +124,14 @@ export async function isbookrentedbycurrentuser(bookID:number, userID:number)
     return data;
 }
 
-export async function isuserReturnInitiated(bookID:number)
+export async function isuserReturnInitiated(bookID:number, userID:number)
 {
     const response = await fetch(`/api/books/RentalManagement/isuserReturnInitiated`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({bookID})
+        body: JSON.stringify({bookID, userID})
     });
     const data = await response.json();
     return data;

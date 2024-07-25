@@ -5,11 +5,13 @@ import theme from '../../Themes';
 import { BookCardProps } from '../../interfaceModels';
 import BookCover from '@/assets/bookcover.png'
 import Cookies from 'js-cookie';
-import { isbookrentedbycurrentuser } from '@/Services/BookRoutines';
+import { isbookrentedbycurrentuser, isuserReturnInitiated } from '@/Services/BookRoutines';
 
 export default function BookCard({bookID, coverimage, title, rating, authors, availability, onMouseEnter, onClick}: BookCardProps) {
     
     const [isRentedBytheSameUser, setIsRentedBytheSameUser] = React.useState<boolean>(false);   
+    const [userInitiatedReturn, setUserInitiatedReturn] = React.useState<boolean>(false);
+
     let userID: number | null = null;
     const userCookie = Cookies.get('user');
     if (userCookie !== undefined) 
@@ -25,9 +27,17 @@ export default function BookCard({bookID, coverimage, title, rating, authors, av
         fetchData();
     }, []);
 
+    React.useEffect(() =>{
+        const fetchData = async () =>{
+            const response = await isuserReturnInitiated(bookID || 0, userID || 0);
+            setUserInitiatedReturn(response.success);
+        }
+        fetchData()
+    },[])
+
     return(
         <ThemeProvider theme={theme}>
-        <Tooltip title={isRentedBytheSameUser ? "Already Rented" : (!availability ? "Not Available" : null)} followCursor>
+      <Tooltip title={isRentedBytheSameUser ? (userInitiatedReturn ? "Return Under Review" : "Already Rented") : (!availability ? "Not Available" : null)} followCursor>
           <Box sx={{ 
                 display: 'flex',
                 flexDirection: 'column',

@@ -48,7 +48,7 @@ export default function DetailedBookCard({bookID, coverimage, title, description
 
     React.useEffect(() => {
         const fetchData = async () => {
-            const response = await isuserReturnInitiated(bookID || 0);
+            const response = await isuserReturnInitiated(bookID || 0, userID || 0);
             setIsuserReturnInitiated(response.success);
         }
         fetchData();
