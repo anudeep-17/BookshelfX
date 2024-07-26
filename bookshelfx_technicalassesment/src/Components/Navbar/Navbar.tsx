@@ -47,6 +47,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
+import NotificationComponent from '../USER_COMPONENTS/NotificationComponent/NotificationComponent';
 
 
 const drawerWidth = DashboardSize;
@@ -63,6 +64,8 @@ export default function Navbar()
     const [open, setOpen] = React.useState(false);
     const [AlertOpen, setAlertOpen] = React.useState(false);
     const [alertInfo, setAlertInfo] = React.useState<{severity: 'warning' | 'error', message: string}>({severity: 'warning', message: ""});
+
+    const [anchorEl_ForNotification, setAnchorEl_ForNotification] =  React.useState<null | HTMLElement>(null);
 
     const handleAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
       if (reason === 'clickaway') {
@@ -82,6 +85,11 @@ export default function Navbar()
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       setAnchorEl(event.currentTarget);
+    };
+
+    const handleClick_forNotification = (event: React.MouseEvent<HTMLButtonElement>) => 
+    {
+      setAnchorEl_ForNotification(event.currentTarget);
     };
 
     const handleClose = () => {
@@ -433,7 +441,7 @@ export default function Navbar()
      
               <Box sx={{ flexGrow: 1 }} />
               
-              <IconButton color="inherit" sx={{
+              <IconButton color="inherit" onClick = {handleClick_forNotification} sx={{
                 ml: { xs: 2, sm: 0 },
               }}>
                 <Badge badgeContent={0} color="error">
@@ -449,6 +457,8 @@ export default function Navbar()
                   />
                 </Badge>
               </IconButton>
+
+              <NotificationComponent anchorEl={anchorEl_ForNotification} setAnchorEl={setAnchorEl_ForNotification} />
 
               <Button 
                 variant="text"
