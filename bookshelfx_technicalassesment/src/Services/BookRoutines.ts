@@ -110,6 +110,14 @@ export async function getRentalsofUser(userID: number)
     return data;
 }
 
+export async function getActiveRentalsOfUser(userID: number)
+{
+    const response = await fetch(`/api/user/getRentalsofUser/ActiveRentals?userId=${userID}`);
+    const data = await response.json();
+    return data;
+}
+
+
 export async function isbookrentedbycurrentuser(bookID:number, userID:number)
 {
     const response = await fetch(`/api/books/RentalManagement/IsItRentedByCurrentUser`, {

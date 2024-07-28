@@ -16,7 +16,7 @@ export function middleware(request: NextRequest)
         '/api/user/getUser',
         '/api/user/favouriteBook/*',
         '/api/user/authenticate',
-        '/api/user/getRentalsofUser',
+        '/api/user/getRentalsofUser/*',
         '/api/user/updatePassword',
         '/api/SendEmail',
       ];
