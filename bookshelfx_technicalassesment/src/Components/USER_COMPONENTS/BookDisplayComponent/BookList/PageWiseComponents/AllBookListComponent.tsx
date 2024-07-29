@@ -6,7 +6,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import {BookDetails, BookCardProps} from '@/Components/interfaceModels';
+import {BookDetails } from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { getAllBooksCount, getBooks, getBooksByCategory, getBooksCountByCategory, getCategories} from '@/Services/BookRoutines';
