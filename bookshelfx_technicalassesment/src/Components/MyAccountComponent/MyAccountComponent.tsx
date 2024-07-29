@@ -29,8 +29,9 @@ export default function MyAccountComponent()
                          
                                 {
                                     user ?
-                                    <Grid container spacing={4} alignItems="center" justifyContent="center" alignContent={"center"} sx={{
-                                        p:2
+                                    <Grid container spacing={4}   justifyContent="center"   sx={{
+                                        p:2,
+                                        mt:2
                                     }}>
                                         <Grid item xs={12} sm={4}>
                                             <Avatar sx={{ width: 200, height: 200, mb: 2 }} src={user.Avatar}/>
@@ -41,6 +42,9 @@ export default function MyAccountComponent()
                                             </Typography>
                                             <Typography variant="h6" gutterBottom>
                                                 UserEmail: {user.email}
+                                            </Typography>
+                                            <Typography variant="body1" gutterBottom>
+                                                Favourite Categories : {user.favoriteCategories?.join(", ")}
                                             </Typography>
                                             <Button variant="contained" color="primary">
                                                 Edit Account
