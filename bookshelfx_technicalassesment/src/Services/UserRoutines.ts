@@ -19,6 +19,7 @@ export async function RegisterUser({email, password, name, role, Avatar, favorit
     return await response.json();
 }
 
+//=======================================================  User Authentication  ========================================================
 export async function GetUser({id}: {id: number})
 {
     const response = await fetch(`/api/user/getUser?id=${id}`);
@@ -72,6 +73,15 @@ export async function CheckIfAReveiwIsAlreadyGivenForTheBook(bookId: number, use
             bookId,
             userID,
         })
+    });
+    return await response.json();
+}
+
+//=======================================================  Delete Account  ========================================================
+export async function DeleteAccount({id}: {id: number})
+{
+    const response = await fetch(`/api/user/deleteUser?id=${id}`, {
+        method: 'DELETE'
     });
     return await response.json();
 }

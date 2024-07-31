@@ -41,6 +41,10 @@ export interface User {
     password?: string; 
     Avatar? : string;
     favoriteCategories?: string[];
+    favouriteBooks?: FavoriteBook[];
+    rentals?: BookRentalDetails[];
+    reviews?: BookReview[];
+    authorizedRentals?: BookRentalDetails[];
 }
 
 export interface BookRentalDetails {

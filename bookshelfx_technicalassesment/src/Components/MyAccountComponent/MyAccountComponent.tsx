@@ -1,17 +1,70 @@
 'use client'
 import React from 'react';
-import { Box, Avatar, Typography, Button, ThemeProvider, CssBaseline, Toolbar, Grid } from '@mui/material';
+import { Box, Avatar, Typography, Button, ThemeProvider, CssBaseline, Toolbar, Grid, CircularProgress, Snackbar, Alert } from '@mui/material';
 import { DashboardSize } from "@/Components/DashboardSize";
 import theme from '../Themes';
 import Cookies from 'js-cookie';
 import { User } from '../interfaceModels';
+import { DeleteAccount, GetUser } from '@/Services/UserRoutines';
+import DeleteDialog from './DeleteDialog';
 const drawerWidth = DashboardSize;
 
 export default function MyAccountComponent() 
 {
+    const [loading, setLoading] = React.useState<boolean>(false);
+
     const userCookie = Cookies.get('user');
     const user : User = userCookie ? JSON.parse(userCookie) : null;
-    console.log(user);
+    const [User, setUser] = React.useState<User | null>(user);
+
+    const [DeleteAccountDialog, setDeleteAccountDialog] = React.useState<boolean>(false);
+    const [alertOpen, setAlertOpen] = React.useState(false);
+    const [alertContent, setAlertContent] = React.useState<{ severity: "success" | "error" | "info" | "warning" | undefined, message: string }>({
+        severity: 'success', message: ''
+    });
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const response = await GetUser({id: Number(user.id) || 0});
+            if(response.success)
+            {
+                console.log(response.data);
+                setUser(response.data);
+            }
+        };
+        setLoading(true);
+        fetchData();
+        setLoading(false);
+    }
+    , []);
+
+    const handleCloseAlert = (event: React.SyntheticEvent<any, Event> | Event, reason?: string) => {
+        if (reason === 'clickaway') 
+        {
+          return;
+        }
+        setAlertOpen(false);
+    };
+    
+    const handleDeleteAccount = async () => {
+        const response = await DeleteAccount({id: Number(user.id) || 0});
+        if(response.success)
+        {
+            setAlertContent({severity: 'success', message: response.message});
+            setAlertOpen(true);
+            Cookies.remove('user');
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 3000);
+        }
+        else
+        {
+            setAlertContent({severity: 'error', message: response.message});
+            setAlertOpen(true);
+        }
+    }
+
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />  
@@ -23,41 +76,58 @@ export default function MyAccountComponent()
                             sx={{width: { sm: `calc(100% - ${drawerWidth}px)`}, marginLeft: { sm: `${drawerWidth}px` }, }}
                         >
                             <Toolbar />   
-                            <Typography variant="h4" gutterBottom textAlign={'center'} sx={{mt:1}}>
-                                    My Account Details
+                            <Typography variant="h4" gutterBottom textAlign={'center'} sx={{mt:2}}>
+                                 Hello  <span style={{ color: theme.palette.text.secondary }}>Bibliophile</span>, Welcome to your account
                             </Typography>      
                          
-                                {
-                                    user ?
-                                    <Grid container spacing={4}   justifyContent="center"   sx={{
-                                        p:2,
-                                        mt:2
-                                    }}>
-                                        <Grid item xs={12} sm={4}>
-                                            <Avatar sx={{ width: 200, height: 200, mb: 2 }} src={user.Avatar}/>
-                                        </Grid>
-                                        <Grid item xs={12} sm={8}>
-                                            <Typography variant="h5" gutterBottom>
-                                                Username: {user.name}
-                                            </Typography>
-                                            <Typography variant="h6" gutterBottom>
-                                                UserEmail: {user.email}
-                                            </Typography>
-                                            <Typography variant="body1" gutterBottom>
-                                                Favourite Categories : {user.favoriteCategories?.join(", ")}
-                                            </Typography>
-                                            <Button variant="contained" color="primary">
-                                                Edit Account
-                                            </Button>
-                                        </Grid>
+                            {
+                                loading?
+                                <CircularProgress />
+                                :
+                                <Grid container spacing={2} sx={{mt:1, p:1}}>
+                                    <Grid item xs={12} sm={6}>
+                                        <Avatar alt={User?.name} src={User?.Avatar} sx={{ width: 350, height: 350, mx: "auto" }} />
                                     </Grid>
-                                    :
-                                    <Typography variant="h6" gutterBottom>
-                                        No user found
-                                    </Typography>
-                                }
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography variant="h6" gutterBottom>
+                                            <span style={{ color: theme.palette.text.secondary }}>Name:</span> {User?.name}
+                                        </Typography>
+                                        <Typography variant="h6" gutterBottom>
+                                            <span style={{color: theme.palette.text.secondary}}>Email:</span> {User?.email}
+                                        </Typography>
+                                        <Typography variant="h6" gutterBottom>
+                                            <span style={{ color: theme.palette.text.secondary }}>Number of Favorite Books:</span> {User?.favouriteBooks?.length || 0} Books
+                                        </Typography>
+                                        <Typography variant="h6" gutterBottom>
+                                            <span style={{ color: theme.palette.text.secondary }}>Number of Rentals:</span> {User?.rentals?.length} books
+                                        </Typography>
+                                        <Typography variant="h6" gutterBottom>
+                                            <span style={{ color: theme.palette.text.secondary }}>Number of Reviews:</span> {User?.reviews?.length} books
+                                        </Typography>
 
+                                        <Typography variant="body1" gutterBottom>
+                                            <span style={{ color: theme.palette.text.secondary }}>Favorite Categories:</span>  {user?.favoriteCategories ? user.favoriteCategories.join(", ") : "No Favorite Categories"}
+                                        </Typography>
+
+                                        <Button variant="outlined"   color="secondary" sx={{mt:2, width: '70%'}} onClick={()=>{
+                                            setDeleteAccountDialog(true);
+                                        }}>
+                                             Delete Account
+                                        </Button>
+                                    </Grid>
+
+                                </Grid>
+                            }
                         </Box>
+
+                {
+                    DeleteAccountDialog && <DeleteDialog openDialog={DeleteAccountDialog} handleDeleteAccount={handleDeleteAccount} setOpenDialog={setDeleteAccountDialog} />
+                }
+                <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleCloseAlert}>
+                    <Alert onClose={handleCloseAlert} severity={alertContent.severity}>
+                        {alertContent.message}
+                    </Alert>
+                </Snackbar>
             </Box>
         </ThemeProvider>
     );

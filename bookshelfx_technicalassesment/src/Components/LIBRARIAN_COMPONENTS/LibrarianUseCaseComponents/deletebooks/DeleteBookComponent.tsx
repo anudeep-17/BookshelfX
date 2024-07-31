@@ -276,7 +276,7 @@ export default function DeleteBookComponent()
                                                             options={AllCategories}
                                                             value={Category}
                                                             freeSolo
-                                                            onInputChange={(event, newInputValue) => {
+                                                            onInputChange={(event, newInputValue) => { 
                                                                 setCategory(newInputValue);
                                                             }}
                                                             renderInput={(params) => <TextField {...params} label="Category" fullWidth variant="outlined" sx={{mb: 2}}/>}
