@@ -92,7 +92,6 @@ export default function SettingsComponent()
                                         Set New Password
                                     </Button>
                                 </Box>
-                                
                             </Grid>
                         </Grid>
                     </Box>
