@@ -134,6 +134,7 @@ export default function Navbar()
       },
       {
         text: 'Settings',
+        path: '/Reader/settings',
         icon: <SettingsIcon/>
       },
       {
@@ -175,6 +176,7 @@ export default function Navbar()
     },
     {
       text: 'Settings',
+      path: '/librarian/settings',
       icon: <SettingsIcon/>
     },
     {
@@ -261,7 +263,15 @@ export default function Navbar()
                         fontWeight: 'bold',
                       },
                     },
-                  }}>
+                  }}
+                  onClick={() => {
+                    if (index !== (pathname.split("/")[1] === 'Reader'? UserDrawer : LibrarianDrawer).length - 1) {
+                      item.path && router.push(item.path);
+                    } else {
+                      handleLogout();
+                    }
+                  }}
+                  >
                     <ListItemIcon>
                       {item.icon}
                     </ListItemIcon>
