@@ -43,7 +43,35 @@ export async function Authentication({email, password}: {email: string, password
 }
 //=======================================================  User Profile  ========================================================
 // add new password, avatar, and favorite categories
+export async function UpdateUserPassword({id, password}: {id: number, password: string})
+{
+    const response = await fetch('/api/user/update/updatePassword', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id,
+            password
+        })
+    });
+    return await response.json();
+}
 
+export async function UpdateUserFavoriteCategories({id, favoriteCategories}: {id: number, favoriteCategories: string[]})
+{
+    const response = await fetch('/api/user/update/updateFavouriteCategories', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id,
+            favoriteCategories
+        })
+    });
+    return await response.json();
+}
 //=======================================================  Book Reviewing  ========================================================
 export async function addAReviewToBook({bookId, userID, rating, review}: {bookId: number, userID: number, rating: number, review: string})
 {

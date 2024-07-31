@@ -33,6 +33,7 @@ export async function GET(req: Request)
                     name: user.name,
                     email: user.email,
                     role: user.role,
+                    favoriteCategories: user.favoriteCategories,
                     favouriteBooks: user.favoriteBooks,
                     rentals: user.rentals,
                     reviews: user.reviews,
@@ -60,11 +61,11 @@ export async function GET(req: Request)
             }
             else
             {
-                return NextResponse.json({message: "User not found"}, {status: 404});
+                return NextResponse.json({success: false, mmessage: "User not found"}, {status: 404});
             }
         }
     }
     catch(e){
-        return NextResponse.json({message: "An error occured"}, {status: 500});
+        return NextResponse.json({success: false, message: "An error occured"}, {status: 500});
     }
 }
