@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import {BookDetails, BookCardProps} from '@/Components/interfaceModels';
+import {BookDetails} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import {getFavBooksByUser} from '@/Services/BookRoutines';
@@ -126,7 +126,7 @@ export default function MyFavouritesComponent()
                                         }}
                                     >
                                         <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, display: 'inline' }}>
-                                                Category Wise{" "} 
+                                                Your Favourite{" "} 
                                                 <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
                                                     Books
                                                 </Typography>

@@ -13,7 +13,6 @@ import ChatSystemAvatar from '@/assets/ChatSystemAvtar.png';
 import ReaderAvatar from '@/assets/ReaderAvtar.jpeg';
 import { ChatGPTSupport } from '@/Services/ChatGPTRoutines';
 import Chip from '@mui/material/Chip';
-import Badge from '@mui/material/Badge';
 
 export default function ChatboxComponent({book, role, informationFromLibrarian}: {book: Book, role?: string, informationFromLibrarian?: string}) {
     
