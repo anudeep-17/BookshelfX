@@ -326,6 +326,9 @@ export default function Navbar()
           router.push(`/Reader/searchresult?${queryParams}`);
         }
       }
+
+      const [cookiesDialogDisplay, setCookiesDialogDisplay] = React.useState(true);
+
     return(
         <ThemeProvider theme={theme}>
             <CssBaseline />

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Button, CircularProgress, CssBaseline, ThemeProvider, Tooltip, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, CircularProgress, CssBaseline, Snackbar, SnackbarContent, ThemeProvider, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid';
 import theme from '../../Themes';
@@ -104,6 +104,7 @@ export default function UserDashboardComponent() {
         router.push(`/Reader/book/${id}`);
     }
 
+    
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -375,7 +376,6 @@ export default function UserDashboardComponent() {
                     >                         
                          { !isXs && book ? <BookDetails book={book}/> : <BookDetails/> }
                     </Box>
-
                 </Box>
         </ThemeProvider>
         )
