@@ -251,78 +251,85 @@ export default function SettingsComponent()
                                     }}
                                 />
                             </Grid>
-                            
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="h2" gutterBottom sx={{
-                                    color: theme.palette.primary.main
-                                }}>
-                                    Favourite <br/>
-                                    Categories: 
-                                </Typography>
-                                <Typography variant="body2" gutterBottom sx={{
-                                    color: theme.palette.text.secondary,
-                                    textDecoration: 'underline',
-                                }}>
-                                    * Select your favourite categories upto 6 categories
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Box 
-                                   sx={{
-                                        display:'flex', 
-                                        flexDirection: 'column',
-                                        alignContent: 'center',
-                                        gap:3
-                                    }}
-                                >
-                                    {
-                                        loading?
-                                        <CircularProgress sx={{
-                                            alignSelf: 'center'
-                                        }} />
-                                        :
-                                        <Grid container spacing={1}>
-                                            {AllCategories.map((category, index) => (
-                                            <Grid item xs={6} key={index}>
-                                                <Chip
-                                                    sx={{cursor: 'pointer', width: '100%'}}
-                                                    label={category}
-                                                    color={selectedCategories.includes(category) ? 'primary' : 'default'}
-                                                    onClick={() => {
-                                                        if(selectedCategories.includes(category)) {
-                                                          setSelectedCategories(selectedCategories.filter((cat) => cat !== category));
-                                                        } else {
-                                                          // Only add the category if there are less than 6 selected categories
-                                                          if (selectedCategories.length < 6) {
-                                                            setSelectedCategories([...selectedCategories, category]);
-                                                          } else {
-                                                            // Set the alert open and content if there are already 6 selected categories
-                                                            setAlertOpen(true);
-                                                            setAlertContent({
-                                                              severity: 'warning',
-                                                              message: 'You have already selected 6 categories.'
-                                                            });
-                                                          }
-                                                        }
-                                                      }}
-                                                />
-                                            </Grid>
-                                            ))}
-                                      </Grid>
-                                    }
+                            {
+                                userCookie && userDetails && userDetails.role === 'librarian' ? 
+                                null:
+                                <>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography variant="h2" gutterBottom sx={{
+                                        color: theme.palette.primary.main
+                                    }}>
+                                        Favourite <br/>
+                                        Categories: 
+                                    </Typography>
+                                    <Typography variant="body2" gutterBottom sx={{
+                                        color: theme.palette.text.secondary,
+                                        textDecoration: 'underline',
+                                    }}>
+                                        * Select your favourite categories upto 6 categories
+                                    </Typography>
+                                </Grid>
 
-                                    {
-                                        CategoriesUpdateLoading ? 
-                                        <CircularProgress sx={{
-                                            alignSelf: 'center'
-                                        }} />
-                                        :
-                                        <Button variant="outlined" color="primary" disabled = {selectedCategories === userSelectedCategories} onClick={handleCategoryChange}>
-                                            Set new Categories
-                                        </Button>
-                                    }
-                                </Box>
-                            </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Box 
+                                    sx={{
+                                            display:'flex', 
+                                            flexDirection: 'column',
+                                            alignContent: 'center',
+                                            gap:3
+                                        }}
+                                    >
+                                        {
+                                            loading?
+                                            <CircularProgress sx={{
+                                                alignSelf: 'center'
+                                            }} />
+                                            :
+                                            <Grid container spacing={1}>
+                                                {AllCategories.map((category, index) => (
+                                                <Grid item xs={6} key={index}>
+                                                    <Chip
+                                                        sx={{cursor: 'pointer', width: '100%'}}
+                                                        label={category}
+                                                        color={selectedCategories.includes(category) ? 'primary' : 'default'}
+                                                        onClick={() => {
+                                                            if(selectedCategories.includes(category)) {
+                                                            setSelectedCategories(selectedCategories.filter((cat) => cat !== category));
+                                                            } else {
+                                                            // Only add the category if there are less than 6 selected categories
+                                                            if (selectedCategories.length < 6) {
+                                                                setSelectedCategories([...selectedCategories, category]);
+                                                            } else {
+                                                                // Set the alert open and content if there are already 6 selected categories
+                                                                setAlertOpen(true);
+                                                                setAlertContent({
+                                                                severity: 'warning',
+                                                                message: 'You have already selected 6 categories.'
+                                                                });
+                                                            }
+                                                            }
+                                                        }}
+                                                    />
+                                                </Grid>
+                                                ))}
+                                        </Grid>
+                                        }
+
+                                        {
+                                            CategoriesUpdateLoading ? 
+                                            <CircularProgress sx={{
+                                                alignSelf: 'center'
+                                            }} />
+                                            :
+                                            <Button variant="outlined" color="primary" disabled = {selectedCategories === userSelectedCategories} onClick={handleCategoryChange}>
+                                                Set new Categories
+                                            </Button>
+                                        }
+                                    </Box>
+                                </Grid>
+                                </>
+                            }
+                           
                         </Grid>
                     </Box>
         </Box>

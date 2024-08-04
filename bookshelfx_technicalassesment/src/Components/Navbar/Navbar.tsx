@@ -327,7 +327,6 @@ export default function Navbar()
         }
       }
 
-      const [cookiesDialogDisplay, setCookiesDialogDisplay] = React.useState(true);
 
     return(
         <ThemeProvider theme={theme}>
@@ -501,7 +500,7 @@ export default function Navbar()
                 onClose={handleClose}
               >
                 <MenuItem onClick={()=>{router.push('/Reader/myaccount')}}>My account</MenuItem>
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                <MenuItem onClick={() => {handleLogout}}>Logout</MenuItem>
               </Menu>
 
             </Toolbar>

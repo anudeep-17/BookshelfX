@@ -1,6 +1,6 @@
 'use client';
 import React from "react"
-import { Box, Grid, Paper, ThemeProvider, Typography } from "@mui/material"
+import { Alert, Box, Button, Fade, Grid, IconButton, Paper, Slide, Snackbar, ThemeProvider, Typography } from "@mui/material"
 import { AllStats } from "@/Services/LibrarianRoutines"
 import theme from "@/Components/Themes"
 import TotalBooksComponent from "./DashboardComponents/TotalBooksComponent"
@@ -13,6 +13,7 @@ import TotalOverdueComponent from "./DashboardComponents/TotalOverdueComponent"
 import NumberOfOverdueDateComponent from "./DashboardComponents/NumberOfOverdueDateComponent"
 import NumberOfReturnAuthorized from "./DashboardComponents/NumberOfReturnAuthorized"
 import Cookies from 'js-cookie'
+import CloseIcon from '@mui/icons-material/Close';
 
 type statsData = {
     totalBooks: number;
@@ -41,7 +42,9 @@ export default function Dashboard_Home()
       
           fetchData();
     }, []);
-     
+
+    const [WelcomeSnackBar, setWelcomeSnackBar] = React.useState(true);
+
     return(
          <ThemeProvider theme={theme}>
             <Box
@@ -57,6 +60,26 @@ export default function Dashboard_Home()
                     cursor: 'pointer',
                 }}
             >
+                <Snackbar
+                    sx={{
+                        mt:5,
+                    }}
+                    open={WelcomeSnackBar}
+                    autoHideDuration={8000}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    message="Welcome to the Librarian Dashboard"
+                    transitionDuration={500}
+                    TransitionComponent={Slide}
+                    action={
+                        <React.Fragment>
+                          <IconButton size="small" aria-label="close" color="inherit" onClick={() => {setWelcomeSnackBar(false)}}>
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
+                        </React.Fragment>
+                    }
+                    onClose={() => {setWelcomeSnackBar(false)}}
+                />
+
                 <Grid container spacing={2}>
                   {stats? 
                     (
