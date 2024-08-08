@@ -507,7 +507,7 @@ export default function Navbar()
                 onClose={handleClose}
               >
                 <MenuItem onClick={()=>{router.push(pathname.split('/')[1] === 'Reader'?  '/Reader/myaccount': '/librarian/myaccount')}}>My account</MenuItem>
-                <MenuItem onClick={() => {handleLogout}}>Logout</MenuItem>
+                <MenuItem onClick={() => {handleLogout()}}>Logout</MenuItem>
               </Menu>
 
             </Toolbar>
