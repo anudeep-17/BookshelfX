@@ -215,7 +215,7 @@ export default function Searchresultcomponent()
                                                         <Drawer anchor='right' open={filterdraweropen} onClose={toggleDrawer(false)}>
                                                              <DrawerForFilter 
                                                                 toggleDrawer={toggleDrawer}
-                                                                selectedChip={selectedChipforAvailabilityInFilter}
+                                                                  selectedChip={selectedChipforAvailabilityInFilter}
                                                                 setSelectedChip={setSelectedChipforAvailabilityInFilter}
 
                                                                 selectedAuthorInFilter={selectedAuthorsInFilter}

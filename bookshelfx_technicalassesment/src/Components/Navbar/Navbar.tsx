@@ -323,7 +323,7 @@ export default function Navbar()
             const [key, value] = item.split(':');
             return `${key}=${encodeURIComponent(value.trim())}`;
           }).join('&');
-          router.push(`/Reader/searchresult?${queryParams}`);
+          router.push(pathname.split("/")[1] === 'librarian'? `/librarian/searchresult?${queryParams}` : `/Reader/searchresult?${queryParams}`);
         }
       }
 
@@ -499,7 +499,7 @@ export default function Navbar()
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={()=>{router.push(pathname[1] === 'Reader'?  '/Reader/myaccount': '/librarian/myaccount')}}>My account</MenuItem>
+                <MenuItem onClick={()=>{router.push(pathname.split('/')[1] === 'Reader'?  '/Reader/myaccount': '/librarian/myaccount')}}>My account</MenuItem>
                 <MenuItem onClick={() => {handleLogout}}>Logout</MenuItem>
               </Menu>
 
