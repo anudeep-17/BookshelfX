@@ -181,6 +181,7 @@ export default function Navbar()
     },
     {
       text: 'Logout',
+      path: '/logout',
       icon: <LogoutIcon/>
     }
   ];
@@ -199,12 +200,16 @@ export default function Navbar()
             </Toolbar>: null
             }
           <Toolbar sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Box onClick={() => router.push('/')} sx={{
+            cursor: 'pointer',
+          }}>
             <Typography variant="h5" sx={{ color: theme => theme.palette.text.primary }} component="span">
               Bookshelf
             </Typography>
             <Typography variant="h5" sx={{ color: theme => theme.palette.text.secondary }} component="span">
               X
             </Typography>
+          </Box>
             
           </Toolbar>
             <List>
@@ -246,7 +251,9 @@ export default function Navbar()
             <List>
               {(pathname.split("/")[1] === 'Reader'? UserDrawer : LibrarianDrawer).slice(6).map((item, index) => (
                 <ListItem key={item.text} disablePadding>
-                  <ListItemButton sx={{ 
+                  <ListItemButton 
+                  selected={index !== (pathname.split("/")[1] === 'Reader'? UserDrawer : LibrarianDrawer).length - 2 && pathname.startsWith(item.path? item.path : "")}
+                  sx={{ 
                     borderRadius: '4px', // Make edges curved
                     m:2,
                     '&:hover': {

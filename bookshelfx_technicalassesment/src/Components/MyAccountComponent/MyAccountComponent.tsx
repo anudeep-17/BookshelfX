@@ -103,7 +103,7 @@ export default function MyAccountComponent()
                                             pathname.split("/")[1] === 'librarian' ?
                                             <>
                                                 <Typography variant="h6" gutterBottom>
-                                                    <span style={{ color: theme.palette.text.secondary }}>Authorized Rentals:</span> {User?.authorizedRentals?.length} Books
+                                                    <span style={{ color: theme.palette.text.secondary }}>Authorized Rental Closures:</span> {User?.authorizedRentals?.length} Books
                                                 </Typography>
                                                 <Button variant="outlined"   color="secondary" sx={{mt:2, width: '70%'}} onClick={()=>{
                                                     router.push('/librarian/home');
