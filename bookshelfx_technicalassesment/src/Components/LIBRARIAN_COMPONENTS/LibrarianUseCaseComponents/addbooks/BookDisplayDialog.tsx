@@ -162,7 +162,7 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
             setAlertOpen(true);
             setAlertContent({severity: 'success', message: "book added to Libraiary successfully"});
             setAddedSuccessfully(true);
-            // window.open(`/book/${response.book.id}`, '_blank');
+            window.open(`/librarian/book/${response.book.id}`, '_blank');
         }
         else
         {
