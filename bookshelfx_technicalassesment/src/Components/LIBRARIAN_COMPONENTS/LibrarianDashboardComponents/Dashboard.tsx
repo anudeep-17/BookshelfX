@@ -14,6 +14,7 @@ import NumberOfOverdueDateComponent from "./DashboardComponents/NumberOfOverdueD
 import NumberOfReturnAuthorized from "./DashboardComponents/NumberOfReturnAuthorized"
 import Cookies from 'js-cookie'
 import CloseIcon from '@mui/icons-material/Close';
+import { useRouter } from "next/navigation";
 
 type statsData = {
     totalBooks: number;
@@ -28,9 +29,18 @@ type statsData = {
 
 export default function Dashboard_Home()
 {
+    const router = useRouter();
     const [stats, setStats] = React.useState<statsData | null>(null);
-    const user = JSON.parse(Cookies.get('user') || '');
-    const librarianID = user.role === 'librarian' ? user.id : undefined;
+    const user = Cookies.get('user')? JSON.parse(Cookies.get('user') || ''):null;
+    const librarianID = user ? user.role === 'librarian' ? user.id : undefined :  undefined;
+
+    React.useEffect(() => {
+        if(librarianID === undefined)
+        {
+            router.push('/');
+        }
+    }
+    , [librarianID]);
 
     React.useEffect(() => {
         const fetchData = async () => {

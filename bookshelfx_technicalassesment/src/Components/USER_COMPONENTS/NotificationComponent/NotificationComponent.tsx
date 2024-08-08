@@ -20,10 +20,14 @@ export default function NotificationComponent({anchorEl, setAnchorEl}:
     const [Notifications, setNotifications] = React.useState<{notificationGroup: "renting"| "initiatedReturn"|"overdue"|null, notificationMessage: React.ReactNode, bookID: number|null}[]>();
 
     let userID: number | null = null;
-    const userCookie = Cookies.get('user');
+    const userCookie = Cookies.get('user') ? Cookies.get('user') : undefined;
     if (userCookie !== undefined) 
     {
         userID = Number(JSON.parse(userCookie).id);
+    }
+    else
+    {
+        router.push('/');
     }
 
     const handleClick = (bookID: number) =>

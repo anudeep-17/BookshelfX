@@ -25,13 +25,15 @@ export default function AllBooksListComponent()
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string>('');
     const [selectedAuthorsInFilter, setSelectedAuthorsInFilter] = React.useState<string[]>([]);
     const [selectedCategoriesInFilter, setSelectedCategoriesInFilter] = React.useState<string[]>([]);
-
+    
+    const [isFilterApplied, setIsFilterApplied] = React.useState<boolean>(false);
 
     const [selectedCategory, setSelectedCategory] = React.useState<string>('All Books');
     const [allCategory, setCategory] = React.useState<string[]>([]);
     
     const [books, setBook] = React.useState<BookDetails[]>([])
     const [categoryWiseBooks, setCategoryWiseBooks] = React.useState<BookDetails[]>([]);
+    const [FilterBasedBooks, setFilterBasedBooks] = React.useState<BookDetails[]>([]);
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
