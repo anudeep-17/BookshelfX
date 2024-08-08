@@ -7,10 +7,14 @@ import Cookies from 'js-cookie';
 import { User } from '../interfaceModels';
 import { DeleteAccount, GetUser } from '@/Services/UserRoutines';
 import DeleteDialog from './DeleteDialog';
+import { usePathname, useRouter } from 'next/navigation';
 const drawerWidth = DashboardSize;
 
 export default function MyAccountComponent() 
 {
+    const pathname = usePathname();
+    const router = useRouter();
+
     const [loading, setLoading] = React.useState<boolean>(false);
 
     const userCookie = Cookies.get('user');
@@ -95,25 +99,42 @@ export default function MyAccountComponent()
                                         <Typography variant="h6" gutterBottom>
                                             <span style={{color: theme.palette.text.secondary}}>Email:</span> {User?.email}
                                         </Typography>
-                                        <Typography variant="h6" gutterBottom>
-                                            <span style={{ color: theme.palette.text.secondary }}>Number of Favorite Books:</span> {User?.favouriteBooks?.length || 0} Books
-                                        </Typography>
-                                        <Typography variant="h6" gutterBottom>
-                                            <span style={{ color: theme.palette.text.secondary }}>Number of Rentals:</span> {User?.rentals?.length} books
-                                        </Typography>
-                                        <Typography variant="h6" gutterBottom>
-                                            <span style={{ color: theme.palette.text.secondary }}>Number of Reviews:</span> {User?.reviews?.length} books
-                                        </Typography>
+                                        {
+                                            pathname.split("/")[1] === 'librarian' ?
+                                            <>
+                                                <Typography variant="h6" gutterBottom>
+                                                    <span style={{ color: theme.palette.text.secondary }}>Authorized Rentals:</span> {User?.authorizedRentals?.length} Books
+                                                </Typography>
+                                                <Button variant="outlined"   color="secondary" sx={{mt:2, width: '70%'}} onClick={()=>{
+                                                    router.push('/librarian/home');
+                                                }}>
+                                                    Go to Librarian Dashboard
+                                                </Button>
+                                            </>
+                                            :
+                                            <>
+                                                <Typography variant="h6" gutterBottom>
+                                                    <span style={{ color: theme.palette.text.secondary }}>Number of Favorite Books:</span> {User?.favouriteBooks?.length || 0} Books
+                                                </Typography>
+                                                <Typography variant="h6" gutterBottom>
+                                                    <span style={{ color: theme.palette.text.secondary }}>Number of Rentals:</span> {User?.rentals?.length} books
+                                                </Typography>
+                                                <Typography variant="h6" gutterBottom>
+                                                    <span style={{ color: theme.palette.text.secondary }}>Number of Reviews:</span> {User?.reviews?.length} books
+                                                </Typography>
 
-                                        <Typography variant="body1" gutterBottom>
-                                            <span style={{ color: theme.palette.text.secondary }}>Favorite Categories:</span>  {user?.favoriteCategories ? user.favoriteCategories.join(", ") : "No Favorite Categories"}
-                                        </Typography>
+                                                <Typography variant="body1" gutterBottom>
+                                                    <span style={{ color: theme.palette.text.secondary }}>Favorite Categories:</span>  {user?.favoriteCategories ? user.favoriteCategories.join(", ") : "No Favorite Categories"}
+                                                </Typography>
 
-                                        <Button variant="outlined"   color="secondary" sx={{mt:2, width: '70%'}} onClick={()=>{
-                                            setDeleteAccountDialog(true);
-                                        }}>
-                                             Delete Account
-                                        </Button>
+                                                <Button variant="outlined"   color="secondary" sx={{mt:2, width: '70%'}} onClick={()=>{
+                                                    setDeleteAccountDialog(true);
+                                                }}>
+                                                    Delete Account
+                                                </Button>
+                                            </>
+                                        }
+                                      
                                     </Grid>
 
                                 </Grid>

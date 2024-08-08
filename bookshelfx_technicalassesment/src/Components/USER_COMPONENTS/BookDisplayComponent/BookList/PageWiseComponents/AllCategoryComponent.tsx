@@ -22,7 +22,11 @@ export default function AllCategoryBookListComponent()
 {
     const router = useRouter();
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
-    const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
+   
+    const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string>('');
+    const [selectedAuthorsInFilter, setSelectedAuthorsInFilter] = React.useState<string[]>([]);
+    const [selectedCategoriesInFilter, setSelectedCategoriesInFilter] = React.useState<string[]>([]);
+
     const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
     const [allCategory, setCategory] = React.useState<string[]>([]);
     const [categoryWiseBooks, setCategoryWiseBooks] = React.useState<BookDetails[]>([]);
@@ -233,9 +237,15 @@ export default function AllCategoryBookListComponent()
                                                         <Drawer anchor='right' open={filterdraweropen} onClose={toggleDrawer(false)}>
                                                              <DrawerForFilter 
                                                                 toggleDrawer={toggleDrawer}
-                                                                slidervaluetext_forDays={slidervaluetext_forDays}
+                                                               
                                                                 selectedChip={selectedChipforAvailabilityInFilter}
-                                                                setSelectedChip={setSelectedChipforAvailabilityInFilter} 
+                                                                setSelectedChip={setSelectedChipforAvailabilityInFilter}
+
+                                                                selectedAuthorInFilter={selectedAuthorsInFilter}
+                                                                setSelectedAuthorsInFilter={setSelectedAuthorsInFilter}
+
+                                                                selectedCategoriesInFilter={selectedCategoriesInFilter}
+                                                                setSelectedCategoriesInFilter={setSelectedCategoriesInFilter}
                                                             />
                                                         </Drawer>
                                                     </>

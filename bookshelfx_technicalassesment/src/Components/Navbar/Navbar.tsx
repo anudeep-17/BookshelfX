@@ -499,7 +499,7 @@ export default function Navbar()
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={()=>{router.push('/Reader/myaccount')}}>My account</MenuItem>
+                <MenuItem onClick={()=>{router.push(pathname[1] === 'Reader'?  '/Reader/myaccount': '/librarian/myaccount')}}>My account</MenuItem>
                 <MenuItem onClick={() => {handleLogout}}>Logout</MenuItem>
               </Menu>
 
