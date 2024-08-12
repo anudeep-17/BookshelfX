@@ -139,6 +139,7 @@ export default function Navbar()
       },
       {
         text: 'Logout',
+        path: '/logout',
         icon: <LogoutIcon/>
       }
   ]
@@ -252,32 +253,33 @@ export default function Navbar()
               {(pathname.split("/")[1] === 'Reader'? UserDrawer : LibrarianDrawer).slice(6).map((item, index) => (
                 <ListItem key={item.text} disablePadding>
                   <ListItemButton 
-                  selected={index !== (pathname.split("/")[1] === 'Reader'? UserDrawer : LibrarianDrawer).length - 2 && pathname.startsWith(item.path? item.path : "")}
-                  sx={{ 
-                    borderRadius: '4px', // Make edges curved
-                    m:2,
-                    '&:hover': {
-                      backgroundColor: 'transparent',
-                      '& .MuiSvgIcon-root': {
-                        color: '#3f51b5',
+                    selected={pathname.startsWith(item.path? item.path : "null")}
+                    sx={{ 
+                      borderRadius: '4px', // Make edges curved
+                      m:2,
+                      '&:hover': {
+                        backgroundColor: 'transparent',
+                        '& .MuiSvgIcon-root': {
+                          color: '#3f51b5',
+                        },
+                        '& .MuiListItemText-root': {
+                          fontWeight: 'bold',
+                        },
                       },
-                      '& .MuiListItemText-root': {
-                        fontWeight: 'bold',
+                      '&.Mui-selected': {
+                        '& .MuiListItemText-root': {
+                          fontWeight: 'bold',
+                        },
                       },
-                    },
-                    '&.Mui-selected': {
-                      '& .MuiListItemText-root': {
-                        fontWeight: 'bold',
-                      },
-                    },
-                  }}
-                  onClick={() => {
-                    if (index !== (pathname.split("/")[1] === 'Reader'? UserDrawer : LibrarianDrawer).length - 1) {
-                      item.path && router.push(item.path);
-                    } else {
-                      handleLogout();
-                    }
-                  }}
+                    }}
+                    onClick={() => {
+                      if (index === 6) 
+                      {
+                        item.path && router.push(item.path);
+                      } else {
+                        handleLogout();
+                      }
+                    }}
                   >
                     <ListItemIcon>
                       {item.icon}

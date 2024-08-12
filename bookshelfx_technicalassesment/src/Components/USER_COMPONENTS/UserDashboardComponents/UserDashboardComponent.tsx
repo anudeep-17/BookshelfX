@@ -243,7 +243,9 @@ export default function UserDashboardComponent() {
                                             flexDirection: 'column',
                                             justifyContent: 'flex-start',
                                             alignItems: 'flex-start', 
-                                            pl:1
+                                            pl:1,
+                                            width: '100%',
+                                            overflow: 'auto',
                                         }}
                                     >
                                         <Box
@@ -258,7 +260,7 @@ export default function UserDashboardComponent() {
                                                 flexWrap: 'wrap',
                                                 mt:2,
                                                 mb:2,
-                                                width: '100%',
+                                                width: '95%',
                                             }}
                                         >
                                             <Typography variant="h5" sx= {{
@@ -293,6 +295,7 @@ export default function UserDashboardComponent() {
                                                 xs: 'wrap',
                                                 sm: 'nowrap',
                                             },
+                                        
                                             gap: {xs: 1, sm: 0},
                                         }}>
                                             {categories.map((category, index) => (
