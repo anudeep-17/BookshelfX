@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
@@ -13,9 +14,12 @@ import ChatSystemAvatar from '@/assets/ChatSystemAvtar.png';
 import ReaderAvatar from '@/assets/ReaderAvtar.jpeg';
 import { ChatGPTSupport } from '@/Services/ChatGPTRoutines';
 import Chip from '@mui/material/Chip';
+import { usePathname } from 'next/navigation';
 
 export default function ChatboxComponent({book, role, informationFromLibrarian}: {book: Book, role?: string, informationFromLibrarian?: string}) {
     
+    const pathname = usePathname();
+
     const [anchorEl, setAnchorEl] = React.useState<EventTarget & HTMLButtonElement | null>(null);
     const [fabOpen, setFabOpen] = React.useState(false);
     const [popoverOpen, setPopoverOpen] = React.useState(false);
