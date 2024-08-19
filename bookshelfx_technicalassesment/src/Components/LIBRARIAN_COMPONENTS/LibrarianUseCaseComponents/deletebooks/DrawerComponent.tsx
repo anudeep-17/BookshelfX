@@ -6,6 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Chip, Alert, Box,  Drawer, Typography, Divider, Paper, IconButton, Tooltip, Button } from "@mui/material";
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import React from 'react';
+import DeleteConfirmationDialog from './DeleteConfirmationDialog';
 
 export default function DrawerComponent({open, setOpen, DeletionList,  setDeletionList, handleDeleteAll}:
     {
@@ -15,7 +16,19 @@ export default function DrawerComponent({open, setOpen, DeletionList,  setDeleti
         setDeletionList: React.Dispatch<React.SetStateAction<BookDetails[]>>,
         handleDeleteAll: () => void
     }) {
-   
+    
+    const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
+    const [openDialog, setOpenDialog] = React.useState(false);
+    
+          
+    const handleClick = () => {
+        setOpenDialog(true);
+    };
+
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
+
     const toggleDrawer = (newOpen: boolean) => () => {
         setOpen(newOpen);
     };
@@ -84,5 +97,6 @@ export default function DrawerComponent({open, setOpen, DeletionList,  setDeleti
         <SwipeableDrawer anchor={'right'} open={open} onClose={toggleDrawer(false)}  onOpen={toggleDrawer(true)}>
             {DrawerList}
         </SwipeableDrawer>
+        
     )
 }

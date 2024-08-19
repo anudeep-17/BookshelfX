@@ -27,9 +27,9 @@ export async function DELETE(req: Request)
         
         if(book)
         {
-           await database.bookRentalDetails.deleteMany({
+            await database.bookRentalDetails.deleteMany({
                 where: {
-                    id: book.id
+                    bookId: book.id
                 }
             });
         
@@ -50,6 +50,8 @@ export async function DELETE(req: Request)
                     id: book.id
                 } 
             });
+            
+         
 
             if(!deleteBook)
             {
