@@ -293,6 +293,7 @@ export default function UserRentalBookComponent()
                                             {
                                                 openRentals.length > 0 ? (
                                                     Array.from(new Set(openRentals.map(rental => new Date(rental.rentalDate).toLocaleDateString())))
+                                                    .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
                                                     .map((date, index, self) => (
                                                         <>
                                                             <ListItem disablePadding>
@@ -355,11 +356,12 @@ export default function UserRentalBookComponent()
                                             {
                                                 closedRentals.length > 0 ? (
                                                     Array.from(new Set(closedRentals.map(rental => new Date(rental.rentalDate).toLocaleDateString())))
+                                                    .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
                                                     .map((date, index, self) => (
                                                         <>
                                                             <ListItem disablePadding>
                                                                 <ListItemButton
-                                                                 selected={selectedRentalDates === date}
+                                                                    selected={selectedRentalDates === date}
                                                                     sx={{ 
                                                                         borderRadius: '4px', // Make edges curved
                                                                         display: 'flex', // Add this
