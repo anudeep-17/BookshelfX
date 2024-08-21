@@ -26,6 +26,8 @@ export default function FeaturedBookComponent()
     const [selectedCategoriesInFilter, setSelectedCategoriesInFilter] = React.useState<string[]>([]);
 
     const [books, setBook] = React.useState<BookDetails[]>([])
+    const [filteredBooks, setFilteredBooks] = React.useState<BookDetails[]>([]);
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const [offset, setOffset] = React.useState(1);
@@ -54,15 +56,45 @@ export default function FeaturedBookComponent()
     },[]);
 
     React.useEffect(() => {
+        setIsLoading(true);
         const fetchData = async () => {
             const data = await getFeaturedBooks(offset,9);
             if (data.success) {
                 setBook(data.data);
-                setIsLoading(false);
             }
         };   
         fetchData();
+        setIsLoading(false);
     }, [offset]);
+
+    React.useEffect(() => {
+   
+        const fetchData = async () => {
+            const data = await getFeaturedBooks(1, countofBooks);
+            if (data.success) {
+                const filteredBooks = data.data.filter((book:BookDetails) => {
+                    // Filter based on availability
+                    const availabilityFilterPassed = selectedChipforAvailabilityInFilter === '' || 
+                        (selectedChipforAvailabilityInFilter === 'Available' && book.availability) || 
+                        (selectedChipforAvailabilityInFilter === 'Not Available' && !book.availability);
+
+                    // Filter based on authors
+                    const authorsFilterPassed = selectedAuthorsInFilter.length === 0 || selectedAuthorsInFilter.some(author => book.authors.includes(author));
+    
+                    // Filter based on categories
+                    const categoriesFilterPassed = selectedCategoriesInFilter.length === 0 || selectedCategoriesInFilter.includes(book.category);
+                    
+                    return availabilityFilterPassed && authorsFilterPassed && categoriesFilterPassed;
+                });
+    
+                setFilteredBooks(filteredBooks);
+            }
+
+        }
+        fetchData();
+        setIsLoading(false);
+
+    }, [selectedChipforAvailabilityInFilter, selectedAuthorsInFilter, selectedCategoriesInFilter]);
 
 
     function handleBookClick(id: number) {
@@ -232,6 +264,49 @@ export default function FeaturedBookComponent()
                                             </Box>
                                         </Box>                        
                                 </Grid>
+                                
+                                <Grid item xs={15} md={15}>
+                                <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            alignContent: 'center',
+                                            flexWrap: 'wrap',
+                                            ml:1,
+                                            mr:1,
+                                            gap:2.5, 
+                                            mb:2,
+                                        }}
+                                    >
+                                    {
+                                        selectedChipforAvailabilityInFilter !== ''?
+                                        <Typography variant='h6' gutterBottom>
+                                            Availability : <span style={{color: theme.palette.text.secondary}}>{selectedChipforAvailabilityInFilter}</span>
+                                        </Typography>
+                                       :
+                                       null
+                                    }
+                                    {
+                                        selectedAuthorsInFilter.length>0?
+                                        <Typography variant='h6' gutterBottom>
+                                            Selected Authors : <span style={{color: theme.palette.text.secondary}}>{selectedAuthorsInFilter.join(", ")}</span>
+                                        </Typography>
+                                        :
+                                        null
+                                    }
+                                    {
+                                        selectedCategoriesInFilter.length>0?
+                                        <Typography variant='h6' gutterBottom>
+                                            Selected Authors :  <span style={{color: theme.palette.text.secondary}}>{selectedCategoriesInFilter.join(", ")}</span>
+                                        </Typography>
+                                        :
+                                        null
+                                    }
+                                    </Box>
+                                 
+                                </Grid>
 
                                 <Grid item xs={15} md={15}>
                                     <Box
@@ -252,8 +327,8 @@ export default function FeaturedBookComponent()
                                            isLoading ? (
                                             <>
                                             </>
-                                            ) : books.length > 0 ? (
-                                                books.map((book: BookDetails) => (
+                                            ) : (selectedChipforAvailabilityInFilter.length>0 || selectedAuthorsInFilter.length > 0 || selectedCategoriesInFilter.length > 0 ? filteredBooks : books).length > 0 ? (
+                                                (selectedChipforAvailabilityInFilter.length>0  || selectedAuthorsInFilter.length > 0 || selectedCategoriesInFilter.length > 0 ? filteredBooks : books).map((book: BookDetails) => (
                                                     <DetailedBookCard
                                                         key={book.id}
                                                         bookID={Number(book.id)}
@@ -276,6 +351,7 @@ export default function FeaturedBookComponent()
                                         }
                                     </Box>
                                 </Grid>
+                                
                                 <Grid xs={12} sm={12}>
                                     <Box
                                         sx={{

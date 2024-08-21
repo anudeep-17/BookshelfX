@@ -44,6 +44,9 @@ export default function DrawerForFilter({
 
     const handleClearFilterClick = () => 
     {
+        setSelectedAuthorsInFilter([]);
+        setSelectedCategoriesInFilter([]);
+        setSelectedChip('');
         setSelectedAuthors([]);
         setSelectedCategories([]);
         setSelectedChipforAvailabilityInFilter('');
@@ -63,13 +66,15 @@ export default function DrawerForFilter({
             const allCategoryResponse = await getCategories();
             if(allCategoryResponse.success)
             {
-                setAllCategories(allCategoryResponse.data);
+                setAllCategories(allCategoryResponse.data.sort());
             }
             const allAuthorsResponse = await getAuthors();
             if(allAuthorsResponse.success)
             {
                 
-                setAllAuthors(allAuthorsResponse.data.map((authorObject: { authors: string[]; }) => authorObject.authors.join(", ")));
+                setAllAuthors(allAuthorsResponse.data
+                    .map((authorObject: { authors: string[]; }) => authorObject.authors.join(", "))
+                    .sort());
             }
         }
         setAuthorsLoading(true);
@@ -83,6 +88,7 @@ export default function DrawerForFilter({
     React.useEffect(() => {
         if(selectedAuthorInFilter.length > 0)
         {
+            console.log(selectedAuthorInFilter);
             setSelectedAuthors(selectedAuthorInFilter);
         }
         if(selectedCategoriesInFilter.length > 0)
@@ -93,7 +99,7 @@ export default function DrawerForFilter({
         {
             setSelectedChipforAvailabilityInFilter(selectedChip);
         }
-    },[]);
+    },[selectedAuthorInFilter, selectedCategoriesInFilter, selectedChip]);
 
 
 
@@ -164,6 +170,7 @@ export default function DrawerForFilter({
                                     }}
                                 >
                                     <Checkbox
+                                        checked={selectedAuthors.includes(author)}
                                         onChange={(event) => {
                                             if (event.target.checked) {
                                                 setSelectedAuthors(prevAuthors => [...prevAuthors, author]);
@@ -214,6 +221,7 @@ export default function DrawerForFilter({
                                     }}
                                 >
                                     <Checkbox
+                                        checked={selectedCategories.includes(category)}
                                         onChange={(event) => {
                                             if (event.target.checked) {
                                                 setSelectedCategories(prevCategories => [...prevCategories, category]);
