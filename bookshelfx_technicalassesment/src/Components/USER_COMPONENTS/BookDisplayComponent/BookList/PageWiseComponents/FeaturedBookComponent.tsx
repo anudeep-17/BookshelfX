@@ -7,7 +7,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {BookDetails} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { getFeaturedBooks, getFeaturedBooksCount} from '@/Services/BookRoutines';
+import { getFeaturedBooks, getFeaturedBooksCount, getFeaturedBooksForFilters} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
@@ -24,6 +24,8 @@ export default function FeaturedBookComponent()
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string>('');
     const [selectedAuthorsInFilter, setSelectedAuthorsInFilter] = React.useState<string[]>([]);
     const [selectedCategoriesInFilter, setSelectedCategoriesInFilter] = React.useState<string[]>([]);
+    const [countofBooksForFilter, setCountofBooksForFilter] = React.useState<number>(0);
+    const [offsetForFilter, setOffsetForFilter] = React.useState(1);
 
     const [books, setBook] = React.useState<BookDetails[]>([])
     const [filteredBooks, setFilteredBooks] = React.useState<BookDetails[]>([]);
@@ -68,33 +70,22 @@ export default function FeaturedBookComponent()
     }, [offset]);
 
     React.useEffect(() => {
-   
+        setOffsetForFilter(1);
+    },[selectedAuthorsInFilter, selectedCategoriesInFilter, selectedChipforAvailabilityInFilter]);
+    
+    React.useEffect(() => {
+        setIsLoading(true);
         const fetchData = async () => {
-            const data = await getFeaturedBooks(1, countofBooks);
-            if (data.success) {
-                const filteredBooks = data.data.filter((book:BookDetails) => {
-                    // Filter based on availability
-                    const availabilityFilterPassed = selectedChipforAvailabilityInFilter === '' || 
-                        (selectedChipforAvailabilityInFilter === 'Available' && book.availability) || 
-                        (selectedChipforAvailabilityInFilter === 'Not Available' && !book.availability);
-
-                    // Filter based on authors
-                    const authorsFilterPassed = selectedAuthorsInFilter.length === 0 || selectedAuthorsInFilter.some(author => book.authors.includes(author));
-    
-                    // Filter based on categories
-                    const categoriesFilterPassed = selectedCategoriesInFilter.length === 0 || selectedCategoriesInFilter.includes(book.category);
-                    
-                    return availabilityFilterPassed && authorsFilterPassed && categoriesFilterPassed;
-                });
-    
-                setFilteredBooks(filteredBooks);
+            const data = await getFeaturedBooksForFilters(offsetForFilter, 9, selectedChipforAvailabilityInFilter === 'Available'? true : false, selectedAuthorsInFilter, selectedCategoriesInFilter);
+            if(data.success)
+            {
+                setFilteredBooks(data.data);
+                setCountofBooksForFilter(data.totalBooks);
             }
-
         }
         fetchData();
         setIsLoading(false);
-
-    }, [selectedChipforAvailabilityInFilter, selectedAuthorsInFilter, selectedCategoriesInFilter]);
+    }, [selectedChipforAvailabilityInFilter, selectedAuthorsInFilter, selectedCategoriesInFilter, countofBooksForFilter, offsetForFilter]);
 
 
     function handleBookClick(id: number) {
@@ -351,7 +342,7 @@ export default function FeaturedBookComponent()
                                         }
                                     </Box>
                                 </Grid>
-                                
+
                                 <Grid xs={12} sm={12}>
                                     <Box
                                         sx={{
@@ -366,11 +357,11 @@ export default function FeaturedBookComponent()
                                     >
                                         {!isLoading && (
                                                 <Pagination 
-                                                    count={Math.ceil(countofBooks / 9)} 
+                                                    count={Math.ceil((selectedChipforAvailabilityInFilter.length>0  || selectedAuthorsInFilter.length > 0 || selectedCategoriesInFilter.length > 0 ? countofBooksForFilter : countofBooks) / 9)} 
                                                     color="primary" 
                                                     size="large"
                                                     onChange={(event, page) => {
-                                                        setOffset(page);
+                                                        (selectedChipforAvailabilityInFilter.length>0  || selectedAuthorsInFilter.length > 0 || selectedCategoriesInFilter.length > 0 ? setOffsetForFilter(page) : setOffset(page))
                                                     }}
                                                 />
                                         )}

@@ -26,6 +26,19 @@ export async function getFeaturedBooks(page: number, limit: number)
     return data;
 }
 
+export async function getFeaturedBooksForFilters(page: number, limit: number, availabilityFilterPassed: boolean, authorsFilterPassed: string[], categoriesFilterPassed: string[])
+{
+    const response = await fetch(`/api/books/getAll/FeaturedBooks/forGivenFilters?page=${page}&limit=${limit}`,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({availabilityFilterPassed, authorsFilterPassed, categoriesFilterPassed})
+    });
+    const data = await response.json();
+    return data;
+}
+
 //================================================================================================= GetAll ROUTINES ================================================================================================
 export async function getCategories()
 {

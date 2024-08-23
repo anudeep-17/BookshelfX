@@ -10,8 +10,6 @@ export async function GET(req: NextApiRequest)
     const category = url.searchParams.get('category') ? url.searchParams.get('category') : '';
     const publisher = url.searchParams.get('publisher') ? url.searchParams.get('publisher') : '';
 
-    console.log(`Title: ${title}, Author: ${author}, Category: ${category}, Publisher: ${publisher}`);
-
     try {
         const books = await database.bookDetails.findMany({
           where: {
@@ -41,6 +39,7 @@ export async function GET(req: NextApiRequest)
         const filteredBooks = books.filter(book => 
           book.authors.some(a => a.toLowerCase().includes((author as string || '').toLowerCase()))
         );
+
         return NextResponse.json({ success: true, data: filteredBooks }, { status: 200 });
     }
     catch (err) {
