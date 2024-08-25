@@ -185,7 +185,7 @@ export default function AllCategoryBookListComponent()
                                                 mb:1,
                                                 }}
                                             >
-                                                <Tooltip title="Sort by Alphabetical Order" placement="top" arrow>
+                                               
                                                     <>
                                                     <Button
                                                         sx={{
@@ -197,7 +197,9 @@ export default function AllCategoryBookListComponent()
                                                         }}
                                                         onClick={handleSortClick}
                                                     >
-                                                        <SortByAlphaIcon/>
+                                                        <Tooltip title="Sort by Alphabetical Order" placement="top" arrow>
+                                                            <SortByAlphaIcon/>
+                                                        </Tooltip>
                                                     </Button>
                                                     <Menu
                                                         id="basic-menu"
@@ -208,20 +210,20 @@ export default function AllCategoryBookListComponent()
                                                         'aria-labelledby': 'basic-button',
                                                         }}
                                                     >
-                                                        <MenuItem onClick={() => handleSort({sortBy: 'title', setBook: setCategoryWiseBooks, books: categoryWiseBooks, handleSortClose: handleSortClose})}>
+                                                        <MenuItem disabled={selectedCategory === null} onClick={() => handleSort({sortBy: 'title', setBook: setCategoryWiseBooks, books: categoryWiseBooks, handleSortClose: handleSortClose})}>
                                                             Sort by book titles
                                                         </MenuItem>
-                                                        <MenuItem onClick={() => handleSort({sortBy: 'author',  setBook: setCategoryWiseBooks, books: categoryWiseBooks, handleSortClose: handleSortClose})}>
+                                                        <MenuItem disabled={selectedCategory === null} onClick={() => handleSort({sortBy: 'author',  setBook: setCategoryWiseBooks, books: categoryWiseBooks, handleSortClose: handleSortClose})}>
                                                             Sort by book authors
                                                         </MenuItem>
-                                                        <MenuItem onClick={() => handleSort({sortBy: 'Category', setCategory, allCategory, handleSortClose: handleSortClose})}>
+                                                        <MenuItem disabled={selectedCategory === null} onClick={() => handleSort({sortBy: 'Category', setCategory, allCategory, handleSortClose: handleSortClose})}>
                                                             Sort book categories
                                                         </MenuItem>
                                                     </Menu>
                                                     </>
-                                                </Tooltip>
                                                 
-                                                <Tooltip title="Filter" placement="top" arrow>
+
+                                               
                                                     <>
                                                         <Button
                                                             sx={{
@@ -231,8 +233,11 @@ export default function AllCategoryBookListComponent()
                                                             },
                                                             }}
                                                             onClick={toggleDrawer(true)}
+                                                            disabled = {selectedCategory === null}
                                                         >
-                                                            <FilterAltIcon sx={{ color: 'primary.main' }} />
+                                                            <Tooltip title="Filter" placement="top" arrow>
+                                                             <FilterAltIcon sx={{ color: 'primary.main' }} />
+                                                            </Tooltip>
                                                         </Button>
                                                         <Drawer anchor='right' open={filterdraweropen} onClose={toggleDrawer(false)}>
                                                              <DrawerForFilter 
@@ -249,7 +254,6 @@ export default function AllCategoryBookListComponent()
                                                             />
                                                         </Drawer>
                                                     </>
-                                                </Tooltip>
                                             </Box>
                                         </Box>                        
                                 </Grid>
