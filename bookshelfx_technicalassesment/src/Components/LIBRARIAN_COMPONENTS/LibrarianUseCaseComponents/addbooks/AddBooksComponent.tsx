@@ -2,8 +2,6 @@
 import { DashboardSize } from "@/Components/DashboardSize";
 import theme from "@/Components/Themes";
 import { Box, Button, CssBaseline, Grid, Paper, Rating, Skeleton, TextField, ThemeProvider, Toolbar, Typography } from "@mui/material";
-import AddBookManualComponent from "./AddBookManualComponent";
-import AddBookFromGoogleComponent from "./AddBookFromGoogleComponent";
 import GoogleIcon from '@mui/icons-material/Google';
 import SpellcheckIcon from '@mui/icons-material/Spellcheck';
 import { useRouter } from "next/navigation";

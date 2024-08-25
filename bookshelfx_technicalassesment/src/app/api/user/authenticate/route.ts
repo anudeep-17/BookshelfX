@@ -6,11 +6,17 @@ import bcrypt from 'bcrypt';
 export async function POST(req:Request) {
     try{
         const { email, password } = await req.json();
+        
+        if(!email || !password){
+            return NextResponse.json({ success: false, message: "Email and password are required"}, {status: 400});
+        }
+
         const user = await database.user.findUnique({
             where: {
                 email
             }
         })
+        
         if (!user) {
             return NextResponse.json({ success: false, message: "User doesn't exist" }, {status: 401});
         }

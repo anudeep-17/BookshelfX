@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Button, CircularProgress, CssBaseline, ThemeProvider, Tooltip, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, CircularProgress, CssBaseline, Snackbar, SnackbarContent, ThemeProvider, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid';
 import theme from '../../Themes';
@@ -104,6 +104,7 @@ export default function UserDashboardComponent() {
         router.push(`/Reader/book/${id}`);
     }
 
+    
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -127,7 +128,7 @@ export default function UserDashboardComponent() {
                             {
                                 overflow: 'hidden',
                                 backgroundColor: 'white',
-                                width: {xs:'100%', sm:'71.5%'},
+                                width: {xs:'100%', sm:'73.5%'},
                                 mt: 2,
                                 mb: 2
                             }
@@ -242,7 +243,9 @@ export default function UserDashboardComponent() {
                                             flexDirection: 'column',
                                             justifyContent: 'flex-start',
                                             alignItems: 'flex-start', 
-                                            pl:1
+                                            pl:1,
+                                            width: '100%',
+                                            overflow: 'auto',
                                         }}
                                     >
                                         <Box
@@ -257,7 +260,7 @@ export default function UserDashboardComponent() {
                                                 flexWrap: 'wrap',
                                                 mt:2,
                                                 mb:2,
-                                                width: '100%',
+                                                width: '95%',
                                             }}
                                         >
                                             <Typography variant="h5" sx= {{
@@ -281,7 +284,7 @@ export default function UserDashboardComponent() {
                                             </Button>
                                         </Box>
 
-                                        <Stack direction="row" spacing={1} sx={{
+                                        <Stack direction="row" spacing={0.4} sx={{
                                             display: 'flex',
                                             flexDirection: 'row',
                                             justifyContent: 'space-between', // Change this line
@@ -292,6 +295,7 @@ export default function UserDashboardComponent() {
                                                 xs: 'wrap',
                                                 sm: 'nowrap',
                                             },
+                                        
                                             gap: {xs: 1, sm: 0},
                                         }}>
                                             {categories.map((category, index) => (
@@ -363,7 +367,7 @@ export default function UserDashboardComponent() {
                     <Box
                         sx={{
                             overflow: 'hidden',
-                            width: {xs:'100%', sm:'27%'},
+                            width: {xs:'100%', sm:'25%'},
                             minHeight: '92.2vh',
                             top:0,
                             display: 'flex',
@@ -375,7 +379,6 @@ export default function UserDashboardComponent() {
                     >                         
                          { !isXs && book ? <BookDetails book={book}/> : <BookDetails/> }
                     </Box>
-
                 </Box>
         </ThemeProvider>
         )

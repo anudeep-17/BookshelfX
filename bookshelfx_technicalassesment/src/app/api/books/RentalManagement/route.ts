@@ -83,19 +83,14 @@ export async function POST(req: Request)
                     userId: Number(userId),
                 },
                 data: {
-                    returned: true,
+                    returned: false,
                     returnDate: currentDate, // Set the return date to the current date
                     isOverdue: overdue, // If the expected return date is less than the current date, set overdue to true, else false
                     userInitiatedReturn: true,
                 },
             });
 
-            const result = await database.bookDetails.update({
-                where: { id: bookId },
-                data: { availability: availability },
-            });
-
-            if(!removefromRentals || !result)
+            if(!removefromRentals)
             {
                 return NextResponse.json({ success: false, message: "No rental found for this user" }, { status: 400 });
             }

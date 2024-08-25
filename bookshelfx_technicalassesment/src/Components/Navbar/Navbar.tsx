@@ -47,6 +47,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
+import NotificationComponent from '../USER_COMPONENTS/NotificationComponent/NotificationComponent';
 
 
 const drawerWidth = DashboardSize;
@@ -63,6 +64,8 @@ export default function Navbar()
     const [open, setOpen] = React.useState(false);
     const [AlertOpen, setAlertOpen] = React.useState(false);
     const [alertInfo, setAlertInfo] = React.useState<{severity: 'warning' | 'error', message: string}>({severity: 'warning', message: ""});
+
+    const [anchorEl_ForNotification, setAnchorEl_ForNotification] =  React.useState<null | HTMLElement>(null);
 
     const handleAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
       if (reason === 'clickaway') {
@@ -82,6 +85,11 @@ export default function Navbar()
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       setAnchorEl(event.currentTarget);
+    };
+
+    const handleClick_forNotification = (event: React.MouseEvent<HTMLButtonElement>) => 
+    {
+      setAnchorEl_ForNotification(event.currentTarget);
     };
 
     const handleClose = () => {
@@ -126,10 +134,12 @@ export default function Navbar()
       },
       {
         text: 'Settings',
+        path: '/Reader/settings',
         icon: <SettingsIcon/>
       },
       {
         text: 'Logout',
+        path: '/logout',
         icon: <LogoutIcon/>
       }
   ]
@@ -167,10 +177,12 @@ export default function Navbar()
     },
     {
       text: 'Settings',
+      path: '/librarian/settings',
       icon: <SettingsIcon/>
     },
     {
       text: 'Logout',
+      path: '/logout',
       icon: <LogoutIcon/>
     }
   ];
@@ -189,12 +201,16 @@ export default function Navbar()
             </Toolbar>: null
             }
           <Toolbar sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Box onClick={() => router.push('/')} sx={{
+            cursor: 'pointer',
+          }}>
             <Typography variant="h5" sx={{ color: theme => theme.palette.text.primary }} component="span">
               Bookshelf
             </Typography>
             <Typography variant="h5" sx={{ color: theme => theme.palette.text.secondary }} component="span">
               X
             </Typography>
+          </Box>
             
           </Toolbar>
             <List>
@@ -236,24 +252,35 @@ export default function Navbar()
             <List>
               {(pathname.split("/")[1] === 'Reader'? UserDrawer : LibrarianDrawer).slice(6).map((item, index) => (
                 <ListItem key={item.text} disablePadding>
-                  <ListItemButton sx={{ 
-                    borderRadius: '4px', // Make edges curved
-                    m:2,
-                    '&:hover': {
-                      backgroundColor: 'transparent',
-                      '& .MuiSvgIcon-root': {
-                        color: '#3f51b5',
+                  <ListItemButton 
+                    selected={pathname.startsWith(item.path? item.path : "null")}
+                    sx={{ 
+                      borderRadius: '4px', // Make edges curved
+                      m:2,
+                      '&:hover': {
+                        backgroundColor: 'transparent',
+                        '& .MuiSvgIcon-root': {
+                          color: '#3f51b5',
+                        },
+                        '& .MuiListItemText-root': {
+                          fontWeight: 'bold',
+                        },
                       },
-                      '& .MuiListItemText-root': {
-                        fontWeight: 'bold',
+                      '&.Mui-selected': {
+                        '& .MuiListItemText-root': {
+                          fontWeight: 'bold',
+                        },
                       },
-                    },
-                    '&.Mui-selected': {
-                      '& .MuiListItemText-root': {
-                        fontWeight: 'bold',
-                      },
-                    },
-                  }}>
+                    }}
+                    onClick={() => {
+                      if (index === 6) 
+                      {
+                        item.path && router.push(item.path);
+                      } else {
+                        handleLogout();
+                      }
+                    }}
+                  >
                     <ListItemIcon>
                       {item.icon}
                     </ListItemIcon>
@@ -305,9 +332,11 @@ export default function Navbar()
             const [key, value] = item.split(':');
             return `${key}=${encodeURIComponent(value.trim())}`;
           }).join('&');
-          router.push(`/Reader/searchresult?${queryParams}`);
+          router.push(pathname.split("/")[1] === 'librarian'? `/librarian/searchresult?${queryParams}` : `/Reader/searchresult?${queryParams}`);
         }
       }
+
+
     return(
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -433,7 +462,7 @@ export default function Navbar()
      
               <Box sx={{ flexGrow: 1 }} />
               
-              <IconButton color="inherit" sx={{
+              <IconButton color="inherit" onClick = {handleClick_forNotification} sx={{
                 ml: { xs: 2, sm: 0 },
               }}>
                 <Badge badgeContent={0} color="error">
@@ -449,6 +478,8 @@ export default function Navbar()
                   />
                 </Badge>
               </IconButton>
+
+              <NotificationComponent anchorEl={anchorEl_ForNotification} setAnchorEl={setAnchorEl_ForNotification} />
 
               <Button 
                 variant="text"
@@ -477,9 +508,8 @@ export default function Navbar()
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                <MenuItem onClick={()=>{router.push(pathname.split('/')[1] === 'Reader'?  '/Reader/myaccount': '/librarian/myaccount')}}>My account</MenuItem>
+                <MenuItem onClick={() => {handleLogout()}}>Logout</MenuItem>
               </Menu>
 
             </Toolbar>

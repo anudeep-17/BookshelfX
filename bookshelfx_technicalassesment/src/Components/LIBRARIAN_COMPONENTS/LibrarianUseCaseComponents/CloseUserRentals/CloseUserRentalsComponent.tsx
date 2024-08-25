@@ -10,13 +10,16 @@ import TableRow from '@mui/material/TableRow';
 import theme from "@/Components/Themes";
 import { DashboardSize } from "@/Components/DashboardSize";
 import { BookRentalDetails } from "@/Components/interfaceModels";
-import { getAllActiveRentalDetails, getAllClosedRentalDetails } from "@/Services/LibrarianRoutines";
+import { CloseRental, getAllActiveRentalDetails, getAllClosedRentalDetails } from "@/Services/LibrarianRoutines";
 const drawerWidth = DashboardSize;
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import { RentalReturnConfirmation } from "@/app/api/SendEmail/EmailTemplates";
+import RentalConfirmationDialog from "./RentalConfirmationDialog";
+import DialogToDisplayInformation from "./DialogToDisplayInformation";
 
 export default function CloseUserRentalsComponenet()
 {
@@ -49,6 +52,8 @@ export default function CloseUserRentalsComponenet()
 
     const [TotalClosedRentalRows, setClosedRentalRows] = React.useState(0);
 
+    const [currentRentalToClose, setCurrentRentalToClose] = React.useState<BookRentalDetails | null>(null);
+
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     
@@ -60,6 +65,11 @@ export default function CloseUserRentalsComponenet()
     const [alertContent, setAlertContent] = React.useState<{ severity: "success" | "error" | "info" | "warning" | undefined, message: string }>({
         severity: 'success', message: ''
     });
+
+    const [openReturnConfirmationDialog, setOpenReturnConfirmationDialog] = React.useState(false);
+
+    const [ShowInformationDialog, setShowInformationDialog] = React.useState(false);
+    const [InformationToDisplay, setInformationToDisplay] = React.useState<{Informationabout: string|null, id: number, bookRentalDetails: BookRentalDetails | null}>({Informationabout:null, id:0, bookRentalDetails:null});
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -212,6 +222,23 @@ export default function CloseUserRentalsComponenet()
         doc.save("rental_data.pdf");
     };
 
+    const handleCloseRental = async(rental:BookRentalDetails) =>
+    {
+
+        const response = await CloseRental(rental.bookId, rental.id, rental.userId);
+        if(response.success)
+        {
+            setAlertContent({severity: 'success', message: response.message});
+            setAlertOpen(true);
+            setActiveRentalData(ActiveRentalData.filter((rentalData) => rentalData.id !== rental.id));
+        }
+        else
+        {
+            setAlertContent({severity: 'error', message: response.message});
+            setAlertOpen(true);
+        }
+    }
+
     return (
         <ThemeProvider theme={theme}>
            <CssBaseline />  
@@ -260,9 +287,15 @@ export default function CloseUserRentalsComponenet()
                                     gap:2                            
                                 }}>
                                     <Tooltip title="Export Rental Records as PDF">
-                                        <IconButton onClick={exportPDF}>
-                                            <PictureAsPdfIcon />
-                                        </IconButton>
+                                    <IconButton 
+                                        onClick={exportPDF} 
+                                        disabled={CurrentView === 'active'? ActiveRentalData.length<=0 : ClosedRentalData.length<=0}
+
+                                    >
+                                        <PictureAsPdfIcon color="inherit" sx={{
+                                            color: CurrentView === 'active'? ActiveRentalData.length<=0 ? 'grey[10]' : 'primary' : ClosedRentalData.length<=0 ? 'grey[10]' : theme.palette.text.secondary
+                                        }}  /> 
+                                    </IconButton>
                                     </Tooltip>
                                     <Button variant="outlined" color="primary"onClick={() => {
                                             if (CurrentView === "active") {
@@ -373,8 +406,47 @@ export default function CloseUserRentalsComponenet()
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                 >
                                                     <TableCell component="th" scope="row">{rental.id}</TableCell>
-                                                    <TableCell align="right">{rental.bookId}</TableCell>
-                                                    <TableCell align="right">{rental.userId}</TableCell>
+                                                    
+                                                    <TableCell align="right" style={{ cursor: 'pointer' }}>
+                                                        <span
+                                                            onMouseEnter={(e) => {
+                                                                e.currentTarget.style.textDecoration = 'underline';
+                                                                e.currentTarget.style.textDecorationColor = theme.palette.text.secondary;
+                                                                e.currentTarget.style.backgroundColor = 'yellow'; // Change this to the color you want
+                                                            }}
+                                                            onMouseLeave={(e) => {
+                                                                e.currentTarget.style.textDecoration = 'none';
+                                                                e.currentTarget.style.backgroundColor = 'transparent'; // Reset the background color
+                                                            }}
+                                                            onClick={()=>{
+                                                                setShowInformationDialog(true);
+                                                                setInformationToDisplay({Informationabout: 'book', id: rental.bookId, bookRentalDetails: rental});
+                                                            }}
+                                                        >
+                                                             {rental.bookId}
+                                                        </span>
+                                                    </TableCell>
+ 
+                                                    <TableCell align="right" style={{ cursor: 'pointer' }}>
+                                                        <span
+                                                            onMouseEnter={(e) => {
+                                                                e.currentTarget.style.textDecoration = 'underline';
+                                                                e.currentTarget.style.textDecorationColor = theme.palette.text.secondary;
+                                                                e.currentTarget.style.backgroundColor = 'yellow'; // Change this to the color you want
+                                                            }}
+                                                            onMouseLeave={(e) => {
+                                                                e.currentTarget.style.textDecoration = 'none';
+                                                                e.currentTarget.style.backgroundColor = 'transparent'; // Reset the background color
+                                                            }}
+                                                            onClick={()=>{
+                                                                setShowInformationDialog(true);
+                                                                setInformationToDisplay({Informationabout: 'user', id: rental.userId, bookRentalDetails: rental});
+                                                            }}
+                                                        >
+                                                            {rental.userId}
+                                                        </span>
+                                                    </TableCell>
+
                                                     <TableCell align="right">{new Date(rental.rentalDate).toLocaleString()}</TableCell>
                                                     <TableCell align="right">{new Date(rental.expectedReturnDate).toLocaleString()}</TableCell>
                                                     <TableCell align="right">{rental.returnDate ? new Date(rental.returnDate).toLocaleString() : 'N/A'}</TableCell>
@@ -382,7 +454,7 @@ export default function CloseUserRentalsComponenet()
                                                     <TableCell align="right">{rental.returned ? 'Yes' : 'No'}</TableCell>
                                                     <TableCell align="right">{rental.isOverdue ? 'Yes' : 'No'}</TableCell>
                                                     <TableCell align="right">
-                                                        <Button variant="contained" color="primary"  disabled ={!rental.userInitiatedReturn}>
+                                                        <Button variant="contained" color="primary"  disabled ={!rental.userInitiatedReturn} onClick={()=>{setOpenReturnConfirmationDialog(true); setCurrentRentalToClose(rental)}}>
                                                             Close Rental
                                                         </Button>
                                                     </TableCell>
@@ -405,8 +477,47 @@ export default function CloseUserRentalsComponenet()
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                 >
                                                     <TableCell component="th" scope="row">{rental.id}</TableCell>
-                                                    <TableCell align="right">{rental.bookId}</TableCell>
-                                                    <TableCell align="right">{rental.userId}</TableCell>
+                                                    
+                                                    <TableCell align="right" style={{ cursor: 'pointer' }}>
+                                                        <span
+                                                            onMouseEnter={(e) => {
+                                                                e.currentTarget.style.textDecoration = 'underline';
+                                                                e.currentTarget.style.textDecorationColor = theme.palette.text.secondary;
+                                                                e.currentTarget.style.backgroundColor = 'yellow'; // Change this to the color you want
+                                                            }}
+                                                            onMouseLeave={(e) => {
+                                                                e.currentTarget.style.textDecoration = 'none';
+                                                                e.currentTarget.style.backgroundColor = 'transparent'; // Reset the background color
+                                                            }}
+                                                            onClick={()=>{
+                                                                setShowInformationDialog(true);
+                                                                setInformationToDisplay({Informationabout: 'book', id: rental.bookId, bookRentalDetails: rental});
+                                                            }}
+                                                        >
+                                                             {rental.bookId}
+                                                        </span>
+                                                    </TableCell>
+ 
+                                                    <TableCell align="right" style={{ cursor: 'pointer' }}>
+                                                        <span
+                                                            onMouseEnter={(e) => {
+                                                                e.currentTarget.style.textDecoration = 'underline';
+                                                                e.currentTarget.style.textDecorationColor = theme.palette.text.secondary;
+                                                                e.currentTarget.style.backgroundColor = 'yellow'; // Change this to the color you want
+                                                            }}
+                                                            onMouseLeave={(e) => {
+                                                                e.currentTarget.style.textDecoration = 'none';
+                                                                e.currentTarget.style.backgroundColor = 'transparent'; // Reset the background color
+                                                            }}
+                                                            onClick={()=>{
+                                                                setShowInformationDialog(true);
+                                                                setInformationToDisplay({Informationabout: 'user', id: rental.userId, bookRentalDetails: rental});
+                                                            }}
+                                                        >
+                                                            {rental.userId}
+                                                        </span>
+                                                    </TableCell>
+
                                                     <TableCell align="right">{new Date(rental.rentalDate).toLocaleString()}</TableCell>
                                                     <TableCell align="right">{new Date(rental.expectedReturnDate).toLocaleString()}</TableCell>
                                                     <TableCell align="right">{rental.returnDate ? new Date(rental.returnDate).toLocaleString() : 'N/A'}</TableCell>
@@ -454,6 +565,24 @@ export default function CloseUserRentalsComponenet()
                 {alertContent.message}
               </Alert>
             </Snackbar>
-        </ThemeProvider>
-    )
-}
+
+                        {
+                            openReturnConfirmationDialog && 
+                            <RentalConfirmationDialog 
+                                openDialog={openReturnConfirmationDialog} 
+                                setOpenDialog={setOpenReturnConfirmationDialog}
+                                handleCloseRental={() => {currentRentalToClose && handleCloseRental(currentRentalToClose)}}
+                            />
+                        }
+                        {
+                            ShowInformationDialog && 
+                            <DialogToDisplayInformation
+                                OpenDialog={ShowInformationDialog}
+                                setOpenDialog={setShowInformationDialog}
+                                DetailsAbout={InformationToDisplay.Informationabout}
+                                bookRentalDetails={InformationToDisplay.bookRentalDetails}
+                            />
+                        }
+            </ThemeProvider>
+                )
+            }

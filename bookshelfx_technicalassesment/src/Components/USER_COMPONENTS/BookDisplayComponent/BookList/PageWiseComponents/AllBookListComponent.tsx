@@ -1,32 +1,39 @@
 import React from 'react';
-import { Box, Button, CssBaseline, Drawer, Menu, MenuItem, Pagination, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Alert, Box, Button, CssBaseline, Drawer, Menu, MenuItem, Pagination, Snackbar, SnackbarCloseReason, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import {BookDetails, BookCardProps} from '@/Components/interfaceModels';
+import {BookDetails } from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { getAllBooksCount, getBooks, getBooksByCategory, getBooksCountByCategory, getCategories} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
-
+import Fireworks from 'react-canvas-confetti/dist/presets/fireworks';
+ 
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 
 export default function AllBooksListComponent()
 {
     const router = useRouter();
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
-    const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
+
+    const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string>('');
+    const [selectedAuthorsInFilter, setSelectedAuthorsInFilter] = React.useState<string[]>([]);
+    const [selectedCategoriesInFilter, setSelectedCategoriesInFilter] = React.useState<string[]>([]);
+    
+    const [isFilterApplied, setIsFilterApplied] = React.useState<boolean>(false);
 
     const [selectedCategory, setSelectedCategory] = React.useState<string>('All Books');
     const [allCategory, setCategory] = React.useState<string[]>([]);
     
     const [books, setBook] = React.useState<BookDetails[]>([])
     const [categoryWiseBooks, setCategoryWiseBooks] = React.useState<BookDetails[]>([]);
+    const [FilterBasedBooks, setFilterBasedBooks] = React.useState<BookDetails[]>([]);
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -37,7 +44,10 @@ export default function AllBooksListComponent()
 
     const [countofBooks, setCountofBooks] = React.useState<number>(0);
     const [countofBooksByCategory, setCountofBooksByCategory] = React.useState<number>(0);
-
+    
+    const [alert, setAlert] = React.useState<{severity: 'success' | 'error', message: string}>({severity: 'success', message: ""});
+    const [Alertopen, setAlertOpen] = React.useState(false);  
+    
     React.useEffect(() => {
         const fetchData = async() =>{
             const data = await getAllBooksCount();
@@ -115,6 +125,13 @@ export default function AllBooksListComponent()
         setOffsetForCategory(1);
         setSelectedCategory(category);
     }
+
+    const handleAlertClose = (event: React.SyntheticEvent<any, Event> | Event, reason?: SnackbarCloseReason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setAlertOpen(false);
+    };
 
     return(
         <ThemeProvider theme={theme}>
@@ -253,9 +270,15 @@ export default function AllBooksListComponent()
                                                         <Drawer anchor='right' open={filterdraweropen} onClose={toggleDrawer(false)}>
                                                              <DrawerForFilter 
                                                                 toggleDrawer={toggleDrawer}
-                                                                slidervaluetext_forDays={slidervaluetext_forDays}
+
                                                                 selectedChip={selectedChipforAvailabilityInFilter}
-                                                                setSelectedChip={setSelectedChipforAvailabilityInFilter} 
+                                                                setSelectedChip={setSelectedChipforAvailabilityInFilter}
+
+                                                                selectedAuthorInFilter={selectedAuthorsInFilter}
+                                                                setSelectedAuthorsInFilter={setSelectedAuthorsInFilter}
+
+                                                                selectedCategoriesInFilter={selectedCategoriesInFilter}
+                                                                setSelectedCategoriesInFilter={setSelectedCategoriesInFilter}
                                                             />
                                                         </Drawer>
                                                     </>
@@ -332,6 +355,8 @@ export default function AllBooksListComponent()
                                                         authors={book.authors}
                                                         availability={book.availability}
                                                         onClick= {() => handleBookClick(book.id as number)}
+                                                        setAlert={setAlert}
+                                                        setAlertOpen={setAlertOpen}
                                                     />
                                                 ))
                                                 : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
@@ -349,6 +374,8 @@ export default function AllBooksListComponent()
                                                     authors={book.authors}
                                                     availability={book.availability}
                                                     onClick= {() => handleBookClick(book.id as number)}
+                                                    setAlert={setAlert}
+                                                    setAlertOpen={setAlertOpen}
                                                     />
                                                 ))
                                                 : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
@@ -384,6 +411,16 @@ export default function AllBooksListComponent()
                                 </Grid>
                         </Grid>
                 </Box>
+                <Snackbar open={Alertopen} autoHideDuration={3000} onClose={handleAlertClose}>
+                    <Alert onClose={handleAlertClose} severity={alert?.severity} sx={{ width: '100%' }}>
+                        {alert.message}
+                    </Alert>
+                </Snackbar>
+                {
+                    alert.severity === 'success' && alert.message === 'Book checked out successfully' ? 
+                    <Fireworks autorun={{ speed: 1, duration: 1000}}/> : null
+                }
+
             </Box>
         </motion.div>
         </ThemeProvider>

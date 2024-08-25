@@ -26,6 +26,8 @@ export async function getFeaturedBooks(page: number, limit: number)
     return data;
 }
 
+
+
 //================================================================================================= GetAll ROUTINES ================================================================================================
 export async function getCategories()
 {
@@ -63,6 +65,7 @@ export async function getPublishers()
     const data = await response.json();
     return data;
 }
+
 //================================================================================================= Book By _____ ROUTINES ================================================================================================
 export async function getBooksByCategory(category: string, page?: number, limit?: number)
 {
@@ -110,6 +113,14 @@ export async function getRentalsofUser(userID: number)
     return data;
 }
 
+export async function getActiveRentalsOfUser(userID: number)
+{
+    const response = await fetch(`/api/user/getRentalsofUser/ActiveRentals?userId=${userID}`);
+    const data = await response.json();
+    return data;
+}
+
+
 export async function isbookrentedbycurrentuser(bookID:number, userID:number)
 {
     const response = await fetch(`/api/books/RentalManagement/IsItRentedByCurrentUser`, {
@@ -124,6 +135,32 @@ export async function isbookrentedbycurrentuser(bookID:number, userID:number)
     return data;
 }
 
+export async function isuserReturnInitiated(bookID:number, userID:number)
+{
+    const response = await fetch(`/api/books/RentalManagement/isuserReturnInitiated`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({bookID, userID})
+    });
+    const data = await response.json();
+    return data;
+
+}
+
+export async function isbookrentedByUserPreviously(bookID:number, userID:number)
+{
+    const response = await fetch(`/api/books/RentalManagement/isBookRentedByUserPreviously`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({bookID, userID})
+    });
+    const data = await response.json();
+    return data;
+}
 //---------------------------------------------------------------------------------------------- Search Book ROUTINES-----------------------------------------------------------------------------------------------
 
 export async function searchBook(title?: string, author?: string, category?: string, publisher?: string)
@@ -213,15 +250,25 @@ export async function getAllBooksCount()
     return data;
 }
 
-//================================================================================================= Book Insertion ROUTINES ================================================================================================
-export async function addBookToLibrary(book: Book)
+//================================================================================================= For Book Filtering ROUTINES ================================================================================================
+export async function getBooksForFilters(
+        page: number, 
+        limit: number, 
+        availabilityFilterPassed: boolean, 
+        authorsFilterPassed: string[], 
+        categoriesFilterPassed: string[],
+        isFeaturedBook: boolean,
+        SpecificCategory: string, 
+        UserID: number, 
+        currentPage: "featuredbooks" | "category" | "allcategory" | "allbooks" | "search" | "allbooks"
+    )
 {
-    const response = await fetch(`/api/books/librarian/addBooks`, {
+    const response = await fetch(`/api/books/getAll/forGivenFilters?page=${page}&limit=${limit}`,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(book)
+        body: JSON.stringify({availabilityFilterPassed, authorsFilterPassed, categoriesFilterPassed, isFeaturedBook, SpecificCategory, UserID, currentPage})
     });
     const data = await response.json();
     return data;

@@ -17,7 +17,7 @@ export async function GET(req: Request)
 
         const allRentalDetails = await database.bookRentalDetails.findMany({
             where: {
-                returned: false,
+                returned: false, 
             },
             include: {
                 book: true,
@@ -31,7 +31,7 @@ export async function GET(req: Request)
         {
             return NextResponse.json({success: false, message: "No active rentals found", totalCount: 0}, {status: 404});
         }
-        console.log( allRentalDetails,   allActiveRentalCount);
+      
         return NextResponse.json({success: true, data: allRentalDetails, totalCount: allActiveRentalCount}, {status: 200});
     }
     catch(err)

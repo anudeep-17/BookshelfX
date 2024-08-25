@@ -19,7 +19,8 @@ import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import Autocomplete from '@mui/material/Autocomplete';
-import { addBookToLibrary, getAuthors, getCategories, getPublishers } from '@/Services/BookRoutines';
+import {  getAuthors, getCategories, getPublishers } from '@/Services/BookRoutines';
+import { addBookToLibrary } from '@/Services/LibrarianRoutines';
 import { DeleteBook, isBookAlreadyInShelf } from '@/Services/LibrarianRoutines';
 import bookcover from '@/assets/bookcover.png'
 import checkImage from '@/assets/checkImage.png'
@@ -162,7 +163,7 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
             setAlertOpen(true);
             setAlertContent({severity: 'success', message: "book added to Libraiary successfully"});
             setAddedSuccessfully(true);
-            // window.open(`/book/${response.book.id}`, '_blank');
+            window.open(`/librarian/book/${response.book.id}`, '_blank');
         }
         else
         {

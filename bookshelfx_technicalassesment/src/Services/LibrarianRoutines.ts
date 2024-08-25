@@ -1,3 +1,20 @@
+import { Book } from "@/Components/interfaceModels";
+
+//================================================================================================= Book Insertion ROUTINES ================================================================================================
+export async function addBookToLibrary(book: Book)
+{
+    const response = await fetch(`/api/books/librarian/addBooks`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(book)
+    });
+    const data = await response.json();
+    return data;
+}
+
+
 export async function AllStats(LibrarianId: number)
 {
     let url;
@@ -98,6 +115,19 @@ export async function getAllClosedRentalDetails(page: number, rowsPerPage: numbe
         headers: {
             'Content-Type': 'application/json'
         }
+    });
+    const data = await response.json();
+    return data;
+}
+
+export async function CloseRental(bookID:number, RentalID: number, userID: number)
+{
+    const response = await fetch(`/api/books/librarian/closeRental`,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({bookID, rentalID: RentalID, userID})
     });
     const data = await response.json();
     return data;

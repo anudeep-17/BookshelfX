@@ -3,14 +3,35 @@ import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import { Badge, Box, Button, ThemeProvider, Tooltip } from '@mui/material';
 import theme from '../../../Themes';
-import { BookCardProps } from '../../../interfaceModels';
+import { BookCardProps, BookReview } from '../../../interfaceModels';
 import bookcover from '@/assets/bookcover.png';
 import Cookies from 'js-cookie';
-import { isbookrentedbycurrentuser } from '@/Services/BookRoutines';
+import { isbookrentedByUserPreviously, isbookrentedbycurrentuser, isuserReturnInitiated, setAvailabilityofBook } from '@/Services/BookRoutines';
+import RentalConfirmationDialog from '@/Components/USER_COMPONENTS/RentaConfirmationDialogComponent/RentalConfirmationDialog';
+import ReviewConfirmationDialog from '../../ReviewComponent/reviewDialogComponent';
+import { CheckIfAReveiwIsAlreadyGivenForTheBook, addAReviewToBook } from '@/Services/UserRoutines';
 
-export default function DetailedBookCard({bookID, coverimage, title, description, rating, authors, availability, onClick}: BookCardProps) {
+
+export default function DetailedBookCard({bookID, coverimage, title, description, rating, authors, availability, onClick, setAlert,setAlertOpen }: BookCardProps 
+                                        & { 
+                                            setAlert: React.Dispatch<React.SetStateAction<{severity: 'success' | 'error', message: string}>>,
+                                            setAlertOpen: React.Dispatch<React.SetStateAction<boolean>>
+                                        })
+{
+
     const [value, setValue] = React.useState<number | null>(rating || null);
+
+    const [isBookRented, setIsBookRented] = React.useState<boolean>(availability ? false : true);
     const [isRentedBytheSameUser, setIsRentedBytheSameUser] = React.useState<boolean>(false);   
+    const [IsuserReturnInitiated, setIsuserReturnInitiated] = React.useState<boolean>(false);
+    const [BookIsPreviouslyRented, setBookIsPreviouslyRented] = React.useState<boolean>(false);
+
+    const [alreadyReviewed, setAlreadyReviewed] = React.useState<boolean>(false);
+
+    const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
+    const [reviewDialog, setReviewDialog] = React.useState<{open: boolean, task: string}>({open: false, task: ''});
+    const [reviewByUser, setReviewByUser] = React.useState<BookReview>({bookId: 0, userId: 0, rating: 0, review: ''});
+
     let userID: number | null = null;
     const userCookie = Cookies.get('user');
     if (userCookie !== undefined) {
@@ -25,9 +46,86 @@ export default function DetailedBookCard({bookID, coverimage, title, description
         fetchData();
     }, []);
 
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const response = await isuserReturnInitiated(bookID || 0, userID || 0);
+            setIsuserReturnInitiated(response.success);
+        }
+        fetchData();
+    },[])
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const response = await isbookrentedByUserPreviously(bookID || 0, userID || 0);
+            setBookIsPreviouslyRented(response.success);
+        }
+        fetchData();
+    },[])
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const response = await CheckIfAReveiwIsAlreadyGivenForTheBook(bookID || 0, userID || 0)
+            setAlreadyReviewed(response.success)
+            if(response.success)
+            {
+                setReviewByUser(response.review);
+            }
+        }
+        fetchData();
+    },[])
+    
+    //=======================================================================================================
+
+    const handleReviewSubmission = async (rating: number, review: string) => 
+    {
+        const response = await addAReviewToBook({bookId: bookID || 0, userID: userID || 0, rating: rating, review: review});
+        if(response.success)
+        {
+            setAlert({severity: "success", message: "Review submitted successfully"});
+            setAlertOpen(true);
+        }
+        else
+        {
+            setAlert({severity: "error", message: "Failed to submit review"});
+            setAlertOpen(true);
+        }
+        
+    }
+    const handleClickonCheckout = async () => {
+        const result = await setAvailabilityofBook(Number(bookID), false, Number(userID));
+        if(result.success)
+        {
+            setAlert({severity: "success", message: "Book checked out successfully"});
+            setAlertOpen(true);
+            setIsBookRented(true);
+            setIsRentedBytheSameUser(true);
+        }
+        else
+        {
+            setAlert({severity: "error", message: "Failed to checkout book"});
+            setAlertOpen(true);
+        }
+    }
+
+    const handleClickonReturn = async () => {
+        const result = await setAvailabilityofBook(Number(bookID), true, Number(userID));
+        if(result.success)
+        {
+            setAlert({severity: "success", message: "Book returned successfully"});
+            setAlertOpen(true);
+            setIsBookRented(false);
+            setIsRentedBytheSameUser(false);
+        }
+        else
+        {
+            setAlert({severity: "error", message: "Failed to return book"});
+            setAlertOpen(true);
+        }
+    }
+
     return(
         <ThemeProvider theme={theme}>
-            <Tooltip title={isRentedBytheSameUser ? "Already Rented" : (!availability ? "Not Available" : null)} followCursor>
+            <Tooltip title={isRentedBytheSameUser ? (IsuserReturnInitiated ? "Return Under Review" : "Already Rented") : (!availability ? "Not Available" : null)} followCursor>
                 <Box sx={{ 
                         display: 'flex',
                         flexDirection: 'column',
@@ -42,7 +140,7 @@ export default function DetailedBookCard({bookID, coverimage, title, description
                             cursor: 'pointer',
                             
                         },
-                        backgroundColor: availability ? 'initial' : '#cccccc',
+                        backgroundColor: !isBookRented ? 'initial' : '#cccccc',
                         borderRadius: '10px 10px 10px 10px', // Make top borders curved
                     }}
                     onClick={onClick}
@@ -86,15 +184,69 @@ export default function DetailedBookCard({bookID, coverimage, title, description
                                 {description.length > 100 ? `${description.substring(0, 100)}...` : description}
                             </Typography>
 
-                            <Button variant="contained" color="primary" sx={{ mb:1 }}
-                                    disabled={!availability && !isRentedBytheSameUser}
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    alignContent: 'center',
+                                    mt: 1, 
+                                    mb:1,
+                                }}
                             >
-                                {isRentedBytheSameUser ? "Return Book" : "Checkout"}
-                            </Button>
+                                <Button variant="contained" color="primary"  
+                                        disabled={isBookRented && (!isRentedBytheSameUser || (isRentedBytheSameUser && IsuserReturnInitiated))}
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            setOpenConfirmationDialog(true);
+                                        }}>
+                                    {isRentedBytheSameUser ? (IsuserReturnInitiated ? "Book Return Under Review" : "Return Book") : "Checkout"}
+                                </Button>
+                                {
+                                    BookIsPreviouslyRented && !isRentedBytheSameUser && !IsuserReturnInitiated && (
+                                        alreadyReviewed ? (
+                                            <Button variant='outlined' onClick={(event)=>{
+                                                event.stopPropagation();
+                                                setReviewDialog({open: true, task: 'viewing'});
+                                            }}>
+                                                Edit Review
+                                            </Button>
+                                        ) : (
+                                            <Button variant='outlined' onClick={(event)=>{
+                                                event.stopPropagation();
+                                                setReviewDialog({open: true, task: 'reviewing'});
+                                            }}>
+                                                Leave a Review
+                                            </Button>
+                                        )
+                                    )
+                                }
+                            </Box>
+                            
                         </Box>
         
                     </Box>
                 </Tooltip>
+                    {
+                        openConfirmationDialog &&
+                        <RentalConfirmationDialog 
+                            openDialog={openConfirmationDialog} setOpenDialog={setOpenConfirmationDialog} 
+                            task={isRentedBytheSameUser ? 'returning' : 'renting'} 
+                            handleCheckout={handleClickonCheckout}
+                            handleReturn={handleClickonReturn}
+                        />
+                    }
+                    {
+                        reviewDialog.open &&
+                         <ReviewConfirmationDialog
+                            openDialog={reviewDialog.open}
+                            setOpenDialog={setReviewDialog}
+                            task={reviewDialog.task}
+                            handleLeaveReview={handleReviewSubmission}
+                            Userreview={reviewByUser}
+                         />
+                    }
         </ThemeProvider>
     );
 }

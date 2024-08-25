@@ -89,10 +89,20 @@ export default function  DialogComponentForHistory({book, openDialog, setOpenDia
                                                 </Box>
                                             )}
                                             <Typography variant="body1">Rental Date: {new Date(rental.rentalDate).toLocaleString()}</Typography>
-                                            <Typography variant="body1">Return Date: {new Date(rental.returnDate).toLocaleString()}</Typography>
+                                            <Typography variant="body1">Expected Return Date: {new Date(rental.expectedReturnDate).toLocaleString()}</Typography>
+                                            {
+                                                rental.returned && 
+                                                <>
+                                                    <Typography variant="body1">Returned Date: {rental.returnDate ? new Date(rental.returnDate).toLocaleString() : "N/A"}</Typography>
+                                                    <Typography variant="body1">User Initiated Return: {rental.userInitiatedReturn ? 'Yes' : 'No'}</Typography>
+                                                </>
+                                            }
                                             <Typography variant="body1">Returned: {rental.returned ? 'Yes' : 'No'}</Typography>
                                             <Typography variant="body1">Is Overdue: {rental.isOverdue ? 'Yes' : 'No'}</Typography>
-                                            <Typography variant="body1">Rental Closed by Librarian: {rental.librarianId}</Typography>
+                                            {
+                                                rental.returned && 
+                                                <Typography variant="body1">Rental Closed by Librarian: {rental.librarianId}</Typography>
+                                            }
                                         </AccordionDetails>
                                     </Accordion>
                                 )):

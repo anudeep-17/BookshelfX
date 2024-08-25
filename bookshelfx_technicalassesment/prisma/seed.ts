@@ -116,24 +116,29 @@ async function CreateBookRentalDetails() {
     for (let i = 0; i < 200; i++) {
         const user = faker.helpers.arrayElement(users);
         const book = faker.helpers.arrayElement(books);
-        const librarian = faker.helpers.arrayElement(librarians);
-
+    
         const rentalDate = faker.date.recent({days: 30});
         const expectedReturnDate = new Date(rentalDate.getTime() + 5 * 24 * 60 * 60 * 1000); 
         const returnDate = faker.date.between({from: rentalDate, to: Date.now()});
-
+    
         if (bookRentalHistory[book.id]) {
             const previousRental = bookRentalHistory[book.id];
             if (rentalDate.getTime() > previousRental.returnDate.getTime() || returnDate.getTime() < previousRental.rentalDate.getTime()) {
                 continue;
             }
         }
-
+    
         const daysDifference = Math.ceil(Math.abs(returnDate.getTime() - rentalDate.getTime()) / (1000 * 60 * 60 * 24));
         const isOverdue = daysDifference > 5;
         const returned = returnDate.getTime() < Date.now();
         const userInitiatedReturn = returned;
-
+    
+        let librarianId = null;
+        if (returned) {
+            const librarian = faker.helpers.arrayElement(librarians);
+            librarianId = librarian.id;
+        }
+    
         await prisma.bookRentalDetails.create({
             data: {
                 userId: user.id,
@@ -144,17 +149,17 @@ async function CreateBookRentalDetails() {
                 isOverdue,
                 returned,
                 userInitiatedReturn,
-                librarianId: returned ? librarian.id : null,
+                librarianId,
             },
         });
-
+    
         if (returned) {
             await prisma.bookDetails.update({
                 where: { id: book.id },
                 data: { availability: true },
             });
         }
-
+    
         // Update the rental history for this book
         bookRentalHistory[book.id] = { rentalDate, returnDate };
     }

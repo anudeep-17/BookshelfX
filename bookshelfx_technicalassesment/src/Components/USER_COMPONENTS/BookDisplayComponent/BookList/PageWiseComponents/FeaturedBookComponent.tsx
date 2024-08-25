@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, Pagination, Skeleton, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Alert, Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, Pagination, Skeleton, Snackbar, SnackbarCloseReason, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
@@ -7,10 +7,11 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {BookDetails} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { getFeaturedBooks, getFeaturedBooksCount} from '@/Services/BookRoutines';
+import { getBooksForFilters, getFeaturedBooks, getFeaturedBooksCount} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
+import Fireworks from 'react-canvas-confetti/dist/presets/fireworks';
 
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false, 
 loading: ()=> <Skeleton variant="rectangular" width={'30%'} height={600} animation="wave" /> });
@@ -19,14 +20,31 @@ export default function FeaturedBookComponent()
 {
     const router = useRouter();
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
-    const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
+    
+    const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string>('');
+    const [selectedAuthorsInFilter, setSelectedAuthorsInFilter] = React.useState<string[]>([]);
+    const [selectedCategoriesInFilter, setSelectedCategoriesInFilter] = React.useState<string[]>([]);
+    const [countofBooksForFilter, setCountofBooksForFilter] = React.useState<number>(0);
+    const [offsetForFilter, setOffsetForFilter] = React.useState(1);
+
     const [books, setBook] = React.useState<BookDetails[]>([])
+    const [filteredBooks, setFilteredBooks] = React.useState<BookDetails[]>([]);
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const [offset, setOffset] = React.useState(1);
     const [countofBooks, setCountofBooks] = React.useState<number>(0);
     const [isLoading, setIsLoading] = React.useState(true);
 
+    const [alert, setAlert] = React.useState<{severity: 'success' | 'error', message: string}>({severity: 'success', message: ""});
+    const [Alertopen, setAlertOpen] = React.useState(false);  
+    
+    const handleAlertClose = (event: React.SyntheticEvent<any, Event> | Event, reason?: SnackbarCloseReason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setAlertOpen(false);
+    };
 
     React.useEffect(() => {
         const fetchData = async() =>{
@@ -40,15 +58,42 @@ export default function FeaturedBookComponent()
     },[]);
 
     React.useEffect(() => {
+        setIsLoading(true);
         const fetchData = async () => {
             const data = await getFeaturedBooks(offset,9);
             if (data.success) {
                 setBook(data.data);
-                setIsLoading(false);
             }
         };   
         fetchData();
+        setIsLoading(false);
     }, [offset]);
+
+    React.useEffect(() => {
+        setOffsetForFilter(1);
+    },[selectedAuthorsInFilter, selectedCategoriesInFilter, selectedChipforAvailabilityInFilter]);
+    
+    React.useEffect(() => {
+        setIsLoading(true);
+        const fetchData = async () => {
+            const data = await getBooksForFilters(  offsetForFilter, 9, 
+                                                    selectedChipforAvailabilityInFilter === 'Available'? true : false, 
+                                                    selectedAuthorsInFilter, 
+                                                    selectedCategoriesInFilter, 
+                                                    true, 
+                                                    '', 
+                                                    0,
+                                                    'featuredbooks'
+                                                    );
+            if(data.success)
+            {
+                setFilteredBooks(data.data);
+                setCountofBooksForFilter(data.totalBooks);
+            }
+        }
+        fetchData();
+        setIsLoading(false);
+    }, [selectedChipforAvailabilityInFilter, selectedAuthorsInFilter, selectedCategoriesInFilter, countofBooksForFilter, offsetForFilter]);
 
 
     function handleBookClick(id: number) {
@@ -60,7 +105,7 @@ export default function FeaturedBookComponent()
     };
     
     const handleSortClose = () => {
-    setAnchorEl(null);
+        setAnchorEl(null);
     };
   
     const toggleDrawer = (newOpen: boolean) => () => 
@@ -203,15 +248,63 @@ export default function FeaturedBookComponent()
                                                         <Drawer anchor='right' open={filterdraweropen} onClose={toggleDrawer(false)}>
                                                              <DrawerForFilter 
                                                                 toggleDrawer={toggleDrawer}
-                                                                slidervaluetext_forDays={slidervaluetext_forDays}
                                                                 selectedChip={selectedChipforAvailabilityInFilter}
-                                                                setSelectedChip={setSelectedChipforAvailabilityInFilter} 
+                                                                setSelectedChip={setSelectedChipforAvailabilityInFilter}
+
+                                                                selectedAuthorInFilter={selectedAuthorsInFilter}
+                                                                setSelectedAuthorsInFilter={setSelectedAuthorsInFilter}
+
+                                                                selectedCategoriesInFilter={selectedCategoriesInFilter}
+                                                                setSelectedCategoriesInFilter={setSelectedCategoriesInFilter}
                                                             />
                                                         </Drawer>
                                                     </>
                                                 </Tooltip>
                                             </Box>
                                         </Box>                        
+                                </Grid>
+                                
+                                <Grid item xs={15} md={15}>
+                                <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            alignContent: 'center',
+                                            flexWrap: 'wrap',
+                                            ml:1,
+                                            mr:1,
+                                            gap:2.5, 
+                                            mb:2,
+                                        }}
+                                    >
+                                    {
+                                        selectedChipforAvailabilityInFilter !== ''?
+                                        <Typography variant='h6' gutterBottom>
+                                            Availability : <span style={{color: theme.palette.text.secondary}}>{selectedChipforAvailabilityInFilter}</span>
+                                        </Typography>
+                                       :
+                                       null
+                                    }
+                                    {
+                                        selectedAuthorsInFilter.length>0?
+                                        <Typography variant='h6' gutterBottom>
+                                            Selected Authors : <span style={{color: theme.palette.text.secondary}}>{selectedAuthorsInFilter.join(", ")}</span>
+                                        </Typography>
+                                        :
+                                        null
+                                    }
+                                    {
+                                        selectedCategoriesInFilter.length>0?
+                                        <Typography variant='h6' gutterBottom>
+                                            Selected Authors :  <span style={{color: theme.palette.text.secondary}}>{selectedCategoriesInFilter.join(", ")}</span>
+                                        </Typography>
+                                        :
+                                        null
+                                    }
+                                    </Box>
+                                 
                                 </Grid>
 
                                 <Grid item xs={15} md={15}>
@@ -233,8 +326,8 @@ export default function FeaturedBookComponent()
                                            isLoading ? (
                                             <>
                                             </>
-                                            ) : books.length > 0 ? (
-                                                books.map((book: BookDetails) => (
+                                            ) : (selectedChipforAvailabilityInFilter.length>0 || selectedAuthorsInFilter.length > 0 || selectedCategoriesInFilter.length > 0 ? filteredBooks : books).length > 0 ? (
+                                                (selectedChipforAvailabilityInFilter.length>0  || selectedAuthorsInFilter.length > 0 || selectedCategoriesInFilter.length > 0 ? filteredBooks : books).map((book: BookDetails) => (
                                                     <DetailedBookCard
                                                         key={book.id}
                                                         bookID={Number(book.id)}
@@ -245,6 +338,8 @@ export default function FeaturedBookComponent()
                                                         authors={book.authors}
                                                         availability={book.availability}
                                                         onClick= {() => handleBookClick(book.id as number)}
+                                                        setAlert={setAlert}
+                                                        setAlertOpen={setAlertOpen}
                                                     />
                                                 ))
                                             ) : (
@@ -255,6 +350,7 @@ export default function FeaturedBookComponent()
                                         }
                                     </Box>
                                 </Grid>
+
                                 <Grid xs={12} sm={12}>
                                     <Box
                                         sx={{
@@ -269,11 +365,11 @@ export default function FeaturedBookComponent()
                                     >
                                         {!isLoading && (
                                                 <Pagination 
-                                                    count={Math.ceil(countofBooks / 9)} 
+                                                    count={Math.ceil((selectedChipforAvailabilityInFilter.length>0  || selectedAuthorsInFilter.length > 0 || selectedCategoriesInFilter.length > 0 ? countofBooksForFilter : countofBooks) / 9)} 
                                                     color="primary" 
                                                     size="large"
                                                     onChange={(event, page) => {
-                                                        setOffset(page);
+                                                        (selectedChipforAvailabilityInFilter.length>0  || selectedAuthorsInFilter.length > 0 || selectedCategoriesInFilter.length > 0 ? setOffsetForFilter(page) : setOffset(page))
                                                     }}
                                                 />
                                         )}
@@ -281,6 +377,15 @@ export default function FeaturedBookComponent()
                                 </Grid>
                         </Grid>
                 </Box>
+                <Snackbar open={Alertopen} autoHideDuration={3000} onClose={handleAlertClose}>
+                    <Alert onClose={handleAlertClose} severity={alert?.severity} sx={{ width: '100%' }}>
+                        {alert.message}
+                    </Alert>
+                </Snackbar>
+                {
+                    alert.severity === 'success' && alert.message === 'Book checked out successfully' ? 
+                    <Fireworks autorun={{ speed: 1, duration: 1000}}/> : null
+                }
             </Box>
         </motion.div>
         </ThemeProvider>

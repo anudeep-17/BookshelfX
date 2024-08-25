@@ -166,6 +166,7 @@ export default function DeleteBookComponent()
                 setAlertContent({severity: 'error', message: deleteBook.message});
                 setAlertOpen(true);
             }
+            setLoading(false);
         }
         else
         {
@@ -193,15 +194,16 @@ export default function DeleteBookComponent()
                     setAlertOpen(true);
                     setDeletionList([]);
             }
-            else {
+            else 
+            {
                 const unsuccessfulBooks = deleteBooks
                     .filter((book) => !book.success)
                     .map((book, index) => DeletionList[index]);
-            
                 setDeletionList(unsuccessfulBooks);
                 setAlertContent({severity: 'error', message: "Some books couldn't be deleted."});
                 setAlertOpen(true);
             }
+            setLoading(false);
         }
         else
         {
@@ -276,7 +278,7 @@ export default function DeleteBookComponent()
                                                             options={AllCategories}
                                                             value={Category}
                                                             freeSolo
-                                                            onInputChange={(event, newInputValue) => {
+                                                            onInputChange={(event, newInputValue) => { 
                                                                 setCategory(newInputValue);
                                                             }}
                                                             renderInput={(params) => <TextField {...params} label="Category" fullWidth variant="outlined" sx={{mb: 2}}/>}

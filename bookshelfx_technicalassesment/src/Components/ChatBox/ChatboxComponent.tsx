@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
@@ -13,17 +14,18 @@ import ChatSystemAvatar from '@/assets/ChatSystemAvtar.png';
 import ReaderAvatar from '@/assets/ReaderAvtar.jpeg';
 import { ChatGPTSupport } from '@/Services/ChatGPTRoutines';
 import Chip from '@mui/material/Chip';
-import Badge from '@mui/material/Badge';
+import { usePathname } from 'next/navigation';
 
 export default function ChatboxComponent({book, role, informationFromLibrarian}: {book: Book, role?: string, informationFromLibrarian?: string}) {
     
+    const pathname = usePathname();
+
     const [anchorEl, setAnchorEl] = React.useState<EventTarget & HTMLButtonElement | null>(null);
     const [fabOpen, setFabOpen] = React.useState(false);
     const [popoverOpen, setPopoverOpen] = React.useState(false);
     const [UserTyping, setUserTyping] = React.useState<string>('');
     const [Messages, setMessage] = React.useState<Array<{role: string, content: string}>>(role && role === 'librarian'? [
-        { role: 'system', content: 'you are a librarian.' },
-        { role: 'system', content: 'you can assist with editing books, providing information about books, authors, genres, and publishers.' },
+        { role: 'system', content: 'you are a librarian. you can assist with editing books, providing information about books, authors, genres, and publishers.' },
         { role: 'system', content: `we are currently editing the book titled "${book.title}" by ${book.authors.join(", ")}. Be ready to provide editing suggestions, answer questions, and offer insights about this book.` },
         { role: 'system', content: `Information From Librarian: ${informationFromLibrarian}`},
         { role: 'assistant', content: 'Hi there, This is Monika, your librarian assistant. I am here to help you with editing and provide valuable insights about the book.' },
@@ -38,19 +40,30 @@ export default function ChatboxComponent({book, role, informationFromLibrarian}:
 
     const [showBadge, setShowBadge] = React.useState(false);
 
-    const preselectedMessages = role && role === 'librarian'? [] : [
+    const preselectedMessages = role && role === 'librarian'? [ 
+        "Could you provide a description of this book?",
+        "Can this be featured as a recommended book?",
+        "What are the key themes covered in this work?",
+        "How does this book compare to others in the same genre?"
+    ] : [
         "What are the benefits of reading this work?",
         "Could you offer an overview of the content?",
         "What are the central topics explored?",
         "What distinguishes the author’s viewpoint in this narrative?"
     ];
 
-    const onSelectionMessages = role && role === 'librarian'? [] : [
+    const onSelectionMessages = role && role === 'librarian'? [
+        `Could you provide a detailed description of '${book.title}' by ${book.authors.join(", ")}?`,
+        `Do you think '${book.title}' by ${book.authors.join(", ")} should be featured as a recommended book? Why or why not?`,
+        `What are the key themes and ideas explored in '${book.title}' by ${book.authors.join(", ")}?`,
+        `How does '${book.title}' by ${book.authors.join(", ")} compare to other books in the ${book.category} genre?`
+    ] : [
         `What specific benefits can readers gain from engaging with the narrative and themes of '${book.title}' by ${book.authors.join(", ")}?`,
         `Could you summarize the key elements and storyline encapsulated within '${book.title}' by ${book.authors.join(", ")}?`,
         `What are the primary themes and messages that '${book.title}' by ${book.authors.join(", ")} seeks to convey to its audience?`,
         `In what ways does '${book.title}' by ${book.authors.join(", ")} offer a unique or innovative perspective within the ${book.category} genre?`
-    ]; 
+    ];
+
     
     const [isLoading, setIsLoading] = React.useState(false);
 
@@ -216,7 +229,7 @@ export default function ChatboxComponent({book, role, informationFromLibrarian}:
                                     height: Messages.length > 6 ? 'auto' : 400,
                                 }}
                             >
-                                {Messages.slice(role === 'librarian'? 4 : 3).map((message, index) => (
+                                {Messages.slice(role === 'librarian'? 3 : 3).map((message, index) => (
                                     message.role === 'assistant' ? (
                                         <Box
                                         key={index}

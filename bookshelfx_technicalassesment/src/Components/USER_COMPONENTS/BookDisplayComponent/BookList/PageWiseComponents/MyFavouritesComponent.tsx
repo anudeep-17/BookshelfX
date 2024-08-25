@@ -1,11 +1,11 @@
 'use client'
 import React from 'react';
-import { Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Alert, Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, Snackbar, SnackbarCloseReason, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import {BookDetails, BookCardProps} from '@/Components/interfaceModels';
+import {BookDetails} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import {getFavBooksByUser} from '@/Services/BookRoutines';
@@ -13,6 +13,7 @@ import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
 import Cookies from 'js-cookie';
+import Fireworks from 'react-canvas-confetti/dist/presets/fireworks';
  
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
 
@@ -20,9 +21,24 @@ export default function MyFavouritesComponent()
 {
     const router = useRouter();
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
-    const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string | null>('');
+    
+    const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string>('');
+    const [selectedAuthorsInFilter, setSelectedAuthorsInFilter] = React.useState<string[]>([]);
+    const [selectedCategoriesInFilter, setSelectedCategoriesInFilter] = React.useState<string[]>([]);
+
     const [favBooks, setFavBooks] = React.useState<BookDetails[]>([])
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    
+    const [alert, setAlert] = React.useState<{severity: 'success' | 'error', message: string}>({severity: 'success', message: ""});
+    const [Alertopen, setAlertOpen] = React.useState(false);  
+    
+    const handleAlertClose = (event: React.SyntheticEvent<any, Event> | Event, reason?: SnackbarCloseReason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setAlertOpen(false);
+    };
+    
     const open = Boolean(anchorEl);
     let userID: string | undefined;
     const userCookie = Cookies.get('user');
@@ -114,7 +130,7 @@ export default function MyFavouritesComponent()
                                         }}
                                     >
                                         <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, display: 'inline' }}>
-                                                Category Wise{" "} 
+                                                Your Favourite{" "} 
                                                 <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: 'text.secondary', display: 'inline' }}>
                                                     Books
                                                 </Typography>
@@ -201,9 +217,15 @@ export default function MyFavouritesComponent()
                                                         <Drawer anchor='right' open={filterdraweropen} onClose={toggleDrawer(false)}>
                                                              <DrawerForFilter 
                                                                 toggleDrawer={toggleDrawer}
-                                                                slidervaluetext_forDays={slidervaluetext_forDays}
+                                                              
                                                                 selectedChip={selectedChipforAvailabilityInFilter}
-                                                                setSelectedChip={setSelectedChipforAvailabilityInFilter} 
+                                                                setSelectedChip={setSelectedChipforAvailabilityInFilter}
+
+                                                                selectedAuthorInFilter={selectedAuthorsInFilter}
+                                                                setSelectedAuthorsInFilter={setSelectedAuthorsInFilter}
+
+                                                                selectedCategoriesInFilter={selectedCategoriesInFilter}
+                                                                setSelectedCategoriesInFilter={setSelectedCategoriesInFilter}
                                                             />
                                                         </Drawer>
                                                     </>
@@ -241,6 +263,8 @@ export default function MyFavouritesComponent()
                                                         authors={book.book.authors}
                                                         availability={book.book.availability}
                                                         onClick={() => handleBookClick(book.book.id as number)}
+                                                        setAlert={setAlert}
+                                                        setAlertOpen={setAlertOpen}
                                                     />
                                                 );
                                             }
@@ -255,6 +279,16 @@ export default function MyFavouritesComponent()
 
                         </Grid>
                 </Box>
+                <Snackbar open={Alertopen} autoHideDuration={3000} onClose={handleAlertClose}>
+                    <Alert onClose={handleAlertClose} severity={alert?.severity} sx={{ width: '100%' }}>
+                        {alert.message}
+                    </Alert>
+                </Snackbar>
+                {
+                    alert.severity === 'success' && alert.message === 'Book checked out successfully' ? 
+                    <Fireworks autorun={{ speed: 1, duration: 1000}}/> : null
+                }
+
             </Box>
         </motion.div>
         </ThemeProvider>
