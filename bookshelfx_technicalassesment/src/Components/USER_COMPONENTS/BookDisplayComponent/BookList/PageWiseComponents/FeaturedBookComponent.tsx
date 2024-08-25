@@ -7,7 +7,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {BookDetails} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { getFeaturedBooks, getFeaturedBooksCount, getFeaturedBooksForFilters} from '@/Services/BookRoutines';
+import { getBooksForFilters, getFeaturedBooks, getFeaturedBooksCount} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
@@ -76,7 +76,15 @@ export default function FeaturedBookComponent()
     React.useEffect(() => {
         setIsLoading(true);
         const fetchData = async () => {
-            const data = await getFeaturedBooksForFilters(offsetForFilter, 9, selectedChipforAvailabilityInFilter === 'Available'? true : false, selectedAuthorsInFilter, selectedCategoriesInFilter);
+            const data = await getBooksForFilters(  offsetForFilter, 9, 
+                                                    selectedChipforAvailabilityInFilter === 'Available'? true : false, 
+                                                    selectedAuthorsInFilter, 
+                                                    selectedCategoriesInFilter, 
+                                                    true, 
+                                                    '', 
+                                                    0,
+                                                    'featuredbooks'
+                                                    );
             if(data.success)
             {
                 setFilteredBooks(data.data);

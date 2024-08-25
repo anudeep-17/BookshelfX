@@ -11,7 +11,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MenuItem from '@mui/material/MenuItem';
 import ImageUrlDialog from './ImageUrlDialog';
 import Image from 'next/image';
-import { addBookToLibrary, getAuthors, getCategories, getPublishers } from '@/Services/BookRoutines';
+import { getAuthors, getCategories, getPublishers } from '@/Services/BookRoutines';
+import { addBookToLibrary } from '@/Services/LibrarianRoutines';
 import { useRouter } from 'next/navigation';
 
 const drawerWidth = DashboardSize;

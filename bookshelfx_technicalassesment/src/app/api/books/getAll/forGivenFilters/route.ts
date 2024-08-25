@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { database } from "../../../../prismaConfig";
+import { database } from "../../../prismaConfig";
 
 export async function POST(req:Request) 
 {
@@ -8,19 +8,25 @@ export async function POST(req:Request)
         const url = new URL(req.url || '');
         const page = parseInt(url.searchParams.get('page') || '1');
         const limit = parseInt(url.searchParams.get('limit') || '10');
-        const {availabilityFilterPassed,authorsFilterPassed,categoriesFilterPassed } = await req.json();
+        const {availabilityFilterPassed, authorsFilterPassed, categoriesFilterPassed, isFeaturedBook, SpecificCategory, UserID, currentPage} = await req.json();
 
-        console.log(availabilityFilterPassed,authorsFilterPassed,categoriesFilterPassed);
-
-        if(availabilityFilterPassed == null || authorsFilterPassed == null || categoriesFilterPassed == null)
-        {
+        if (availabilityFilterPassed == null || authorsFilterPassed == null || (SpecificCategory === false && currentPage !== 'allcategory' && categoriesFilterPassed == null) || (currentPage === 'favourites' && UserID == null)) {
             return NextResponse.json({success: false, message: "All fields are required"}, {status: 400});
         }
 
         let filters: any = {
-            isFeaturedBook: true,
             AND: []
         };
+
+        if(isFeaturedBook && currentPage === 'featuredbooks')
+        {
+            filters.isFeaturedBook = true;
+        }
+
+        if(SpecificCategory !== null && currentPage === 'category')
+        {
+            filters.category = SpecificCategory;
+        }
 
         if (availabilityFilterPassed != null) {
             filters.AND.push({ availability: availabilityFilterPassed });
@@ -30,15 +36,14 @@ export async function POST(req:Request)
             filters.AND.push({ authors: { hasSome: authorsFilterPassed } });
         }
 
-        if (categoriesFilterPassed != null && categoriesFilterPassed.length > 0) {
+        if (categoriesFilterPassed != null && categoriesFilterPassed.length > 0 && currentPage !== 'allcategory' && SpecificCategory === null) 
+        {
             filters.AND.push({ category: { in: categoriesFilterPassed } });
         }
 
         if (filters.AND.length === 0) {
             delete filters.AND;
         }
-
-
         
         const countofFeaturedBooksForGivenFilters = await database.bookDetails.count({
             where: filters,
@@ -57,7 +62,7 @@ export async function POST(req:Request)
 
         if (result.length === 0) 
         {
-            return NextResponse.json({success: false, message: "No featured books available"}, {status: 404});
+            return NextResponse.json({success: false, message: "No books available"}, {status: 404});
         }
 
         return NextResponse.json({success: true, data: result, totalBooks: countofFeaturedBooksForGivenFilters}, {status: 200}); 
