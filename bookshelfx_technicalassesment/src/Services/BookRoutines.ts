@@ -256,10 +256,10 @@ export async function getBooksForFilters(
         limit: number, 
         availabilityFilterPassed: boolean, 
         authorsFilterPassed: string[], 
-        categoriesFilterPassed: string[],
-        isFeaturedBook: boolean,
-        SpecificCategory: string, 
-        UserID: number, 
+        categoriesFilterPassed: string[] | null,
+        isFeaturedBook: boolean | null,
+        SpecificCategory: string | null, 
+        UserID: number | null, 
         currentPage: "featuredbooks" | "category" | "allcategory" | "allbooks" | "search" | "allbooks"
     )
 {

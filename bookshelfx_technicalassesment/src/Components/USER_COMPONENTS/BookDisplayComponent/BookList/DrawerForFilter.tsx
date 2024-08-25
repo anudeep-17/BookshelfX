@@ -10,6 +10,7 @@ import { getAuthors, getCategories } from '@/Services/BookRoutines';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { usePathname } from 'next/navigation';
 
 
 export default function DrawerForFilter({
@@ -26,12 +27,15 @@ export default function DrawerForFilter({
     setSelectedAuthorsInFilter: React.Dispatch<React.SetStateAction<string[]>>,
     selectedChip: string,
     setSelectedChip: React.Dispatch<React.SetStateAction<string>>,
-    selectedCategoriesInFilter: string[],
-    setSelectedCategoriesInFilter: React.Dispatch<React.SetStateAction<string[]>>
+    selectedCategoriesInFilter?: string[],
+    setSelectedCategoriesInFilter?: React.Dispatch<React.SetStateAction<string[]>>
     
 })
 
 {
+    const pathname = usePathname();
+    const currentpath = pathname.split('/')[2];
+    
     const [AllAuthors, setAllAuthors] = React.useState<string[]>([]);
     const [AllCategories, setAllCategories] = React.useState<string[]>([]);
     
@@ -45,7 +49,10 @@ export default function DrawerForFilter({
     const handleClearFilterClick = () => 
     {
         setSelectedAuthorsInFilter([]);
-        setSelectedCategoriesInFilter([]);
+        if (currentpath !== 'allcategory' && setSelectedCategoriesInFilter) 
+        {
+            setSelectedCategoriesInFilter([]);
+        }
         setSelectedChip('');
         setSelectedAuthors([]);
         setSelectedCategories([]);
@@ -55,7 +62,10 @@ export default function DrawerForFilter({
     const handleApplyFilterClick = () => 
     {
         setSelectedAuthorsInFilter(selectedAuthors);
-        setSelectedCategoriesInFilter(selectedCategories);
+        if (currentpath !== 'allcategory' && setSelectedCategoriesInFilter) 
+        {
+            setSelectedCategoriesInFilter(selectedCategories);
+        }
         setSelectedChip(selectedChipforAvailabilityInFilter);
     }
     
@@ -63,11 +73,15 @@ export default function DrawerForFilter({
     React.useEffect(() => {
         // Fetch all authors and categories
         const fetchData = async () => {
-            const allCategoryResponse = await getCategories();
-            if(allCategoryResponse.success)
+            if(currentpath !== 'allcategory' && setSelectedCategoriesInFilter)
             {
-                setAllCategories(allCategoryResponse.data.sort());
+                const allCategoryResponse = await getCategories();
+                if(allCategoryResponse.success)
+                {
+                    setAllCategories(allCategoryResponse.data.sort());
+                }
             }
+            
             const allAuthorsResponse = await getAuthors();
             if(allAuthorsResponse.success)
             {
@@ -91,7 +105,7 @@ export default function DrawerForFilter({
             console.log(selectedAuthorInFilter);
             setSelectedAuthors(selectedAuthorInFilter);
         }
-        if(selectedCategoriesInFilter.length > 0)
+        if(selectedCategoriesInFilter && selectedCategoriesInFilter.length > 0)
         {
             setSelectedCategories(selectedCategoriesInFilter);
         }
@@ -189,6 +203,8 @@ export default function DrawerForFilter({
                 </Accordion>
             </Box>
 
+            {pathname.split('/')[2] !== 'allcategory' &&                          
+            <>
             <Divider sx={{ml:2, mr:2, mt:2, mb:2}}/>
 
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', alignContent: 'center', ml: 2, mr: 2 }}>
@@ -239,6 +255,8 @@ export default function DrawerForFilter({
                         )}
                 </Accordion>
             </Box>
+            </>
+            }
             
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: 'center', ml: 2, mr: 2, mt:2, mb:2}}>
                 <Button variant="contained" sx={{mr:1}}  onClick={() => {handleApplyFilterClick(); toggleDrawer(false)();}}>

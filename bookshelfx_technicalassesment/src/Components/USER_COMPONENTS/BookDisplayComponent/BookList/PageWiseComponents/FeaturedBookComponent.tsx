@@ -81,8 +81,8 @@ export default function FeaturedBookComponent()
                                                     selectedAuthorsInFilter, 
                                                     selectedCategoriesInFilter, 
                                                     true, 
-                                                    '', 
-                                                    0,
+                                                    null, 
+                                                    null,
                                                     'featuredbooks'
                                                     );
             if(data.success)

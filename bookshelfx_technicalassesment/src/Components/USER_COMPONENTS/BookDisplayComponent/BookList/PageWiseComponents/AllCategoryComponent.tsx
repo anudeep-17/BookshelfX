@@ -9,7 +9,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {BookDetails, BookCardProps} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import {getCategories, getBooksByCategory, getBooksCountByCategory} from '@/Services/BookRoutines';
+import {getCategories, getBooksByCategory, getBooksCountByCategory, getBooksForFilters} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
@@ -25,12 +25,16 @@ export default function AllCategoryBookListComponent()
    
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string>('');
     const [selectedAuthorsInFilter, setSelectedAuthorsInFilter] = React.useState<string[]>([]);
-    const [selectedCategoriesInFilter, setSelectedCategoriesInFilter] = React.useState<string[]>([]);
+    const [countofBooksForFilter, setCountofBooksForFilter] = React.useState<number>(0);
+    const [offsetForFilter, setOffsetForFilter] = React.useState(1);
+
 
     const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
     const [allCategory, setCategory] = React.useState<string[]>([]);
-    const [categoryWiseBooks, setCategoryWiseBooks] = React.useState<BookDetails[]>([]);
 
+    const [categoryWiseBooks, setCategoryWiseBooks] = React.useState<BookDetails[]>([]);
+    const [filteredBooks, setFilteredBooks] = React.useState<BookDetails[]>([]);
+    
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -39,7 +43,8 @@ export default function AllCategoryBookListComponent()
     
     const [alert, setAlert] = React.useState<{severity: 'success' | 'error', message: string}>({severity: 'success', message: ""});
     const [Alertopen, setAlertOpen] = React.useState(false);  
-    
+
+
     React.useEffect(() => {
         const fetchData = async () => {
             const data = await getBooksCountByCategory(selectedCategory? selectedCategory : '');
@@ -70,6 +75,38 @@ export default function AllCategoryBookListComponent()
 
         fetchData();
     }, []);
+
+    React.useEffect(() => {
+        setOffsetForFilter(1);
+    },[selectedAuthorsInFilter, selectedChipforAvailabilityInFilter]);
+    
+    React.useEffect(() => {
+        setSelectedAuthorsInFilter([]);
+        setSelectedChipforAvailabilityInFilter('');
+    }
+    ,[selectedCategory])
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const data = await getBooksForFilters( offsetForFilter, 9, 
+                                                    selectedChipforAvailabilityInFilter === 'Available'? true : false, 
+                                                    selectedAuthorsInFilter, 
+                                                    [], 
+                                                    null, 
+                                                    selectedCategory, 
+                                                    null,
+                                                    'allcategory'
+                                                    );
+            if(data.success)
+            {
+                setFilteredBooks(data.data);
+                setCountofBooksForFilter(data.totalBooks);
+            }
+        }
+        fetchData();
+    }, [selectedChipforAvailabilityInFilter, selectedAuthorsInFilter, countofBooksForFilter, offsetForFilter]);
+
+
 
     function handleBookClick(id: number) {
         router.push(`/Reader/book/${id}`);
@@ -248,9 +285,6 @@ export default function AllCategoryBookListComponent()
 
                                                                 selectedAuthorInFilter={selectedAuthorsInFilter}
                                                                 setSelectedAuthorsInFilter={setSelectedAuthorsInFilter}
-
-                                                                selectedCategoriesInFilter={selectedCategoriesInFilter}
-                                                                setSelectedCategoriesInFilter={setSelectedCategoriesInFilter}
                                                             />
                                                         </Drawer>
                                                     </>
@@ -314,8 +348,8 @@ export default function AllCategoryBookListComponent()
                                     >
                                         {   
                                             selectedCategory !== null 
-                                            ? (categoryWiseBooks.length > 0 
-                                              ? categoryWiseBooks.map((book: BookDetails) => (
+                                            ? ((selectedAuthorsInFilter.length>0 || selectedChipforAvailabilityInFilter.length>0 ? filteredBooks:categoryWiseBooks).length > 0 
+                                              ? (selectedAuthorsInFilter.length>0 || selectedChipforAvailabilityInFilter.length>0 ? filteredBooks:categoryWiseBooks).map((book: BookDetails) => (
                                                   <DetailedBookCard
                                                     key={book.id}
                                                     bookID={Number(book.id)}
@@ -353,12 +387,12 @@ export default function AllCategoryBookListComponent()
                                     >
                                         { 
                                                <Pagination 
-                                               count={Math.ceil((selectedCategory !== null ? bookCount : 0) / 9)}
+                                               count={Math.ceil((selectedCategory !== null ? (selectedAuthorsInFilter.length>0 || selectedChipforAvailabilityInFilter.length>0 ? countofBooksForFilter: bookCount) : 0) / 9)}
                                                color="primary" 
                                                size="large"
                                                page={selectedCategory !== null ? offset : 1}
                                                onChange={(event, page) => {
-                                                   selectedCategory !== null ? setOffset(page) : setOffset(1);
+                                                   selectedCategory !== null ? (selectedAuthorsInFilter.length>0 || selectedChipforAvailabilityInFilter.length>0 ? setOffsetForFilter(page) : setOffset(page)) : setOffset(1);
                                                }}
                                            />
                                          } 
