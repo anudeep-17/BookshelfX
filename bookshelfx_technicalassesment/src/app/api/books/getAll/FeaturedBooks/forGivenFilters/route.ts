@@ -38,7 +38,7 @@ export async function POST(req:Request)
             delete filters.AND;
         }
 
-        console.log(filters)
+
         
         const countofFeaturedBooksForGivenFilters = await database.bookDetails.count({
             where: filters,

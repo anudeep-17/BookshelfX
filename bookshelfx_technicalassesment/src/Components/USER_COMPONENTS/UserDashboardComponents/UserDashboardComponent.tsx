@@ -128,7 +128,7 @@ export default function UserDashboardComponent() {
                             {
                                 overflow: 'hidden',
                                 backgroundColor: 'white',
-                                width: {xs:'100%', sm:'71.5%'},
+                                width: {xs:'100%', sm:'73.5%'},
                                 mt: 2,
                                 mb: 2
                             }
@@ -284,7 +284,7 @@ export default function UserDashboardComponent() {
                                             </Button>
                                         </Box>
 
-                                        <Stack direction="row" spacing={1} sx={{
+                                        <Stack direction="row" spacing={0.4} sx={{
                                             display: 'flex',
                                             flexDirection: 'row',
                                             justifyContent: 'space-between', // Change this line
@@ -367,7 +367,7 @@ export default function UserDashboardComponent() {
                     <Box
                         sx={{
                             overflow: 'hidden',
-                            width: {xs:'100%', sm:'27%'},
+                            width: {xs:'100%', sm:'25%'},
                             minHeight: '92.2vh',
                             top:0,
                             display: 'flex',
