@@ -215,9 +215,9 @@ export async function removeFavBooks(userId: number, bookId: number)
     return data;
 }
 
-export async function getFavBooksByUser(userId: number)
+export async function getFavBooksByUser(userId: number, page: number)
 {
-    const response = await fetch(`/api/user/favouriteBook/getFavBooks?userId=${userId}`);
+    const response = await fetch(`/api/user/favouriteBook/getFavBooks?userId=${userId}&page=${page}`);
     const data = await response.json();
     return data;
 }

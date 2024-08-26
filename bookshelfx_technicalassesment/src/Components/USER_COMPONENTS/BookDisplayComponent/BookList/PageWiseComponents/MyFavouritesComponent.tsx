@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { Alert, Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, Snackbar, SnackbarCloseReason, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import { Alert, Box, Button, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, Pagination, Snackbar, SnackbarCloseReason, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import theme from '@/Components/Themes';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
@@ -29,6 +29,8 @@ export default function MyFavouritesComponent()
     const [favBooks, setFavBooks] = React.useState<BookDetails[]>([])
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     
+    const [offset, setoffset] = React.useState(1);
+    const [totalFavBooks, settotalFavBooks] = React.useState(0)
     const [alert, setAlert] = React.useState<{severity: 'success' | 'error', message: string}>({severity: 'success', message: ""});
     const [Alertopen, setAlertOpen] = React.useState(false);  
     
@@ -52,16 +54,16 @@ export default function MyFavouritesComponent()
         const fetchData = async () => {
             if( userID !== undefined)
             {
-                const data = await getFavBooksByUser(Number(userID));
+                const data = await getFavBooksByUser(Number(userID), offset);
                 if (data.success) {
-                    console.log(data.data);
+                    settotalFavBooks(data.totalbooks)
                     setFavBooks(data.data);
                 }
             }
         };
 
         fetchData();
-    }, [userID]);
+    }, [userID, offset]);
 
 
 
@@ -276,7 +278,30 @@ export default function MyFavouritesComponent()
                                         }
                                     </Box>
                                 </Grid>
-
+                                <Grid xs={12} sm={12}>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            alignContent: 'center',
+                                            mb: 2,
+                                            mt:2,
+                                        }}
+                                    >
+                                        { 
+                                               <Pagination 
+                                               count={Math.ceil( totalFavBooks / 10)}
+                                               color="primary" 
+                                               size="large"
+                                               onChange={(event, page) => {
+                                                    setoffset(page)
+                                                }}
+                                           />
+                                         } 
+                                    </Box>
+                                </Grid>
                         </Grid>
                 </Box>
                 <Snackbar open={Alertopen} autoHideDuration={3000} onClose={handleAlertClose}>
