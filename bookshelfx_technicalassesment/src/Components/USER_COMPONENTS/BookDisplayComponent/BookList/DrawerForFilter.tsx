@@ -62,7 +62,7 @@ export default function DrawerForFilter({
     const handleApplyFilterClick = () => 
     {
         setSelectedAuthorsInFilter(selectedAuthors);
-        if (currentpath !== 'allcategory' && setSelectedCategoriesInFilter) 
+        if (currentpath !== ('allcategory'|| 'allbooks') && setSelectedCategoriesInFilter) 
         {
             setSelectedCategoriesInFilter(selectedCategories);
         }
@@ -73,7 +73,7 @@ export default function DrawerForFilter({
     React.useEffect(() => {
         // Fetch all authors and categories
         const fetchData = async () => {
-            if(currentpath !== 'allcategory' && setSelectedCategoriesInFilter)
+            if(currentpath !== ('allcategory'|| 'allbooks') && setSelectedCategoriesInFilter)
             {
                 const allCategoryResponse = await getCategories();
                 if(allCategoryResponse.success)
@@ -203,7 +203,7 @@ export default function DrawerForFilter({
                 </Accordion>
             </Box>
 
-            {pathname.split('/')[2] !== 'allcategory' &&                          
+            {(pathname.split('/')[2] !== 'allcategory' && pathname.split('/')[2] !== 'allbooks') &&                          
             <>
             <Divider sx={{ml:2, mr:2, mt:2, mb:2}}/>
 

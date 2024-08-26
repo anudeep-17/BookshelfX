@@ -77,7 +77,7 @@ export default function FeaturedBookComponent()
         setIsLoading(true);
         const fetchData = async () => {
             const data = await getBooksForFilters(  offsetForFilter, 9, 
-                                                    selectedChipforAvailabilityInFilter === 'Available'? true : false, 
+                                                    selectedChipforAvailabilityInFilter !='' ? selectedChipforAvailabilityInFilter === 'Available'? true : false : null, 
                                                     selectedAuthorsInFilter, 
                                                     selectedCategoriesInFilter, 
                                                     true, 

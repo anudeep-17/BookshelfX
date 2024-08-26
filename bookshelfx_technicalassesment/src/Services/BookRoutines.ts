@@ -254,8 +254,8 @@ export async function getAllBooksCount()
 export async function getBooksForFilters(
         page: number, 
         limit: number, 
-        availabilityFilterPassed: boolean, 
-        authorsFilterPassed: string[], 
+        availabilityFilterPassed: boolean | null, 
+        authorsFilterPassed: string[] | null, 
         categoriesFilterPassed: string[] | null,
         isFeaturedBook: boolean | null,
         SpecificCategory: string | null, 
