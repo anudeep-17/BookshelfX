@@ -39,6 +39,11 @@ export default function NotificationComponent({anchorEl, setAnchorEl}:
     React.useEffect(() =>{
         const fetchActiveRentalDataOfUser = async () =>
         { 
+            if(userID === null)
+            {
+                return;
+            }
+            
             const fetchActiveRentalDataOfUser = await getActiveRentalsOfUser(userID || 0);
             let notificationStrings :{notificationGroup: "renting"| "initiatedReturn"|"overdue"|null, notificationMessage: React.ReactNode, bookID: number}[] = [];
             if(fetchActiveRentalDataOfUser.success)

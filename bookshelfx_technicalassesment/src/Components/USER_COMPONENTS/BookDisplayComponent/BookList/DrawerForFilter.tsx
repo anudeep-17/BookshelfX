@@ -6,7 +6,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import Slider from '@mui/material/Slider';
 import Checkbox from '@mui/material/Checkbox';
 import { ChevronLeft } from '@mui/icons-material';
-import { getAuthors, getCategories } from '@/Services/BookRoutines';
+import { getAuthors, getAuthorsForFiltering, getCategories, getCategoriesForFiltering } from '@/Services/BookRoutines';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -20,7 +20,8 @@ export default function DrawerForFilter({
     selectedChip,
     setSelectedChip,
     selectedCategoriesInFilter,
-    setSelectedCategoriesInFilter
+    setSelectedCategoriesInFilter,
+    SpecificCategory
 }:{
     toggleDrawer: (open: boolean) => () => void,
     selectedAuthorInFilter: string[],
@@ -29,6 +30,7 @@ export default function DrawerForFilter({
     setSelectedChip: React.Dispatch<React.SetStateAction<string>>,
     selectedCategoriesInFilter?: string[],
     setSelectedCategoriesInFilter?: React.Dispatch<React.SetStateAction<string[]>>
+    SpecificCategory?: string | null
     
 })
 
@@ -69,20 +71,27 @@ export default function DrawerForFilter({
         setSelectedChip(selectedChipforAvailabilityInFilter);
     }
     
-
     React.useEffect(() => {
         // Fetch all authors and categories
         const fetchData = async () => {
             if(currentpath !== ('allcategory'|| 'allbooks') && setSelectedCategoriesInFilter)
             {
-                const allCategoryResponse = await getCategories();
+                const allCategoryResponse = await getCategoriesForFiltering(
+                    currentpath === 'featuredbooks' ? 'featuredbooks' : currentpath === 'allcategory' ? 'allcategory' : currentpath === 'favourites' ? 'favourites' : 'allbooks',
+                    currentpath === 'featuredbooks' ? true : null,
+                );
                 if(allCategoryResponse.success)
                 {
                     setAllCategories(allCategoryResponse.data.sort());
                 }
             }
             
-            const allAuthorsResponse = await getAuthors();
+            const allAuthorsResponse = await getAuthorsForFiltering(
+                currentpath === 'featuredbooks' ? 'featuredbooks' : currentpath === 'allcategory' ? 'allcategory' : currentpath === 'favourites' ? 'favourites' : 'allbooks',
+                currentpath === 'featuredbooks' ? true : null,
+                SpecificCategory ? SpecificCategory : null,
+                null
+            );
             if(allAuthorsResponse.success)
             {
                 

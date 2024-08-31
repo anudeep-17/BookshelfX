@@ -273,3 +273,40 @@ export async function getBooksForFilters(
     const data = await response.json();
     return data;
 }
+
+export async function getAuthorsForFiltering(
+    pageName: "featuredbooks" | "allcategory" | "favourites" | "allbooks",
+    isFeaturedBook: boolean | null,
+    SpecificCategory: string | null,
+    FavouriteBooksForUserID: number | null
+)
+{
+    const authors = await fetch('/api/books/getAll/forGivenFilters/getAuthors', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({pageName, isFeaturedBook, SpecificCategory, FavouriteBooksForUserID})
+    });
+
+    const data = await authors.json();
+    return data;
+}
+
+export async function getCategoriesForFiltering(
+    pageName: "featuredbooks" | "allcategory" | "favourites" | "allbooks",
+    isFeaturedBook: boolean | null, 
+
+)
+{
+    const categories = await fetch('/api/books/getAll/forGivenFilters/getCategories', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({pageName, isFeaturedBook})
+    });
+
+    const data = await categories.json();
+    return data;
+}

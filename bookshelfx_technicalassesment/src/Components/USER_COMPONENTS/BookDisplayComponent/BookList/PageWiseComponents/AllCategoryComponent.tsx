@@ -289,6 +289,8 @@ export default function AllCategoryBookListComponent()
 
                                                                 selectedAuthorInFilter={selectedAuthorsInFilter}
                                                                 setSelectedAuthorsInFilter={setSelectedAuthorsInFilter}
+
+                                                                SpecificCategory={selectedCategory}
                                                             />
                                                         </Drawer>
                                                     </>
