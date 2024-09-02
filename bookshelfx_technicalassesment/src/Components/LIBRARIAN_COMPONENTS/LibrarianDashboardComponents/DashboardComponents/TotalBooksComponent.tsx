@@ -1,9 +1,12 @@
 import React from "react";
-import { Box, Grid, ThemeProvider, Typography } from "@mui/material";
+import { Box, Grid, ThemeProvider, Typography, useMediaQuery, useTheme } from "@mui/material";
 import theme from "@/Components/Themes";
 
 export default function TotalBooksComponent({totalBooks}:{totalBooks: number})
 {
+    const themeofscreen = useTheme();
+    const isSmallScreen = useMediaQuery(themeofscreen.breakpoints.down('sm'));
+
     return(
         <ThemeProvider theme={theme}>
             <Box
@@ -12,8 +15,6 @@ export default function TotalBooksComponent({totalBooks}:{totalBooks: number})
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    width: '100%',
-                    height: '100%',
                     transition: 'transform 0.3s ease-in-out', // Add a transition for smooth animation
                     ':hover': {
                         transform: 'translateY(-5px)', // Move the Box up by 5px on hover
@@ -23,7 +24,7 @@ export default function TotalBooksComponent({totalBooks}:{totalBooks: number})
                     },
                 }}
             >
-                <Typography variant="h1" color="textSecondary"  gutterBottom className="changeColorOnHover"   sx={{
+                <Typography variant={isSmallScreen ? "h4" : "h1"} color="textSecondary"  gutterBottom className="changeColorOnHover"   sx={{
                     transition: 'color 0.6s ease-in-out',
                 }}>
                     {totalBooks}

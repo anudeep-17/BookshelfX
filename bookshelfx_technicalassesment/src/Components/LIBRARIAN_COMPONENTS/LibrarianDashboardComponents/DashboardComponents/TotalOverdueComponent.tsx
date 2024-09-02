@@ -1,10 +1,14 @@
 import React from "react";
-import { Box, Divider, Grid, ThemeProvider, Typography } from "@mui/material";
+import { Box, Divider, Grid, ThemeProvider, Typography, useMediaQuery, useTheme } from "@mui/material";
 import theme from "@/Components/Themes";
 import { Gauge,  gaugeClasses } from '@mui/x-charts/Gauge';
 
 export default function TotalOverdueComponent({totalOverdueRentals, totalBooks}:{totalOverdueRentals: number, totalBooks: number})
 {
+    const themeofscreen = useTheme();
+    const isSmallScreen = useMediaQuery(themeofscreen.breakpoints.down('sm'));
+
+
     return(
         <ThemeProvider theme={theme}>
             <Box
@@ -24,7 +28,7 @@ export default function TotalOverdueComponent({totalOverdueRentals, totalBooks}:
                     },
                 }}
             >
-                <Gauge width={200} height={100} value={totalOverdueRentals} startAngle={-90} endAngle={90} valueMin={0} valueMax={totalBooks}  
+                <Gauge width={isSmallScreen? 395: 200} height={isSmallScreen? 300: 100} value={totalOverdueRentals} startAngle={-90} endAngle={90} valueMin={0} valueMax={totalBooks}  
                     cornerRadius="50%"
                     sx={(theme) => ({
                         position: 'relative',

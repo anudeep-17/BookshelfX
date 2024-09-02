@@ -1,10 +1,13 @@
 import React from "react";
-import { Box, Grid, ThemeProvider, Typography } from "@mui/material";
+import { Box, Grid, ThemeProvider, Typography, useMediaQuery } from "@mui/material";
 import theme from "@/Components/Themes";
 import { BarChart } from '@mui/x-charts/BarChart';
 
+
 export default function RentalVsAvailableComponent({rentalBookCount, availableBookCount}:{rentalBookCount: number, availableBookCount: number})
 {
+    const isXsScreen = useMediaQuery(theme.breakpoints.down('sm'));
+ 
     return(
         <ThemeProvider theme={theme}>
             <Box
@@ -39,10 +42,9 @@ export default function RentalVsAvailableComponent({rentalBookCount, availableBo
                 >
                     <BarChart 
                         xAxis={[{ scaleType:'band', data: ['Number of Rental Books', 'Number of Available Books'] }]}
-                        series={[{ data: [rentalBookCount, availableBookCount],  
-                                   color: theme.palette.text.secondary }]}
-                        width={500}
-                        height={300}
+                        series={[{ data: [rentalBookCount, availableBookCount], color: theme.palette.text.secondary }]}
+                        width={isXsScreen ? 350 : 500}
+                        height={isXsScreen ? 250 : 350}
                         margin={{right: 5}}
                     />
                 </Box>

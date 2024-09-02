@@ -17,8 +17,6 @@ export default function CategorywiseBookCountComponent({categoryWiseBooks}:{cate
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    width: '100%',
-                    height: '100%',
                     transition: 'transform 0.3s ease-in-out',  
                     ':hover': {
                         transform: 'translateY(-5px)',  
@@ -51,7 +49,7 @@ export default function CategorywiseBookCountComponent({categoryWiseBooks}:{cate
                         legend: { hidden: true },
                     }}
                     margin={{right: 5}}
-                    height={300}
+                    height={350}
                     sx={{
                         ml:2, 
                         mr:2,
