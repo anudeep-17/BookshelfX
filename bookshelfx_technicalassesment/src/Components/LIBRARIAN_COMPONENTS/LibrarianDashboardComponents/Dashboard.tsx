@@ -142,7 +142,7 @@ export default function Dashboard_Home()
                                 stats.categoryWiseBooks && Object.keys(stats.categoryWiseBooks).length > 0 ?
                                 <Grid container spacing={2}>
                                     <Grid item xs={12} sm={12}>
-                                        <Paper elevation={3} sx={{display: 'flex', alignContent: 'center', alignItems: 'center', height: '100%' }}>
+                                        <Paper elevation={3} sx={{display: 'flex', alignContent: 'center', alignItems: 'center', justifyContent:'center', height: '100%' }}>
                                             <CategorywiseBookCountComponent categoryWiseBooks={stats.categoryWiseBooks}/>
                                         </Paper>
                                     </Grid>
@@ -155,6 +155,7 @@ export default function Dashboard_Home()
                                 </Paper>
                             }
                         </Grid>
+                        
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             {
                                 stats.categoryWiseFavBooks ?

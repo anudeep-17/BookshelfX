@@ -60,7 +60,7 @@ export default function NumberOfReturnAuthorized({librarianClosedRentals}: {
                                 color: theme.palette.primary.main
                             }
                         ]}
-                        width={isSmallScreen?300:1200}
+                        width={isSmallScreen? 350:1200}
                         height={300}
                         margin={{right: 5}}
                     />
