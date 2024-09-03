@@ -6,6 +6,7 @@ import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Cookies from 'js-cookie';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const RegistrationStep1 = dynamic(() => import('@/Components/Authentication/RegistrationSteps/RegistationStep1'), { 
   loading: () => 
@@ -51,6 +52,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { RegisterUser } from '@/Services/UserRoutines';
 import { User } from '@/Components/interfaceModels';
 import { EmailRoutines } from '@/Services/EmailRoutines';
+import { usePathname, useRouter } from 'next/navigation'
 
 const steps = [
     'Personal Information',
@@ -60,6 +62,9 @@ const steps = [
 
 export default function Registration() 
 {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState<{[k: number]: boolean;}>({});
   const [alertopener, setAlertopener] = React.useState(false);
@@ -210,6 +215,9 @@ export default function Registration()
 
   return (
     <Box sx={{ p:1.5, width: '45vw'}}>
+        <Button  sx={{mb:1}} onClick={()=>{router.push(pathname); }}>
+          <ArrowBackIosIcon/> Login
+        </Button>
         <Typography variant="h4" letterSpacing={2}>
             Signup
         </Typography>
