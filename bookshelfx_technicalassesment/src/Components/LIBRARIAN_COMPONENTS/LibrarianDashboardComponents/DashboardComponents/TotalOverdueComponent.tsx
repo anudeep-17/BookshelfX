@@ -28,7 +28,7 @@ export default function TotalOverdueComponent({totalOverdueRentals, totalBooks}:
                     },
                 }}
             >
-                <Gauge width={isSmallScreen? 395: 200} height={isSmallScreen? 300: 100} value={totalOverdueRentals} startAngle={-90} endAngle={90} valueMin={0} valueMax={totalBooks}  
+                <Gauge width={isSmallScreen? 395: 400} height={isSmallScreen? 300: 100} value={totalOverdueRentals} startAngle={-90} endAngle={90} valueMin={0} valueMax={totalBooks}  
                     cornerRadius="50%"
                     sx={(theme) => ({
                         position: 'relative',

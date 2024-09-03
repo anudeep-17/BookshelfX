@@ -25,9 +25,6 @@ export default function CloseUserRentalsComponenet()
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
-
-    const themeofscreen = useTheme();
-    const isSmallScreen = useMediaQuery(themeofscreen.breakpoints.down('sm'));
  
     function createData(rental: BookRentalDetails) {    
         return {
@@ -292,7 +289,6 @@ export default function CloseUserRentalsComponenet()
                                     <IconButton 
                                         onClick={exportPDF} 
                                         disabled={CurrentView === 'active'? ActiveRentalData.length<=0 : ClosedRentalData.length<=0}
-
                                     >
                                         <PictureAsPdfIcon color="inherit" sx={{
                                             color: CurrentView === 'active'? ActiveRentalData.length<=0 ? 'grey[10]' : 'primary' : ClosedRentalData.length<=0 ? 'grey[10]' : theme.palette.text.secondary
