@@ -120,7 +120,7 @@ export default function Dashboard_Home()
                             }
                         </Grid>
 
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} sm={12} md={12} lg={6}>
                             {
                                 stats.rentedBooks !==undefined && stats.availableBooks !==undefined ?
                                   <Grid container spacing={2}>
@@ -137,7 +137,7 @@ export default function Dashboard_Home()
                             }
                         </Grid>
 
-                        <Grid item xs={12} sm={4}>
+                        <Grid item xs={12} sm={12} md={12} lg={4}>
                             {
                                 stats.categoryWiseBooks && Object.keys(stats.categoryWiseBooks).length > 0 ?
                                 <Grid container spacing={2}>
@@ -155,7 +155,7 @@ export default function Dashboard_Home()
                                 </Paper>
                             }
                         </Grid>
-                        <Grid item xs={12} sm={12}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                             {
                                 stats.categoryWiseFavBooks ?
                                 <Grid container spacing={2}>
@@ -171,7 +171,7 @@ export default function Dashboard_Home()
                                 </Typography>
                             }
                         </Grid>
-                        <Grid item xs={12} sm={2}>
+                        <Grid item xs={12} sm={12} md={12} lg={2}>
                             {
                                  stats.overdueBooks?
                                  <Grid container spacing={0} sx={{
@@ -193,7 +193,7 @@ export default function Dashboard_Home()
                                 </Typography>
                             }
                         </Grid>
-                        <Grid item xs={12} sm={10}>
+                        <Grid item xs={12} sm={12} md={12} lg={10}>
                             {
                                  stats.overdueBooks?
                                  <Grid container spacing={2}>
@@ -210,7 +210,7 @@ export default function Dashboard_Home()
                                 </Typography>
                             }
                         </Grid>
-                        <Grid item xs={12} sm={12}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                             {
                                  stats.overdueBooks?
                                 <Grid container spacing={0}>
