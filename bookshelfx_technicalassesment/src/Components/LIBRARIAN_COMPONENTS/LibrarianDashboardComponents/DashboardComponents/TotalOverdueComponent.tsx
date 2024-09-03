@@ -19,9 +19,9 @@ export default function TotalOverdueComponent({totalOverdueRentals, totalBooks}:
                     alignItems: 'center',
                     width: '100%',
                     height: '100%',
-                    transition: 'transform 0.3s ease-in-out', // Add a transition for smooth animation
+                    transition: 'transform 0.3s ease-in-out', 
                     ':hover': {
-                        transform: 'translateY(-5px)', // Move the Box up by 5px on hover
+                        transform: 'translateY(-5px)',  
                         '& .changeColorOnHover': {
                             color: 'primary.main',
                         },

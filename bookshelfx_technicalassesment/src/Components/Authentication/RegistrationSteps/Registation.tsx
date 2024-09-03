@@ -50,6 +50,7 @@ import dynamic from 'next/dynamic';
 import CircularProgress from '@mui/material/CircularProgress';
 import { RegisterUser } from '@/Services/UserRoutines';
 import { User } from '@/Components/interfaceModels';
+import { EmailRoutines } from '@/Services/EmailRoutines';
 
 const steps = [
     'Personal Information',
@@ -195,6 +196,8 @@ export default function Registration()
               Avatar: register.user.Avatar,
               favoriteCategories: register.user.favoriteCategories
           }
+          await EmailRoutines({task: "UserRegistration", UserName: user.name, UserEmail: user.email, RegistrationDate: new Date()});
+          
           setIsAuthenticated(true);
           return user;
       }

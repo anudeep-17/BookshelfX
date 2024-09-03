@@ -19,6 +19,7 @@ import autoTable from 'jspdf-autotable';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import RentalConfirmationDialog from "./RentalConfirmationDialog";
 import DialogToDisplayInformation from "./DialogToDisplayInformation";
+import { EmailRoutines } from "@/Services/EmailRoutines";
 
 export default function CloseUserRentalsComponenet()
 {
@@ -230,6 +231,16 @@ export default function CloseUserRentalsComponenet()
             setAlertContent({severity: 'success', message: response.message});
             setAlertOpen(true);
             setActiveRentalData(ActiveRentalData.filter((rentalData) => rentalData.id !== rental.id));
+
+            await EmailRoutines({
+                task: "RentalCloser",
+                BookTitle: rental.book.title,
+                BookAuthors: rental.book.authors.join(", "),
+                BookRentalDate: new Date(rental.rentalDate),
+                BookReturnDate: new Date(rental.returnDate? rental.returnDate : new Date()),
+                UserEmail: rental.user?.email,
+            });
+        
         }
         else
         {

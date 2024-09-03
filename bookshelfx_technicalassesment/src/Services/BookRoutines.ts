@@ -1,4 +1,5 @@
 import { Book } from "@/Components/interfaceModels";
+import { EmailRoutines } from "./EmailRoutines";
 
 export async function getBooks(page: number, limit: number)
 {
@@ -103,7 +104,6 @@ export async function setAvailabilityofBook(bookId: number, availability: boolea
     });
     const data = await response.json();
     return data;
-
 }
 
 export async function getRentalsofUser(userID: number)
