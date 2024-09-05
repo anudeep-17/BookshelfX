@@ -18,6 +18,7 @@ export async function POST(req: Request)
     } = await req.json();
 
     let functiontoexecute = null;
+    let subject = null;
 
     if(!task || UserEmail === undefined)
     {
@@ -29,6 +30,7 @@ export async function POST(req: Request)
         {
             return NextResponse.json({ success: false, message: "BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, TotalBooksinlibrary are required" }, {status: 400});
         }
+        subject = 'Rental Receipt from BookshelfX: Confirmation of your rental, hopefully you enjoy the book!';
         functiontoexecute = RentalRecipt({BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, TotalBooksinlibrary});
     }
     else if(task === "RentalCloser")
@@ -37,6 +39,7 @@ export async function POST(req: Request)
         {
             return NextResponse.json({ success: false, message: "BookTitle, BookAuthors, BookRentalDate, BootReturnDate are required" }, {status: 400});
         }
+        subject = 'Rental Closer from BookshelfX: Thank you for returning the book!';
         functiontoexecute = RentalCloser({BookTitle, BookAuthors, BookRentalDate, BookReturnDate});
     }
     else if(task === "RentalOverdue")
@@ -45,6 +48,7 @@ export async function POST(req: Request)
         {
             return NextResponse.json({ success: false, message: "BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate are required" }, {status: 400});
         }
+        subject = 'Rental Overdue from BookshelfX: Please return the book as soon as possible';
         functiontoexecute = RentalOverdue({BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate });
     }
     else if(task === "RentalReturnRequest")
@@ -53,6 +57,7 @@ export async function POST(req: Request)
         {
             return NextResponse.json({ success: false, message: "BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate are required" }, {status: 400});
         }
+        subject = 'Rental Return Request from BookshelfX: Please return the book as soon as possible';
         functiontoexecute = RentalReturnRequest({BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate});
     }
     else if(task === "UserRegistration")
@@ -61,6 +66,7 @@ export async function POST(req: Request)
         {
             return NextResponse.json({ success: false, message: "UserName, UserEmail, RegistrationDate are required" }, {status: 400});
         }
+        subject = 'User Registration from BookshelfX: Welcome to BookshelfX';
         functiontoexecute = UserRegistration({UserName, UserEmail, RegistrationDate});
     }
     else
@@ -75,7 +81,7 @@ export async function POST(req: Request)
         const {data} = await resend.emails.send({
             from: 'Monika - BookShelfX Library Assistant <noreply@bookshelfx.store>',
             to: [ UserEmail ],
-            subject: 'Rental Receipt from BookshelfX: Confirmation of your rental, hopefully you enjoy the book!',
+            subject:  subject,
             html: functiontoexecute,
         });
         return NextResponse.json(data);

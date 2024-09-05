@@ -36,7 +36,7 @@ export default function Home() {
       const user = Cookies.get('user');
       if(user)
       {
-        if(JSON.parse(user).role === 'customer') 
+        if(JSON.parse(user).role === 'Customer') 
         {
           router.push('/Reader/home');
         }

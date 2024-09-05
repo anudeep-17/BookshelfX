@@ -117,10 +117,10 @@ export default function MyAccountComponent()
                                                     <span style={{ color: theme.palette.text.secondary }}>Number of Favorite Books:</span> {User?.favouriteBooks?.length || 0} Books
                                                 </Typography>
                                                 <Typography variant="h6" gutterBottom>
-                                                    <span style={{ color: theme.palette.text.secondary }}>Number of Rentals:</span> {User?.rentals?.length} books
+                                                    <span style={{ color: theme.palette.text.secondary }}>Number of Rentals:</span> {(User?.rentals && User?.rentals.length !== 0) ? User?.rentals.length : "No rentals"} books
                                                 </Typography>
                                                 <Typography variant="h6" gutterBottom>
-                                                    <span style={{ color: theme.palette.text.secondary }}>Number of Reviews:</span> {User?.reviews?.length} books
+                                                    <span style={{ color: theme.palette.text.secondary }}>Number of Reviews:</span> {(User?.reviews && User?.reviews.length !== 0) ? User?.reviews.length : "No reviews given"} books
                                                 </Typography>
 
                                                 <Typography variant="body1" gutterBottom>
@@ -130,7 +130,7 @@ export default function MyAccountComponent()
                                                 <Button variant="outlined"   color="secondary" sx={{mt:2, width: '70%'}} onClick={()=>{
                                                     setDeleteAccountDialog(true);
                                                 }}>
-                                                    Delete Account
+                                                    Delete Account 
                                                 </Button>
                                             </>
                                         }
