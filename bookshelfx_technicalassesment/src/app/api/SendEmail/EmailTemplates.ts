@@ -467,10 +467,12 @@ export const UserRegistration = ({
     UserName,
     UserEmail,
     RegistrationDate,
+    role
 }:{
     UserName: string,
     UserEmail: string,
     RegistrationDate: string,
+    role: string
 }) => {
     return `
     <!DOCTYPE html>
@@ -539,7 +541,7 @@ export const UserRegistration = ({
                 <h2>Registration Successful</h2>
                 <p><strong>Date:</strong> ${RegistrationDate}</p>
                 <p>Dear ${UserName},</p>
-                <p>Thank you for registering with bookshelfX. Your account has been successfully created.</p>
+                <p>Thank you for registering with bookshelfX as ${role}. Your account has been successfully created.</p>
                 <p>You can now access our library services using the email address: ${UserEmail}</p>
                 <p>We are excited to have you on board and look forward to providing you with the best library experience. 😊📚</p>
             </div>
