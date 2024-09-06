@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid, ThemeProvider, Typography } from "@mui/material";
+import { Box, Grid, ThemeProvider, Typography, useMediaQuery, useTheme } from "@mui/material";
 import theme from "@/Components/Themes";
 import { BarChart } from '@mui/x-charts/BarChart';
 import { BookRentalDetails } from "@/Components/interfaceModels";
@@ -21,6 +21,8 @@ export default function NumberOfOverdueDateComponent({ overdueBooks }: { overdue
         return acc;
       }, {});
 
+      const themeofscreen = useTheme();
+      const isSmallScreen = useMediaQuery(themeofscreen.breakpoints.down('sm'));
 
     return(
         <ThemeProvider theme={theme}>
@@ -67,7 +69,7 @@ export default function NumberOfOverdueDateComponent({ overdueBooks }: { overdue
                                 color: theme.palette.text.secondary
                             }
                         ]}
-                        width={1000}
+                        width={isSmallScreen? 300 : 1000}
                         height={300}
                         margin={{right: 5}}
                     />

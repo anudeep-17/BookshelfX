@@ -94,56 +94,25 @@ export default function Dashboard_Home()
                   {stats? 
                     (
                     <>
-                        <Grid item xs={12} sm={2}>
-                           
-                                {
-                                    stats.totalBooks !== undefined && stats.totalUsers !== undefined ?
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'flex-start',
-                                            width: '100%',
-                                            height: '100%'
-                                        }}
-                                    >
-                                        <Paper elevation={3} sx={{
-                                            width: '100%',
-                                            height: '49%'
-                                        }}>
+                       <Grid item xs={12} sm={12} md={12} lg={2}>
+                            {
+                                stats.totalBooks !== undefined && stats.totalUsers !== undefined ?
+                                <>
+                                <Grid container spacing={2} sx={{mb:2}}>
+                                    <Grid item xs={12} sm={12}>
+                                        <Paper elevation={3} sx={{ p: 1}}>
                                             <TotalBooksComponent totalBooks={stats.totalBooks}/>
                                         </Paper>
-                                        <Paper elevation={3} sx={{
-                                            width: '100%',
-                                            height: '49%'
-                                        }}>
+                                    </Grid>
+                                </Grid>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={12}>
+                                        <Paper elevation={3} sx={{ p: 1 }}>
                                             <TotalUsersComponent totalUsers={stats.totalUsers}/>
                                         </Paper>
-                                    </Box>
-                                    :
-                                    <Typography variant="h6" color="textSecondary" gutterBottom>
-                                        No Data
-                                    </Typography>
-                                }
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            {
-                                stats.rentedBooks !==undefined && stats.availableBooks !==undefined ?
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'flex-start',
-                                        alignItems: 'flex-start',
-                                        width: '100%',
-                                        height: '100%'
-                                    }}
-                                 >
-                                    <Paper elevation={3} sx={{alignContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
-                                        <RentalVsAvailableComponent rentalBookCount={stats.rentedBooks} availableBookCount={stats.availableBooks}/>
-                                    </Paper>
-                                </Box>
+                                    </Grid>
+                                </Grid>
+                                </>
                                 :
                                 <Typography variant="h6" color="textSecondary" gutterBottom>
                                     No Data
@@ -151,23 +120,33 @@ export default function Dashboard_Home()
                             }
                         </Grid>
 
-                        <Grid item xs={12} sm={4}>
+                        <Grid item xs={12} sm={12} md={12} lg={6}>
+                            {
+                                stats.rentedBooks !==undefined && stats.availableBooks !==undefined ?
+                                  <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={12}>
+                                        <Paper elevation={3} sx={{display: 'flex', alignContent: 'center', alignItems: 'center', justifyContent: 'center'}}>
+                                            <RentalVsAvailableComponent rentalBookCount={stats.rentedBooks} availableBookCount={stats.availableBooks}/>
+                                        </Paper>
+                                    </Grid>
+                                </Grid>
+                                :
+                                <Typography variant="h6" color="textSecondary" gutterBottom>
+                                    No Data
+                                </Typography>
+                            }
+                        </Grid>
+
+                        <Grid item xs={12} sm={12} md={12} lg={4}>
                             {
                                 stats.categoryWiseBooks && Object.keys(stats.categoryWiseBooks).length > 0 ?
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'flex-start',
-                                        alignItems: 'flex-start',
-                                        width: '100%',
-                                        height: '100%'
-                                    }}
-                                 > 
-                                    <Paper elevation={3} sx={{alignContent: 'center', alignItems: 'center', height: '100%'}}>
-                                        <CategorywiseBookCountComponent categoryWiseBooks={stats.categoryWiseBooks}/>
-                                    </Paper>
-                                </Box>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={12}>
+                                        <Paper elevation={3} sx={{display: 'flex', alignContent: 'center', alignItems: 'center', justifyContent:'center', height: '100%' }}>
+                                            <CategorywiseBookCountComponent categoryWiseBooks={stats.categoryWiseBooks}/>
+                                        </Paper>
+                                    </Grid>
+                                </Grid>
                                 :
                                 <Paper elevation={3} sx={{alignContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center'}}>
                                     <Typography variant="h6" color="textSecondary" gutterBottom>
@@ -176,92 +155,72 @@ export default function Dashboard_Home()
                                 </Paper>
                             }
                         </Grid>
-                        <Grid item xs={12} sm={12}>
+                        
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                             {
                                 stats.categoryWiseFavBooks ?
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'flex-start',
-                                        alignItems: 'flex-start',
-                                        width: '100%',
-                                        height: '100%'
-                                    }}
-                                > 
-                                <Paper elevation={3} sx={{alignContent: 'center', alignItems: 'center', width: '100%'}}>
-                                    <FavoriteBooksCountForEachCategory categoryWiseFavBooks={stats.categoryWiseFavBooks}/>
-                                </Paper>
-                                </Box>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={12}>
+                                        <Paper elevation={3} sx={{alignContent: 'center', alignItems: 'center', width: '100%'}}>
+                                            <FavoriteBooksCountForEachCategory categoryWiseFavBooks={stats.categoryWiseFavBooks}/>
+                                        </Paper>
+                                    </Grid>
+                                </Grid>
                                 :
                                 <Typography variant="h6" color="textSecondary" gutterBottom>
                                     No Data
                                 </Typography>
                             }
                         </Grid>
-                        <Grid item xs={12} sm={2}>
+                        <Grid item xs={12} sm={12} md={12} lg={2}>
                             {
                                  stats.overdueBooks?
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'flex-start',
-                                        alignItems: 'flex-start',
-                                        width: '100%',
-                                        height: '100%'
-                                    }}
-                                >
-                                    <Paper elevation={3} sx={{alignContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
-                                         <TotalOverdueComponent totalOverdueRentals={stats.overdueBooks.length} totalBooks={stats.totalBooks}/>
-                                    </Paper>
-                                </Box>
+                                 <Grid container spacing={0} sx={{
+                                    height: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-start',
+                                    width: '100%',
+                                 }}>
+                                    <Grid item xs={12} sm={12}>
+                                        <Paper elevation={3} sx={{alignContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
+                                            <TotalOverdueComponent totalOverdueRentals={stats.overdueBooks.length} totalBooks={stats.totalBooks}/>
+                                        </Paper>
+                                    </Grid>
+                                </Grid>
                                 :
                                 <Typography variant="h6" color="textSecondary" gutterBottom>
                                     No Data
                                 </Typography>
                             }
                         </Grid>
-                        <Grid item xs={12} sm={10}>
+                        <Grid item xs={12} sm={12} md={12} lg={10}>
                             {
                                  stats.overdueBooks?
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'flex-start',
-                                        alignItems: 'flex-start',
-                                        width: '100%',
-                                        height: '100%'
-                                    }}
-                                >
-                                    <Paper elevation={3} sx={{alignContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
-                                         <NumberOfOverdueDateComponent overdueBooks={stats.overdueBooks}/>
-                                    </Paper>
-                                </Box>
+                                 <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={12}>
+                                        <Paper elevation={3} sx={{alignContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
+                                            <NumberOfOverdueDateComponent overdueBooks={stats.overdueBooks}/>
+                                        </Paper>
+                                    </Grid>
+                                </Grid>
+
                                 :
                                 <Typography variant="h6" color="textSecondary" gutterBottom>
                                     No Data
                                 </Typography>
                             }
                         </Grid>
-                        <Grid item xs={12} sm={12}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                             {
                                  stats.overdueBooks?
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'flex-start',
-                                        alignItems: 'flex-start',
-                                        width: '100%',
-                                        height: '100%'
-                                    }}
-                                >
-                                    <Paper elevation={3} sx={{alignContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
-                                         <NumberOfReturnAuthorized librarianClosedRentals={stats.librarianClosedRentals}/>
-                                    </Paper>
-                                </Box>
+                                <Grid container spacing={0}>
+                                    <Grid item xs={12} sm={12}>
+                                        <Paper elevation={3} sx={{alignContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
+                                            <NumberOfReturnAuthorized librarianClosedRentals={stats.librarianClosedRentals}/>
+                                        </Paper>
+                                    </Grid>
+                                </Grid>
                                 :
                                 <Typography variant="h6" color="textSecondary" gutterBottom>
                                     No Data

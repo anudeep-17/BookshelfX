@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid, ThemeProvider, Typography } from "@mui/material";
+import { Box, Grid, ThemeProvider, Typography, useMediaQuery, useTheme } from "@mui/material";
 import theme from "@/Components/Themes";
 import { BarChart } from '@mui/x-charts/BarChart';
 import { BookRentalDetails } from "@/Components/interfaceModels";
@@ -11,7 +11,10 @@ export default function NumberOfReturnAuthorized({librarianClosedRentals}: {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     const data = months.map((month, index) => (librarianClosedRentals ? librarianClosedRentals[index] : 0) || 0);
-     
+
+    const themeofscreen = useTheme();
+    const isSmallScreen = useMediaQuery(themeofscreen.breakpoints.down('sm'));
+
     return(
         <ThemeProvider theme={theme}>
             <Box
@@ -57,7 +60,7 @@ export default function NumberOfReturnAuthorized({librarianClosedRentals}: {
                                 color: theme.palette.primary.main
                             }
                         ]}
-                        width={1200}
+                        width={isSmallScreen? 350:1200}
                         height={300}
                         margin={{right: 5}}
                     />

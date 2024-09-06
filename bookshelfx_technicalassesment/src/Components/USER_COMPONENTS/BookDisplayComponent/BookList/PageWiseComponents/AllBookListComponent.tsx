@@ -9,7 +9,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {BookDetails } from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { getAllBooksCount, getBooks, getBooksByCategory, getBooksCountByCategory, getCategories} from '@/Services/BookRoutines';
+import { getAllBooksCount, getBooks, getBooksByCategory, getBooksCountByCategory, getBooksForFilters, getCategories} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
 import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
@@ -22,18 +22,20 @@ export default function AllBooksListComponent()
     const router = useRouter();
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
 
+    const [isloading, setIsLoading] = React.useState<boolean>(false);
+
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string>('');
     const [selectedAuthorsInFilter, setSelectedAuthorsInFilter] = React.useState<string[]>([]);
-    const [selectedCategoriesInFilter, setSelectedCategoriesInFilter] = React.useState<string[]>([]);
-    
-    const [isFilterApplied, setIsFilterApplied] = React.useState<boolean>(false);
+    const [countofBooksForFilter, setCountofBooksForFilter] = React.useState<number>(0);
+    const [offsetForFilter, setOffsetForFilter] = React.useState(1);
+
 
     const [selectedCategory, setSelectedCategory] = React.useState<string>('All Books');
     const [allCategory, setCategory] = React.useState<string[]>([]);
     
     const [books, setBook] = React.useState<BookDetails[]>([])
     const [categoryWiseBooks, setCategoryWiseBooks] = React.useState<BookDetails[]>([]);
-    const [FilterBasedBooks, setFilterBasedBooks] = React.useState<BookDetails[]>([]);
+    const [filteredBooks, setFilteredBooks] = React.useState<BookDetails[]>([]);
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -71,6 +73,7 @@ export default function AllBooksListComponent()
     }, [selectedCategory]);
 
     React.useEffect(() => {
+        setIsLoading(true);
         const fetchData = async () => {
             if(selectedCategory !== 'All Books')
             {
@@ -82,9 +85,11 @@ export default function AllBooksListComponent()
         };
 
         fetchData();
+        setIsLoading(false);
     }, [selectedCategory, offsetForCategory]);
 
     React.useEffect(() => {
+        setIsLoading(true);
         const fetchData = async () => {
             const data = await getBooks(offset, 9);
             if (data.success) {
@@ -92,6 +97,7 @@ export default function AllBooksListComponent()
             }
         };
         fetchData();
+        setIsLoading(false);
     }, [offset]);
 
     React.useEffect(() => {
@@ -103,6 +109,41 @@ export default function AllBooksListComponent()
         };
         fetchData();
     }, []);
+
+    React.useEffect(() => {
+        setOffsetForFilter(1);
+    },[selectedAuthorsInFilter, selectedChipforAvailabilityInFilter]);
+    
+    React.useEffect(() => {
+        setSelectedAuthorsInFilter([]);
+        setSelectedChipforAvailabilityInFilter('');
+    }
+    ,[selectedCategory])
+
+    React.useEffect(() => {
+        setIsLoading(true);
+        const fetchData = async () => {
+            const data = await getBooksForFilters( offsetForFilter, 9, 
+                                                    selectedChipforAvailabilityInFilter !='' ? selectedChipforAvailabilityInFilter === 'Available'? true : false : null, 
+                                                    selectedAuthorsInFilter, 
+                                                    [],
+                                                    null, 
+                                                    selectedCategory !== 'All Books' ? selectedCategory : null, 
+                                                    null,
+                                                    'allbooks'
+                                                    );
+            if(data.success)
+            {
+                setFilteredBooks(data.data);
+                setCountofBooksForFilter(data.totalBooks);
+            }
+        }
+        fetchData();
+        setIsLoading(false);
+    }, [selectedChipforAvailabilityInFilter, selectedAuthorsInFilter, countofBooksForFilter, selectedCategory, offsetForFilter]);
+
+
+
 
     function handleBookClick(id: number) {
         router.push(`/Reader/book/${id}`);
@@ -277,8 +318,7 @@ export default function AllBooksListComponent()
                                                                 selectedAuthorInFilter={selectedAuthorsInFilter}
                                                                 setSelectedAuthorsInFilter={setSelectedAuthorsInFilter}
 
-                                                                selectedCategoriesInFilter={selectedCategoriesInFilter}
-                                                                setSelectedCategoriesInFilter={setSelectedCategoriesInFilter}
+                                                                SpecificCategory={selectedCategory === 'All Books' ? null : selectedCategory}
                                                             />
                                                         </Drawer>
                                                     </>
@@ -342,45 +382,67 @@ export default function AllBooksListComponent()
                                         }}
                                     >
                                         {
-                                            selectedCategory === null || selectedCategory === 'All Books'
-                                            ? (books.length > 0 
-                                                ? books.map((book: BookDetails) => (
-                                                    <DetailedBookCard
-                                                        key={book.id}
-                                                        bookID={Number(book.id)}
-                                                        coverimage={book.coverimage}
-                                                        title={book.title}
-                                                        description={book.description}
-                                                        rating={book.rating}
-                                                        authors={book.authors}
-                                                        availability={book.availability}
-                                                        onClick= {() => handleBookClick(book.id as number)}
-                                                        setAlert={setAlert}
-                                                        setAlertOpen={setAlertOpen}
-                                                    />
-                                                ))
-                                                : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
-                                                    No Books Found
-                                                </Typography>)
-                                            : (categoryWiseBooks.length > 0 
-                                                ? categoryWiseBooks.map((book: BookDetails) => (
-                                                    <DetailedBookCard
-                                                    key={book.id}
-                                                    bookID={Number(book.id)}
-                                                    coverimage={book.coverimage}
-                                                    title={book.title}
-                                                    description={book.description}
-                                                    rating={book.rating}
-                                                    authors={book.authors}
-                                                    availability={book.availability}
-                                                    onClick= {() => handleBookClick(book.id as number)}
-                                                    setAlert={setAlert}
-                                                    setAlertOpen={setAlertOpen}
-                                                    />
-                                                ))
-                                                : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
-                                                    No Books Found
-                                                </Typography>)
+                                            isloading 
+                                            ? <></>
+                                            : (selectedChipforAvailabilityInFilter.length > 0 || selectedAuthorsInFilter.length > 0)
+                                                ? (filteredBooks.length > 0 
+                                                    ? filteredBooks.map((book: BookDetails) => (
+                                                        <DetailedBookCard
+                                                            key={book.id}
+                                                            bookID={Number(book.id)}
+                                                            coverimage={book.coverimage}
+                                                            title={book.title}
+                                                            description={book.description}
+                                                            rating={book.rating}
+                                                            authors={book.authors}
+                                                            availability={book.availability}
+                                                            onClick= {() => handleBookClick(book.id as number)}
+                                                            setAlert={setAlert}
+                                                            setAlertOpen={setAlertOpen}
+                                                        />
+                                                    ))
+                                                    : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
+                                                        No Books Found
+                                                    </Typography>)
+                                                : selectedCategory === null || selectedCategory === 'All Books'
+                                                    ? (books.length > 0 
+                                                        ? books.map((book: BookDetails) => (
+                                                            <DetailedBookCard
+                                                                key={book.id}
+                                                                bookID={Number(book.id)}
+                                                                coverimage={book.coverimage}
+                                                                title={book.title}
+                                                                description={book.description}
+                                                                rating={book.rating}
+                                                                authors={book.authors}
+                                                                availability={book.availability}
+                                                                onClick= {() => handleBookClick(book.id as number)}
+                                                                setAlert={setAlert}
+                                                                setAlertOpen={setAlertOpen}
+                                                            />
+                                                        ))
+                                                        : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
+                                                            No Books Found
+                                                        </Typography>)
+                                                    : (categoryWiseBooks.length > 0 
+                                                        ? categoryWiseBooks.map((book: BookDetails) => (
+                                                            <DetailedBookCard
+                                                                key={book.id}
+                                                                bookID={Number(book.id)}
+                                                                coverimage={book.coverimage}
+                                                                title={book.title}
+                                                                description={book.description}
+                                                                rating={book.rating}
+                                                                authors={book.authors}
+                                                                availability={book.availability}
+                                                                onClick= {() => handleBookClick(book.id as number)}
+                                                                setAlert={setAlert}
+                                                                setAlertOpen={setAlertOpen}
+                                                            />
+                                                        ))
+                                                        : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
+                                                            No Books Found
+                                                        </Typography>)
                                         }
                                     </Box>
                                 </Grid>
@@ -398,12 +460,18 @@ export default function AllBooksListComponent()
                                     >
                                         { 
                                                 <Pagination 
-                                                    count={Math.ceil((selectedCategory !== 'All Books' ? countofBooksByCategory : countofBooks) / 9)}
+                                                    count={Math.ceil((selectedChipforAvailabilityInFilter.length > 0 || selectedAuthorsInFilter.length > 0 ? countofBooksForFilter  : selectedCategory !== 'All Books' ? countofBooksByCategory : countofBooks) / 9)}                                     
                                                     color="primary" 
                                                     size="large"
-                                                    page={selectedCategory !== 'All Books' ? offsetForCategory : offset}
+                                                    page={selectedChipforAvailabilityInFilter.length > 0 || selectedAuthorsInFilter.length > 0  ? offsetForFilter : selectedCategory !== 'All Books' ? offsetForCategory : offset}
                                                     onChange={(event, page) => {
-                                                        selectedCategory !== 'All Books' ? setOffsetForCategory(page) : setOffset(page);
+                                                        if (selectedChipforAvailabilityInFilter.length > 0 || selectedAuthorsInFilter.length > 0) {
+                                                            setOffsetForFilter(page);
+                                                        } else if (selectedCategory !== 'All Books') {
+                                                            setOffsetForCategory(page);
+                                                        } else {
+                                                            setOffset(page);
+                                                        }
                                                     }}
                                                 />
                                          } 

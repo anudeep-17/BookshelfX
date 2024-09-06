@@ -3,7 +3,7 @@ import React from 'react';
 import { Box, Button, CssBaseline, Grid, Paper, Rating, Skeleton, ThemeProvider, Toolbar, Tooltip, Typography } from '@mui/material';
 import theme from '../../Themes';
 import { Book, BookReview } from '../../interfaceModels';
-import { getBookByID, isbookrentedByUserPreviously, setAvailabilityofBook } from '@/Services/BookRoutines';
+import { getAllBooksCount, getBookByID, isbookrentedByUserPreviously, setAvailabilityofBook } from '@/Services/BookRoutines';
 import { DashboardSize } from "@/Components/DashboardSize";
 import EmblaCarousel from './EmblaCarousel'
 import { EmblaOptionsType } from 'embla-carousel'
@@ -33,6 +33,7 @@ import { BookDetails } from '../../interfaceModels';
 import RentalConfirmationDialog from '../RentaConfirmationDialogComponent/RentalConfirmationDialog';
 import { CheckIfAReveiwIsAlreadyGivenForTheBook, addAReviewToBook } from '@/Services/UserRoutines';
 import ReviewConfirmationDialog from '../ReviewComponent/reviewDialogComponent';
+import { EmailRoutines } from '@/Services/EmailRoutines';
 
 const drawerWidth = DashboardSize;
 const OPTIONS: EmblaOptionsType = { loop: true }
@@ -365,6 +366,14 @@ export default function WholeBookData({id}:{id: string})
             setAlertOpen(true);
             setIsBookRented(true);
             setIsBookRentedByCurrentUser(true);
+            await EmailRoutines({
+                task: "RentalRecipt",
+                BookTitle: book?.title,
+                BookAuthors: book?.authors.join(", "),
+                BookRentalDate: new Date(),
+                BookExpectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 14)),
+                TotalBooksinlibrary: await getAllBooksCount(),
+            });
         }
         else
         {
@@ -385,6 +394,13 @@ export default function WholeBookData({id}:{id: string})
             setIsBookRented(false); 
             setIsBookRentedByCurrentUser(false);
             setBookReturnUnderReview(true);
+            await EmailRoutines({
+                task: "RentalReturnRequest",
+                BookTitle: book?.title,
+                BookAuthors: book?.authors.join(", "),
+                BookRentalDate: new Date(),
+                BookExpectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 14)),
+            });
         }
         else
         {

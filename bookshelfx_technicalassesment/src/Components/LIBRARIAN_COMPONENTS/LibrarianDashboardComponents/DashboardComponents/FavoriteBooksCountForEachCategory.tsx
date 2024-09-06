@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid, ThemeProvider, Typography } from "@mui/material";
+import { Box, Grid, ThemeProvider, Typography, useMediaQuery, useTheme } from "@mui/material";
 import theme from "@/Components/Themes";
 import { BarChart } from '@mui/x-charts/BarChart';
 
@@ -7,6 +7,9 @@ export default function FavoriteBooksCountForEachCategory({categoryWiseFavBooks}
     {[key: string]: number}
 })
 {
+    const themeofscreen = useTheme();
+    const isSmallScreen = useMediaQuery(themeofscreen.breakpoints.down('sm'));
+
     return(
         <ThemeProvider theme={theme}>
                 <Box
@@ -42,7 +45,7 @@ export default function FavoriteBooksCountForEachCategory({categoryWiseFavBooks}
                         <BarChart 
                             xAxis={[{ scaleType:'band', data: Object.keys(categoryWiseFavBooks) }]}
                             series={[{ data: Object.values(categoryWiseFavBooks),  color: theme.palette.primary.main}]}
-                            width={1100}
+                            width={isSmallScreen? 300 : 1100}
                             height={250}
                             margin={{right: 5}}
                         />

@@ -22,7 +22,7 @@ async function CreateUsers()
     const passwords = faker.helpers.uniqueArray(faker.internet.password, 20);
 
     for (let i = 0; i < 20; i++) {
-        const role = faker.helpers.arrayElement(['librarian', 'customer']);
+        const role = faker.helpers.arrayElement(['Librarian', 'Customer']);
         const Avatar =  `https://avatar.iran.liara.run/public`
         const favoriteCategories = faker.helpers.shuffle(BookCategories.bookCategories).slice(0, 6);
         userData += `Email: ${emails[i]}, Name: ${names[i]}, Password: ${passwords[i]}, Role: ${role}, \t\t  Avatar: ${Avatar}, \t\t Favourite Categories: ${favoriteCategories.join(", ")}\n`;

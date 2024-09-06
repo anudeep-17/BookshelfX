@@ -6,6 +6,7 @@ import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Cookies from 'js-cookie';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const RegistrationStep1 = dynamic(() => import('@/Components/Authentication/RegistrationSteps/RegistationStep1'), { 
   loading: () => 
@@ -50,6 +51,8 @@ import dynamic from 'next/dynamic';
 import CircularProgress from '@mui/material/CircularProgress';
 import { RegisterUser } from '@/Services/UserRoutines';
 import { User } from '@/Components/interfaceModels';
+import { EmailRoutines } from '@/Services/EmailRoutines';
+import { usePathname, useRouter } from 'next/navigation'
 
 const steps = [
     'Personal Information',
@@ -59,6 +62,9 @@ const steps = [
 
 export default function Registration() 
 {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState<{[k: number]: boolean;}>({});
   const [alertopener, setAlertopener] = React.useState(false);
@@ -71,7 +77,6 @@ export default function Registration()
   const [passwordMatch, setpasswordMatch] = React.useState(false);
   const [Role, setRole] = React.useState('');
   const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
-  const [selectedAvatar, setSelectedAvatar] = React.useState<string>('');
 
   const [allSetFromUserSide, setAllSetFromUserSide] = React.useState(false);
   const [showAuthenticationFailed, setShowAuthenticationFailed] = React.useState(false);
@@ -96,55 +101,47 @@ export default function Registration()
 
   const handleNext = async () => {
 
-    let isError = false;
+      let isError = false;
 
-    if (activeStep+1 === 1) {
-        if (!Email || !Password || !ConfirmPassword || !Role || Password !== ConfirmPassword) {
-            setAlertopener(true);  
-            setalert({severity: 'error', message: 'Please fill in all fields and ensure passwords match'});
-            isError = true;
-            return;
-        } else {
-            setAlertopener(true);
-            setalert({severity: 'success', message: 'Step 1 Completed, account created'});
-        }
-    }
-    else if(activeStep+1 === 2) 
-    {
-        setAlertopener(true);
-        let registeruser;
-        if (selectedCategories.length > 1 && selectedAvatar !== '') {
-            setalert({severity: 'success', message: 'Step 2 Completed, Favourite categories added '});
-            registeruser = await handleRegister();
-        } else {
-            setalert({severity: 'success', message: 'Step 2 Skipped, no favourite categories selected'});
-            registeruser = await handleRegister();
-        }
+      if (activeStep+1 === 1) {
+          if (!Email || !Password || !ConfirmPassword || !Role || Password !== ConfirmPassword) {
+              setAlertopener(true);  
+              setalert({severity: 'error', message: 'Please fill in all fields and ensure passwords match'});
+              isError = true;
+              return;
+          } else {
+              setAlertopener(true);
+              setalert({severity: 'success', message: 'Step 1 Completed, account created'});
+          }
+      }
+      else if(activeStep+1 === 2) 
+      {
+          setAlertopener(true);
+          if (selectedCategories.length > 1 ) {
+              setalert({severity: 'success', message: 'Step 2 Completed, Favourite categories added '});
+          } else {
+              setalert({severity: 'success', message: 'Step 2 Skipped, no favourite categories selected'});
+          }
+          setAllSetFromUserSide(true);
+      }
+      else if (activeStep+1 === 3) {
+          let registeruser = await handleRegister();
 
-        // If user is registered, set the user in the cookies
-        if(registeruser)
-        {
-            Cookies.set('user', JSON.stringify(registeruser));
-        }
-        else
-        {
-            setAlertopener(true);
-            setalert({severity: 'error', message: 'Registration failed, please try again'});
-            isError = true;
-            setActiveStep(0); // Navigate back to step 0
-        }
-        setAllSetFromUserSide(true);
-    }
-    else if (activeStep+1 === 3) {
-        if (allSetFromUserSide) {
-            setAlertopener(true);
-            setalert({severity: 'success', message: 'Step 3 Completed, account created'});
-        } else {
-            setAlertopener(true);
-            setalert({severity: 'error', message: 'Please complete all steps'});
-            isError = true;
-        }     
-    }
+          // If user is registered, set the user in the cookies
+          if(registeruser)
+          {
+              Cookies.set('user', JSON.stringify(registeruser));
+              setAlertopener(true);
+              setalert({severity: 'success', message: 'Step 3 Completed, account created'});
+          }
+          else
+          {
+              setAlertopener(true);
+              setalert({severity: 'error', message: 'Registration failed, please try again'});
+              isError = true;
+              setActiveStep(0); // Navigate back to step 0
+          }     
+      }
 
     if (!isError) {
         const newActiveStep =
@@ -181,9 +178,10 @@ export default function Registration()
           email: Email,
           password: Password,
           role: Role,
-          Avatar:  selectedAvatar? selectedAvatar : '',
-         favoriteCategories: selectedCategories? selectedCategories : []
+          Avatar:  "https://avatar.iran.liara.run/public",
+         favoriteCategories: selectedCategories.length !== 0 ? selectedCategories : []
       }
+      
       const register = await RegisterUser(Registerdetails);
       if(register.success)
       {
@@ -195,6 +193,8 @@ export default function Registration()
               Avatar: register.user.Avatar,
               favoriteCategories: register.user.favoriteCategories
           }
+          await EmailRoutines({task: "UserRegistration", UserName: user.name, UserEmail: user.email, RegistrationDate: new Date(), role: user.role});
+          
           setIsAuthenticated(true);
           return user;
       }
@@ -207,6 +207,9 @@ export default function Registration()
 
   return (
     <Box sx={{ p:1.5, width: '45vw'}}>
+        <Button  sx={{mb:1}} onClick={()=>{router.push(pathname); }}>
+          <ArrowBackIosIcon/> Login
+        </Button>
         <Typography variant="h4" letterSpacing={2}>
             Signup
         </Typography>
@@ -247,13 +250,11 @@ export default function Registration()
                                           showPassword={showPassword} 
                                           setShowPassword={setShowPassword} 
                                       /> :
-                activeStep === 1 ?  <RegistrationStep2
+                activeStep === 1 && Role !== 'Librarian' ?  <RegistrationStep2
                                         setAlertopener={setAlertopener} 
                                         setAlert={setalert}
                                         selectedCategories={selectedCategories}
                                         setSelectedCategories={setSelectedCategories}
-                                        SelectedAvatar={selectedAvatar}
-                                        setSelectedAvatar={setSelectedAvatar}
                                       /> :
                 activeStep === 2 && allSetFromUserSide ?  <RegistrationStep3 /> : null
             }

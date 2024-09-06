@@ -77,12 +77,12 @@ export default function FeaturedBookComponent()
         setIsLoading(true);
         const fetchData = async () => {
             const data = await getBooksForFilters(  offsetForFilter, 9, 
-                                                    selectedChipforAvailabilityInFilter === 'Available'? true : false, 
+                                                    selectedChipforAvailabilityInFilter !='' ? selectedChipforAvailabilityInFilter === 'Available'? true : false : null, 
                                                     selectedAuthorsInFilter, 
                                                     selectedCategoriesInFilter, 
                                                     true, 
-                                                    '', 
-                                                    0,
+                                                    null, 
+                                                    null,
                                                     'featuredbooks'
                                                     );
             if(data.success)
@@ -199,7 +199,7 @@ export default function FeaturedBookComponent()
                                                 mb:1,
                                                 }}
                                             >
-                                                <Tooltip title="Sort by Alphabetical Order" placement="top" arrow>
+                                                
                                                     <>
                                                     <Button
                                                         sx={{
@@ -211,7 +211,9 @@ export default function FeaturedBookComponent()
                                                         }}
                                                         onClick={handleSortClick}
                                                     >
-                                                        <SortByAlphaIcon/>
+                                                        <Tooltip title="Sort by Alphabetical Order" placement="top" arrow>
+                                                            <SortByAlphaIcon/>
+                                                        </Tooltip>
                                                     </Button>
                                                     <Menu
                                                         id="basic-menu"
@@ -230,9 +232,9 @@ export default function FeaturedBookComponent()
                                                         </MenuItem>
                                                     </Menu>
                                                     </>
-                                                </Tooltip>
+                                            
                                                 
-                                                <Tooltip title="Filter" placement="top" arrow>
+                                                
                                                     <>
                                                         <Button
                                                             sx={{
@@ -243,7 +245,10 @@ export default function FeaturedBookComponent()
                                                             }}
                                                             onClick={toggleDrawer(true)}
                                                         >
-                                                            <FilterAltIcon sx={{ color: 'primary.main' }} />
+                                                            <Tooltip title="Filter" placement="top" arrow>
+                                                                <FilterAltIcon sx={{ color: 'primary.main' }} />
+                                                            </Tooltip>
+
                                                         </Button>
                                                         <Drawer anchor='right' open={filterdraweropen} onClose={toggleDrawer(false)}>
                                                              <DrawerForFilter 
@@ -259,7 +264,6 @@ export default function FeaturedBookComponent()
                                                             />
                                                         </Drawer>
                                                     </>
-                                                </Tooltip>
                                             </Box>
                                         </Box>                        
                                 </Grid>

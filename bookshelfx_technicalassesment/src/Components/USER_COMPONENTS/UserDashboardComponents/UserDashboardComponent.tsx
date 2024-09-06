@@ -35,11 +35,15 @@ const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false, loading
 export default function UserDashboardComponent() {
     const [categories, setCategory] = React.useState<string[]>([]);
     const [selectedCategory, setSelectedCategory] = React.useState('');
+
     React.useEffect(() => {
         const fetchData = async () => {
             const userCookie = Cookies.get('user');
+            console.log(userCookie)
             const data = userCookie ? JSON.parse(userCookie).favoriteCategories : undefined;
-            if (data !== undefined) {
+            if (data !== undefined) 
+            {
+                console.log("data", data)
                 setCategory(data);
             }
             setSelectedCategory(data[0]);
@@ -296,7 +300,7 @@ export default function UserDashboardComponent() {
                                                 sm: 'nowrap',
                                             },
                                         
-                                            gap: {xs: 1, sm: 0},
+                                            gap: {xs: 1, sm: 1},
                                         }}>
                                             {categories.map((category, index) => (
                                                 <Chip

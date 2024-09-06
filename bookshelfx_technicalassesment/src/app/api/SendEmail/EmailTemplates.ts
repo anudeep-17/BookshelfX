@@ -117,123 +117,6 @@ export const RentalRecipt = ({BookTitle, BookAuthors, BookRentalDate, BookExpect
     `;
 };
 
-
-export const ReturnReminder = ({
-    BookTitle,
-    BookAuthors,
-    BookRentalDate,
-    BookExpectedReturnDate,
- 
-}:{
-    BookTitle: string,
-    BookAuthors: string,
-    BookRentalDate: string,
-    BookExpectedReturnDate: string,
-}) => {
-    return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Library Book Return Reminder</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-                background-color: #f4f4f4;
-            }
-            .container {
-                width: 100%;
-                max-width: 600px;
-                margin: 0 auto;
-                background-color: #ffffff;
-                padding: 20px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            }
-            .header {
-                text-align: center;
-                padding: 10px 0;
-                border-bottom: 1px solid #dddddd;
-            }
-            .header h1 {
-                margin: 0;
-                font-size: 24px;
-            }
-            .header .library-name {
-                display: inline;
-                font-size: 28px; /* Increase the font size here */
-            }
-            .header .library-name .green {
-                color: green;
-            }
-            .content {
-                padding: 20px 0;
-            }
-            .content h2 {
-                margin: 0 0 10px 0;
-                font-size: 20px;
-            }
-            .content p {
-                margin: 5px 0;
-            }
-            .content table {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 20px 0;
-            }
-            .content table, .content th, .content td {
-                border: 1px solid #dddddd;
-            }
-            .content th, .content td {
-                padding: 8px;
-                text-align: left;
-            }
-            .footer {
-                text-align: center;
-                padding: 10px 0;
-                border-top: 1px solid #dddddd;
-                font-size: 12px;
-                color: #777777;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <p class="library-name">bookshelf<span class="green">X</span></p>
-                <h1>Library Book Return Reminder</h1>
-            </div>
-            <div class="content">
-                <h2>Reminder Details</h2>
-                <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
-                <h2>Book Details</h2>
-                <table>
-                    <tr>
-                        <th>Book Title</th>
-                        <th>Book Authors</th>
-                        <th>Rental Date</th>
-                        <th>Expected Return Date</th>
-                    </tr>
-                    <tr>
-                        <td>${BookTitle}</td>
-                        <td>${BookAuthors}</td>
-                        <td>${BookRentalDate}</td>
-                        <td>${BookExpectedReturnDate}</td>
-                    </tr>
-                </table>
-                <p>This is a gentle reminder that you have one more day to return the book(s) listed above. Please consider returning the book(s) on time to avoid Overdue. 😊📚</p>
-            </div>
-            <div class="footer">
-                <p>Thank you for using our library services!</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    `;
-};
-
 export const RentalCloser = ({
     BookTitle,
     BookAuthors,
@@ -579,132 +462,17 @@ export const RentalReturnRequest = ({
     `;
 };
 
-export const RentalReturnConfirmation = ({
-    BookTitle,
-    BookAuthors,
-    BookRentalDate,
-    BookReturnDate,
-    LibrarianID
-}:{
-    BookTitle: string,
-    BookAuthors: string,
-    BookRentalDate: string,
-    BookReturnDate: string,
-    LibrarianID: string
-}) => {
-    return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Library Book Return Confirmation</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-                background-color: #f4f4f4;
-            }
-            .container {
-                width: 100%;
-                max-width: 600px;
-                margin: 0 auto;
-                background-color: #ffffff;
-                padding: 20px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            }
-            .header {
-                text-align: center;
-                padding: 10px 0;
-                border-bottom: 1px solid #dddddd;
-            }
-            .header h1 {
-                margin: 0;
-                font-size: 24px;
-            }
-            .header .library-name {
-                display: inline;
-                font-size: 28px;
-            }
-            .header .library-name .green {
-                color: green;
-            }
-            .content {
-                padding: 20px 0;
-            }
-            .content h2 {
-                margin: 0 0 10px 0;
-                font-size: 20px;
-            }
-            .content p {
-                margin: 5px 0;
-            }
-            .content table {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 20px 0;
-            }
-            .content table, .content th, .content td {
-                border: 1px solid #dddddd;
-            }
-            .content th, .content td {
-                padding: 8px;
-                text-align: left;
-            }
-            .footer {
-                text-align: center;
-                padding: 10px 0;
-                border-top: 1px solid #dddddd;
-                font-size: 12px;
-                color: #777777;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <p class="library-name">bookshelf<span class="green">X</span></p>
-                <h1>Library Book Return Confirmation</h1>
-            </div>
-            <div class="content">
-                <h2>Confirmation Details</h2>
-                <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
-                <h2>Book Details</h2>
-                <table>
-                    <tr>
-                        <th>Book Title</th>
-                        <th>Book Authors</th>
-                        <th>Rental Date</th>
-                        <th>Return Date</th>
-                    </tr>
-                    <tr>
-                        <td>${BookTitle}</td>
-                        <td>${BookAuthors}</td>
-                        <td>${BookRentalDate}</td>
-                        <td>${BookReturnDate}</td>
-                    </tr>
-                </table>
-                <p>Your Rental Was Closed by Librarian with ID ${LibrarianID}, We have received the returned book(s) listed above. Thank you for returning them on time. 😊📚</p>
-            </div>
-            <div class="footer">
-                <p>Thank you for using our library services!</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    `;
-};
-
 
 export const UserRegistration = ({
     UserName,
     UserEmail,
     RegistrationDate,
+    role
 }:{
     UserName: string,
     UserEmail: string,
     RegistrationDate: string,
+    role: string
 }) => {
     return `
     <!DOCTYPE html>
@@ -773,12 +541,104 @@ export const UserRegistration = ({
                 <h2>Registration Successful</h2>
                 <p><strong>Date:</strong> ${RegistrationDate}</p>
                 <p>Dear ${UserName},</p>
-                <p>Thank you for registering with bookshelfX. Your account has been successfully created.</p>
+                <p>Thank you for registering with bookshelfX as ${role}. Your account has been successfully created.</p>
                 <p>You can now access our library services using the email address: ${UserEmail}</p>
                 <p>We are excited to have you on board and look forward to providing you with the best library experience. 😊📚</p>
             </div>
             <div class="footer">
                 <p>Thank you for joining bookshelfX!</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+};
+
+
+export const UserDeletion = ({
+    UserName,
+    UserEmail,
+    DeletionDate, 
+    role
+}:{
+    UserName: string,
+    UserEmail: string,
+    DeletionDate: string, 
+    role: string
+}) => {
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Account Deletion Confirmation</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }
+            .container {
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: #ffffff;
+                padding: 20px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            .header {
+                text-align: center;
+                padding: 10px 0;
+                border-bottom: 1px solid #dddddd;
+            }
+            .header h1 {
+                margin: 0;
+                font-size: 24px;
+            }
+            .header .library-name {
+                display: inline;
+                font-size: 28px;
+            }
+            .header .library-name .green {
+                color: green;
+            }
+            .content {
+                padding: 20px 0;
+            }
+            .content h2 {
+                margin: 0 0 10px 0;
+                font-size: 20px;
+            }
+            .content p {
+                margin: 5px 0;
+            }
+            .footer {
+                text-align: center;
+                padding: 10px 0;
+                border-top: 1px solid #dddddd;
+                font-size: 12px;
+                color: #777777;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <p class="library-name">bookshelf<span class="green">X</span></p>
+                <h1>Account Deletion Confirmation</h1>
+            </div>
+            <div class="content">
+                <h2>Account Deleted</h2>
+                <p><strong>Date:</strong> ${DeletionDate}</p>
+                <p>Dear ${UserName},</p>
+                <p>We are sorry to see you go. Your account associated with the email address ${UserEmail} has been successfully deleted on ${DeletionDate}.</p>
+                <p>If you have any questions or need further assistance, please do not hesitate to contact us.</p>
+                <p>Thank you for being a part of bookshelfX as ${role}. We hope to see you again in the future. 😊📚</p>
+            </div>
+            <div class="footer">
+                <p>Thank you for using bookshelfX!</p>
             </div>
         </div>
     </body>

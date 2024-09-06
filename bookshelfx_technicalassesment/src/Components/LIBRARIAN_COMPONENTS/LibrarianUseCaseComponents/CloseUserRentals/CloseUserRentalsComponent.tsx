@@ -1,6 +1,6 @@
 'use client';
 import React from "react";
-import { Chip, Alert, Box, Button, CircularProgress, CssBaseline, Grid, Pagination, Paper, Snackbar, TextField, ThemeProvider, Toolbar, Typography, Tooltip, FormControl, IconButton, Badge, Autocomplete, TablePagination } from "@mui/material";
+import { Chip, Alert, Box, Button, CircularProgress, CssBaseline, Grid, Pagination, Paper, Snackbar, TextField, ThemeProvider, Toolbar, Typography, Tooltip, FormControl, IconButton, Badge, Autocomplete, TablePagination, useTheme, useMediaQuery } from "@mui/material";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -17,17 +17,17 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import { RentalReturnConfirmation } from "@/app/api/SendEmail/EmailTemplates";
 import RentalConfirmationDialog from "./RentalConfirmationDialog";
 import DialogToDisplayInformation from "./DialogToDisplayInformation";
+import { EmailRoutines } from "@/Services/EmailRoutines";
 
 export default function CloseUserRentalsComponenet()
 {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
-
-    function createData(rental: BookRentalDetails) {
+ 
+    function createData(rental: BookRentalDetails) {    
         return {
             id: rental.id,
             bookId: rental.bookId,
@@ -231,6 +231,16 @@ export default function CloseUserRentalsComponenet()
             setAlertContent({severity: 'success', message: response.message});
             setAlertOpen(true);
             setActiveRentalData(ActiveRentalData.filter((rentalData) => rentalData.id !== rental.id));
+
+            await EmailRoutines({
+                task: "RentalCloser",
+                BookTitle: rental.book.title,
+                BookAuthors: rental.book.authors.join(", "),
+                BookRentalDate: new Date(rental.rentalDate),
+                BookReturnDate: new Date(rental.returnDate? rental.returnDate : new Date()),
+                UserEmail: rental.user?.email,
+            });
+        
         }
         else
         {
@@ -248,7 +258,7 @@ export default function CloseUserRentalsComponenet()
                 <CssBaseline />
                     <Box
                         component="main"
-                        sx={{width: { sm: `calc(100% - ${drawerWidth}px)`}, marginLeft: { sm: `${drawerWidth}px` }, }}
+                        sx={{width: { xs: '100%' ,sm: `calc(100% - ${drawerWidth}px)`}, marginLeft: { sm: `${drawerWidth}px` },}}
                     >
                         <Toolbar />         
                         <Box
@@ -261,7 +271,7 @@ export default function CloseUserRentalsComponenet()
                                 p:1.5,
                             }}
                         >
-                            <Typography variant="h3" sx={{mt:1}}>
+                            <Typography variant="h3" sx={{mt:1}} textAlign={'center'}>
                                User Rental Details
                             </Typography>
                             <Typography variant="body1" sx={{mb:3, mt:1, color: theme.palette.text.secondary}}>
@@ -290,7 +300,6 @@ export default function CloseUserRentalsComponenet()
                                     <IconButton 
                                         onClick={exportPDF} 
                                         disabled={CurrentView === 'active'? ActiveRentalData.length<=0 : ClosedRentalData.length<=0}
-
                                     >
                                         <PictureAsPdfIcon color="inherit" sx={{
                                             color: CurrentView === 'active'? ActiveRentalData.length<=0 ? 'grey[10]' : 'primary' : ClosedRentalData.length<=0 ? 'grey[10]' : theme.palette.text.secondary
@@ -313,8 +322,10 @@ export default function CloseUserRentalsComponenet()
                              
                             </Box>
                             
-                            <TableContainer component={Paper}>
-                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                            <TableContainer component={Paper} sx={{
+                                overflowX: 'auto',
+                            }}>
+                                <Table sx={{ minWidth: 650 }} aria-label="customized table">
                                     <TableHead>
                                         <TableRow>
                                         <TableCell>
@@ -395,6 +406,7 @@ export default function CloseUserRentalsComponenet()
 
                                         </TableRow>
                                     </TableHead>
+
                                     <TableBody>
                                     {Loading ? (
                                         <CircularProgress />
@@ -537,7 +549,6 @@ export default function CloseUserRentalsComponenet()
                                         )
                                     ))}    
                                     <TableRow
-                                                     
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell colSpan={10} align="center">

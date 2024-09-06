@@ -1,4 +1,5 @@
 import { Book } from "@/Components/interfaceModels";
+import { EmailRoutines } from "./EmailRoutines";
 
 export async function getBooks(page: number, limit: number)
 {
@@ -103,7 +104,6 @@ export async function setAvailabilityofBook(bookId: number, availability: boolea
     });
     const data = await response.json();
     return data;
-
 }
 
 export async function getRentalsofUser(userID: number)
@@ -215,9 +215,9 @@ export async function removeFavBooks(userId: number, bookId: number)
     return data;
 }
 
-export async function getFavBooksByUser(userId: number)
+export async function getFavBooksByUser(userId: number, page: number)
 {
-    const response = await fetch(`/api/user/favouriteBook/getFavBooks?userId=${userId}`);
+    const response = await fetch(`/api/user/favouriteBook/getFavBooks?userId=${userId}&page=${page}`);
     const data = await response.json();
     return data;
 }
@@ -254,12 +254,12 @@ export async function getAllBooksCount()
 export async function getBooksForFilters(
         page: number, 
         limit: number, 
-        availabilityFilterPassed: boolean, 
-        authorsFilterPassed: string[], 
-        categoriesFilterPassed: string[],
-        isFeaturedBook: boolean,
-        SpecificCategory: string, 
-        UserID: number, 
+        availabilityFilterPassed: boolean | null, 
+        authorsFilterPassed: string[] | null, 
+        categoriesFilterPassed: string[] | null,
+        isFeaturedBook: boolean | null,
+        SpecificCategory: string | null, 
+        UserID: number | null, 
         currentPage: "featuredbooks" | "category" | "allcategory" | "allbooks" | "search" | "allbooks"
     )
 {
@@ -271,5 +271,42 @@ export async function getBooksForFilters(
         body: JSON.stringify({availabilityFilterPassed, authorsFilterPassed, categoriesFilterPassed, isFeaturedBook, SpecificCategory, UserID, currentPage})
     });
     const data = await response.json();
+    return data;
+}
+
+export async function getAuthorsForFiltering(
+    pageName: "featuredbooks" | "allcategory" | "favourites" | "allbooks",
+    isFeaturedBook: boolean | null,
+    SpecificCategory: string | null,
+    FavouriteBooksForUserID: number | null
+)
+{
+    const authors = await fetch('/api/books/getAll/forGivenFilters/getAuthors', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({pageName, isFeaturedBook, SpecificCategory, FavouriteBooksForUserID})
+    });
+
+    const data = await authors.json();
+    return data;
+}
+
+export async function getCategoriesForFiltering(
+    pageName: "featuredbooks" | "allcategory" | "favourites" | "allbooks",
+    isFeaturedBook: boolean | null, 
+
+)
+{
+    const categories = await fetch('/api/books/getAll/forGivenFilters/getCategories', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({pageName, isFeaturedBook})
+    });
+
+    const data = await categories.json();
     return data;
 }

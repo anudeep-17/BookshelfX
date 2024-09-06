@@ -6,10 +6,11 @@ import theme from '../../../Themes';
 import { BookCardProps, BookReview } from '../../../interfaceModels';
 import bookcover from '@/assets/bookcover.png';
 import Cookies from 'js-cookie';
-import { isbookrentedByUserPreviously, isbookrentedbycurrentuser, isuserReturnInitiated, setAvailabilityofBook } from '@/Services/BookRoutines';
+import { getAllBooksCount, isbookrentedByUserPreviously, isbookrentedbycurrentuser, isuserReturnInitiated, setAvailabilityofBook } from '@/Services/BookRoutines';
 import RentalConfirmationDialog from '@/Components/USER_COMPONENTS/RentaConfirmationDialogComponent/RentalConfirmationDialog';
 import ReviewConfirmationDialog from '../../ReviewComponent/reviewDialogComponent';
 import { CheckIfAReveiwIsAlreadyGivenForTheBook, addAReviewToBook } from '@/Services/UserRoutines';
+import { EmailRoutines } from '@/Services/EmailRoutines';
 
 
 export default function DetailedBookCard({bookID, coverimage, title, description, rating, authors, availability, onClick, setAlert,setAlertOpen }: BookCardProps 
@@ -99,6 +100,14 @@ export default function DetailedBookCard({bookID, coverimage, title, description
             setAlertOpen(true);
             setIsBookRented(true);
             setIsRentedBytheSameUser(true);
+            await EmailRoutines({
+                task: "RentalRecipt",
+                BookTitle: title,
+                BookAuthors: authors.join(", "),
+                BookRentalDate: new Date(),
+                BookExpectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 14)),
+                TotalBooksinlibrary: await getAllBooksCount(),
+            });
         }
         else
         {
@@ -115,6 +124,13 @@ export default function DetailedBookCard({bookID, coverimage, title, description
             setAlertOpen(true);
             setIsBookRented(false);
             setIsRentedBytheSameUser(false);
+            await EmailRoutines({
+                task: "RentalReturnRequest",
+                BookTitle: title,
+                BookAuthors: authors.join(", "),
+                BookRentalDate: new Date(),
+                BookExpectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 14)),
+            });
         }
         else
         {

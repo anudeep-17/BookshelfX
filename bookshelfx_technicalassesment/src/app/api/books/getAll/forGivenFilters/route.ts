@@ -9,8 +9,11 @@ export async function POST(req:Request)
         const page = parseInt(url.searchParams.get('page') || '1');
         const limit = parseInt(url.searchParams.get('limit') || '10');
         const {availabilityFilterPassed, authorsFilterPassed, categoriesFilterPassed, isFeaturedBook, SpecificCategory, UserID, currentPage} = await req.json();
+        
 
-        if (availabilityFilterPassed == null || authorsFilterPassed == null || (SpecificCategory === false && currentPage !== 'allcategory' && categoriesFilterPassed == null) || (currentPage === 'favourites' && UserID == null)) {
+        if ((authorsFilterPassed == null || SpecificCategory == null) || 
+            (currentPage === 'allcategory' || currentPage === 'allbooks') && categoriesFilterPassed === null || 
+            (currentPage === 'favourites' && UserID == null)) {
             return NextResponse.json({success: false, message: "All fields are required"}, {status: 400});
         }
 
@@ -39,6 +42,11 @@ export async function POST(req:Request)
         if (categoriesFilterPassed != null && categoriesFilterPassed.length > 0 && currentPage !== 'allcategory' && SpecificCategory === null) 
         {
             filters.AND.push({ category: { in: categoriesFilterPassed } });
+        }
+
+        if(categoriesFilterPassed == null &&  SpecificCategory!= null)
+        {
+            filters.AND.push({ category: SpecificCategory });
         }
 
         if (filters.AND.length === 0) {

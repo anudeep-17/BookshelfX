@@ -9,11 +9,10 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {BookDetails, BookCardProps} from '@/Components/interfaceModels';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import {getCategories, getBooksByCategory, getBooksCountByCategory} from '@/Services/BookRoutines';
+import {getCategories, getBooksByCategory, getBooksCountByCategory, getBooksForFilters} from '@/Services/BookRoutines';
 import { useRouter} from 'next/navigation';
 import DrawerForFilter from '../DrawerForFilter';
-import { handleSort, slidervaluetext_forDays } from '@/Services/SortingAndFilteringRoutines';
- 
+import { handleSort } from '@/Services/SortingAndFilteringRoutines';
 import Fireworks from 'react-canvas-confetti/dist/presets/fireworks';
  
 const DetailedBookCard = dynamic(() => import('@/Components/USER_COMPONENTS/BookDisplayComponent/BookList/DetailedBookCard'), { ssr: false });
@@ -22,15 +21,20 @@ export default function AllCategoryBookListComponent()
 {
     const router = useRouter();
     const [filterdraweropen, setFilterDrawerOpen] = React.useState(false);
-   
+    
+    const [isloading, setIsLoading] = React.useState<boolean>(false);
     const [selectedChipforAvailabilityInFilter, setSelectedChipforAvailabilityInFilter] =  React.useState<string>('');
     const [selectedAuthorsInFilter, setSelectedAuthorsInFilter] = React.useState<string[]>([]);
-    const [selectedCategoriesInFilter, setSelectedCategoriesInFilter] = React.useState<string[]>([]);
+    const [countofBooksForFilter, setCountofBooksForFilter] = React.useState<number>(0);
+    const [offsetForFilter, setOffsetForFilter] = React.useState(1);
+
 
     const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
     const [allCategory, setCategory] = React.useState<string[]>([]);
-    const [categoryWiseBooks, setCategoryWiseBooks] = React.useState<BookDetails[]>([]);
 
+    const [categoryWiseBooks, setCategoryWiseBooks] = React.useState<BookDetails[]>([]);
+    const [filteredBooks, setFilteredBooks] = React.useState<BookDetails[]>([]);
+    
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -39,7 +43,8 @@ export default function AllCategoryBookListComponent()
     
     const [alert, setAlert] = React.useState<{severity: 'success' | 'error', message: string}>({severity: 'success', message: ""});
     const [Alertopen, setAlertOpen] = React.useState(false);  
-    
+
+
     React.useEffect(() => {
         const fetchData = async () => {
             const data = await getBooksCountByCategory(selectedCategory? selectedCategory : '');
@@ -51,6 +56,7 @@ export default function AllCategoryBookListComponent()
     },[selectedCategory])
 
     React.useEffect(() => {
+        setIsLoading(true);
         const fetchData = async () => {
             const data = await getBooksByCategory(selectedCategory? selectedCategory : '', offset, 9);
             if (data.success) {
@@ -58,6 +64,7 @@ export default function AllCategoryBookListComponent()
             }
         }
         fetchData();
+        setIsLoading(false);
     },[selectedCategory, offset])
 
     React.useEffect(() => {
@@ -70,6 +77,40 @@ export default function AllCategoryBookListComponent()
 
         fetchData();
     }, []);
+
+    React.useEffect(() => {
+        setOffsetForFilter(1);
+    },[selectedAuthorsInFilter, selectedChipforAvailabilityInFilter]);
+    
+    React.useEffect(() => {
+        setSelectedAuthorsInFilter([]);
+        setSelectedChipforAvailabilityInFilter('');
+    }
+    ,[selectedCategory])
+
+    React.useEffect(() => {
+        setIsLoading(true);
+        const fetchData = async () => {
+            const data = await getBooksForFilters( offsetForFilter, 9, 
+                                                    selectedChipforAvailabilityInFilter !='' ? selectedChipforAvailabilityInFilter === 'Available'? true : false : null,  
+                                                    selectedAuthorsInFilter, 
+                                                    [], 
+                                                    null, 
+                                                    selectedCategory, 
+                                                    null,
+                                                    'allcategory'
+                                                    );
+            if(data.success)
+            {
+                setFilteredBooks(data.data);
+                setCountofBooksForFilter(data.totalBooks);
+            }
+        }
+        fetchData();
+        setIsLoading(false);
+    }, [selectedChipforAvailabilityInFilter, selectedAuthorsInFilter, countofBooksForFilter, offsetForFilter]);
+
+
 
     function handleBookClick(id: number) {
         router.push(`/Reader/book/${id}`);
@@ -185,7 +226,7 @@ export default function AllCategoryBookListComponent()
                                                 mb:1,
                                                 }}
                                             >
-                                                <Tooltip title="Sort by Alphabetical Order" placement="top" arrow>
+                                               
                                                     <>
                                                     <Button
                                                         sx={{
@@ -197,7 +238,9 @@ export default function AllCategoryBookListComponent()
                                                         }}
                                                         onClick={handleSortClick}
                                                     >
-                                                        <SortByAlphaIcon/>
+                                                        <Tooltip title="Sort by Alphabetical Order" placement="top" arrow>
+                                                            <SortByAlphaIcon/>
+                                                        </Tooltip>
                                                     </Button>
                                                     <Menu
                                                         id="basic-menu"
@@ -208,20 +251,20 @@ export default function AllCategoryBookListComponent()
                                                         'aria-labelledby': 'basic-button',
                                                         }}
                                                     >
-                                                        <MenuItem onClick={() => handleSort({sortBy: 'title', setBook: setCategoryWiseBooks, books: categoryWiseBooks, handleSortClose: handleSortClose})}>
+                                                        <MenuItem disabled={selectedCategory === null} onClick={() => handleSort({sortBy: 'title', setBook: setCategoryWiseBooks, books: categoryWiseBooks, handleSortClose: handleSortClose})}>
                                                             Sort by book titles
                                                         </MenuItem>
-                                                        <MenuItem onClick={() => handleSort({sortBy: 'author',  setBook: setCategoryWiseBooks, books: categoryWiseBooks, handleSortClose: handleSortClose})}>
+                                                        <MenuItem disabled={selectedCategory === null} onClick={() => handleSort({sortBy: 'author',  setBook: setCategoryWiseBooks, books: categoryWiseBooks, handleSortClose: handleSortClose})}>
                                                             Sort by book authors
                                                         </MenuItem>
-                                                        <MenuItem onClick={() => handleSort({sortBy: 'Category', setCategory, allCategory, handleSortClose: handleSortClose})}>
+                                                        <MenuItem disabled={selectedCategory === null} onClick={() => handleSort({sortBy: 'Category', setCategory, allCategory, handleSortClose: handleSortClose})}>
                                                             Sort book categories
                                                         </MenuItem>
                                                     </Menu>
                                                     </>
-                                                </Tooltip>
                                                 
-                                                <Tooltip title="Filter" placement="top" arrow>
+
+                                               
                                                     <>
                                                         <Button
                                                             sx={{
@@ -231,8 +274,11 @@ export default function AllCategoryBookListComponent()
                                                             },
                                                             }}
                                                             onClick={toggleDrawer(true)}
+                                                            disabled = {selectedCategory === null}
                                                         >
-                                                            <FilterAltIcon sx={{ color: 'primary.main' }} />
+                                                            <Tooltip title="Filter" placement="top" arrow>
+                                                             <FilterAltIcon sx={{ color: 'primary.main' }} />
+                                                            </Tooltip>
                                                         </Button>
                                                         <Drawer anchor='right' open={filterdraweropen} onClose={toggleDrawer(false)}>
                                                              <DrawerForFilter 
@@ -244,12 +290,10 @@ export default function AllCategoryBookListComponent()
                                                                 selectedAuthorInFilter={selectedAuthorsInFilter}
                                                                 setSelectedAuthorsInFilter={setSelectedAuthorsInFilter}
 
-                                                                selectedCategoriesInFilter={selectedCategoriesInFilter}
-                                                                setSelectedCategoriesInFilter={setSelectedCategoriesInFilter}
+                                                                SpecificCategory={selectedCategory}
                                                             />
                                                         </Drawer>
                                                     </>
-                                                </Tooltip>
                                             </Box>
                                         </Box>                        
                                 </Grid>
@@ -308,30 +352,32 @@ export default function AllCategoryBookListComponent()
                                             mb:2,
                                         }}
                                     >
-                                        {   
-                                            selectedCategory !== null 
-                                            ? (categoryWiseBooks.length > 0 
-                                              ? categoryWiseBooks.map((book: BookDetails) => (
-                                                  <DetailedBookCard
-                                                    key={book.id}
-                                                    bookID={Number(book.id)}
-                                                    coverimage={book.coverimage}
-                                                    title={book.title}
-                                                    description={book.description}
-                                                    rating={book.rating}
-                                                    authors={book.authors}
-                                                    availability= {book.availability}
-                                                    onClick= {() => handleBookClick(book.id as number)}
-                                                    setAlert={setAlert}
-                                                    setAlertOpen={setAlertOpen}
-                                                    />
-                                                ))
-                                              : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
-                                                  No Books Found
+                                        {
+                                            isloading 
+                                            ? <></>
+                                            : (selectedCategory !== null 
+                                                ? ((selectedAuthorsInFilter.length>0 || selectedChipforAvailabilityInFilter.length>0 ? filteredBooks:categoryWiseBooks).length > 0 
+                                                    ? (selectedAuthorsInFilter.length>0 || selectedChipforAvailabilityInFilter.length>0 ? filteredBooks:categoryWiseBooks).map((book: BookDetails) => (
+                                                        <DetailedBookCard
+                                                            key={book.id}
+                                                            bookID={Number(book.id)}
+                                                            coverimage={book.coverimage}
+                                                            title={book.title}
+                                                            description={book.description}
+                                                            rating={book.rating}
+                                                            authors={book.authors}
+                                                            availability= {book.availability}
+                                                            onClick= {() => handleBookClick(book.id as number)}
+                                                            setAlert={setAlert}
+                                                            setAlertOpen={setAlertOpen}
+                                                        />
+                                                    ))
+                                                    : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
+                                                        No Books Found
+                                                    </Typography>)
+                                                : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
+                                                    Please select a category
                                                 </Typography>)
-                                            : <Typography variant="h5" color="text.secondary" sx={{mt: 3}}>
-                                                Please select a category
-                                              </Typography>
                                         }
                                     </Box>
                                 </Grid>
@@ -349,12 +395,12 @@ export default function AllCategoryBookListComponent()
                                     >
                                         { 
                                                <Pagination 
-                                               count={Math.ceil((selectedCategory !== null ? bookCount : 0) / 9)}
+                                               count={Math.ceil((selectedCategory !== null ? (selectedAuthorsInFilter.length>0 || selectedChipforAvailabilityInFilter.length>0 ? countofBooksForFilter: bookCount) : 0) / 9)}
                                                color="primary" 
                                                size="large"
                                                page={selectedCategory !== null ? offset : 1}
                                                onChange={(event, page) => {
-                                                   selectedCategory !== null ? setOffset(page) : setOffset(1);
+                                                   selectedCategory !== null ? (selectedAuthorsInFilter.length>0 || selectedChipforAvailabilityInFilter.length>0 ? setOffsetForFilter(page) : setOffset(page)) : setOffset(1);
                                                }}
                                            />
                                          } 

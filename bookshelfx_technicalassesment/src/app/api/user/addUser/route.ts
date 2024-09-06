@@ -5,8 +5,9 @@ import bcrypt from 'bcrypt';
 export async function POST(req: Request) 
 {
     try{
-        const {email, password, name, role, Avatar, favouriteCategories} = await req.json();
-        if(!email || !password || !name || !role){
+        const {email, password, name, role, Avatar, favoriteCategories} = await req.json();
+        if(!email || !password || !name || !role || !Avatar || !favoriteCategories)
+        {
             return NextResponse.json({success:false, user: null, message: "Please fill in all fields"}, {status: 400});
         }
 
@@ -27,7 +28,7 @@ export async function POST(req: Request)
                name,
                role,
                Avatar,
-               favoriteCategories: favouriteCategories
+               favoriteCategories
             }
         });
         const {password:newUserPassword, ...user} = newuser;

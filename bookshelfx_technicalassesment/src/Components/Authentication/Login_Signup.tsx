@@ -16,8 +16,14 @@ import {User} from '../interfaceModels';
 import Cookies from 'js-cookie';
 import { AuthContext } from '../Context/AuthContext';
 import Registration from './RegistrationSteps/Registation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-export default function Login_Signup() {
+export default function Login_Signup() 
+{
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
     const [isregister, setisregister] = React.useState(false);
     const [Email, setEmail] = React.useState('');
     const [Password, setPassword] = React.useState('');
@@ -29,8 +35,19 @@ export default function Login_Signup() {
     const [showAuthenticationFailed, setShowAuthenticationFailed] = React.useState(false);
     const { setIsAuthenticated } = React.useContext(AuthContext);
 
+    React.useEffect(() => {
+        if(searchParams.get('register') === 'true')
+        {
+            setisregister(true);
+        }
+        else
+        {
+            setisregister(false);
+        }
+    }, [searchParams, pathname ]);
+
     const handleRegisterRequest = () => {
-        setisregister(true);
+        router.push(pathname + '?register=true');        
     };
 
     const handleRoleChange = (event: SelectChangeEvent) => {
@@ -86,7 +103,7 @@ export default function Login_Signup() {
             >
                 {isregister ? (
                     <>
-                        <Registration/>
+                        <Registration />
                     </>
                 ) : (
                     <>
@@ -161,6 +178,7 @@ export default function Login_Signup() {
                             >
                                 Login
                             </Button>
+
                             <Button
                                 variant="outlined"
                                 sx={{
