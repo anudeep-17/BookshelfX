@@ -1,13 +1,15 @@
 import React from "react";
 import theme from "@/Components/Themes";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Rating, TextField, ThemeProvider, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Rating, TextField, ThemeProvider, Tooltip, Typography } from "@mui/material";
 import { BookReview } from "@/Components/interfaceModels";
+import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function ReviewConfirmationDialog({openDialog, setOpenDialog, task, handleLeaveReview, Userreview}:{
+export default function ReviewConfirmationDialog({openDialog, setOpenDialog, task, handleLeaveReview, handleDeleteReview, Userreview}:{
     openDialog: boolean,
     setOpenDialog: React.Dispatch<React.SetStateAction<{ open: boolean, task: string }>>,
     task: string,
     handleLeaveReview: (rating: number, review: string) => void,
+    handleDeleteReview: () => void,
     Userreview?: BookReview
 }) 
 {    
@@ -42,15 +44,24 @@ export default function ReviewConfirmationDialog({openDialog, setOpenDialog, tas
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                       
-                                <Typography variant= "h6" sx={{
-                                    mb:1, 
-                                    color: theme.palette.primary.main,
-                                }}>
-                                    
-                                        {task === 'reviewing' ? "Hope you enjoyed reading the book, please leave a review":"You have already left a review for the book"}
-            
-                                </Typography>
+                                <Box display="flex" flexDirection="row" alignItems="center" justifyContent={'space-between'} justifyItems={'center'} alignContent={'center'}>
+                                    <Typography variant="h6" sx={{ mb: 1, color: theme.palette.primary.main }}>
+                                        {task === 'reviewing' ? "Hope you enjoyed reading the book, please leave a review" : "You have already left a review for the book"}
+                                    </Typography>
+                                    {task !== 'reviewing' && (
+                                        <Tooltip title="Delete review">
+                                            <IconButton color="secondary" aria-label="delete review" onClick={()=>{
+                                                if(handleDeleteReview)
+                                                {
+                                                    handleDeleteReview();
+                                                    handleClose();
+                                                }
+                                            }}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    )}
+                                </Box>
                                 {
                                     task === 'reviewing' ?
                                     <>

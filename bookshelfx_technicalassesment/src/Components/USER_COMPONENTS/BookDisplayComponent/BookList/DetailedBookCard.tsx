@@ -9,7 +9,7 @@ import Cookies from 'js-cookie';
 import { getAllBooksCount, isbookrentedByUserPreviously, isbookrentedbycurrentuser, isuserReturnInitiated, setAvailabilityofBook } from '@/Services/BookRoutines';
 import RentalConfirmationDialog from '@/Components/USER_COMPONENTS/RentaConfirmationDialogComponent/RentalConfirmationDialog';
 import ReviewConfirmationDialog from '../../ReviewComponent/reviewDialogComponent';
-import { CheckIfAReveiwIsAlreadyGivenForTheBook, addAReviewToBook } from '@/Services/UserRoutines';
+import { CheckIfAReveiwIsAlreadyGivenForTheBook, DeleteAReviewForABook, addAReviewToBook } from '@/Services/UserRoutines';
 import { EmailRoutines } from '@/Services/EmailRoutines';
 
 
@@ -82,6 +82,7 @@ export default function DetailedBookCard({bookID, coverimage, title, description
         const response = await addAReviewToBook({bookId: bookID || 0, userID: userID || 0, rating: rating, review: review});
         if(response.success)
         {
+            setAlreadyReviewed(true);
             setAlert({severity: "success", message: "Review submitted successfully"});
             setAlertOpen(true);
         }
@@ -92,6 +93,23 @@ export default function DetailedBookCard({bookID, coverimage, title, description
         }
         
     }
+
+    const handleDeleteReview = async () => 
+    {
+        const response = await DeleteAReviewForABook(bookID || 0, userID || 0);
+        if(response.success)
+        {
+            setAlreadyReviewed(false);
+            setAlert({severity: "success", message: "Review deleted successfully"});
+            setAlertOpen(true);
+        }
+        else
+        {
+            setAlert({severity: "error", message: "Failed to delete review"});
+            setAlertOpen(true);
+        } 
+    }
+
     const handleClickonCheckout = async () => {
         const result = await setAvailabilityofBook(Number(bookID), false, Number(userID));
         if(result.success)
@@ -260,6 +278,7 @@ export default function DetailedBookCard({bookID, coverimage, title, description
                             setOpenDialog={setReviewDialog}
                             task={reviewDialog.task}
                             handleLeaveReview={handleReviewSubmission}
+                            handleDeleteReview={handleDeleteReview}
                             Userreview={reviewByUser}
                          />
                     }

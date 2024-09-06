@@ -105,6 +105,20 @@ export async function CheckIfAReveiwIsAlreadyGivenForTheBook(bookId: number, use
     return await response.json();
 }
 
+export async function DeleteAReviewForABook(bookId: number, userID: number)
+{
+    const response = await fetch('/api/user/reviewBook/deleteAReviewForABook', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            bookId,
+            userID,
+        })
+    });
+    return await response.json();
+}
 //=======================================================  Delete Account  ========================================================
 export async function DeleteAccount({id}: {id: number})
 {
