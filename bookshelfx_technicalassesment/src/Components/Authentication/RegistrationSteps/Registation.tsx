@@ -193,7 +193,7 @@ export default function Registration()
               Avatar: register.user.Avatar,
               favoriteCategories: register.user.favoriteCategories
           }
-          await EmailRoutines({task: "UserRegistration", UserName: user.name, UserEmail: user.email, RegistrationDate: new Date()});
+          await EmailRoutines({task: "UserRegistration", UserName: user.name, UserEmail: user.email, RegistrationDate: new Date(), role: user.role});
           
           setIsAuthenticated(true);
           return user;

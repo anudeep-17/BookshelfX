@@ -45,6 +45,14 @@ export default function Home() {
           router.push('/librarian/home');
         }
       }
+      else
+      {
+        router.push('/');
+      }
+    }
+    else
+    {
+      router.push('/');
     }
   }, [isAuthenticated, router]); 
 

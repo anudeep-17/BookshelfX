@@ -8,6 +8,7 @@ import { User } from '../interfaceModels';
 import { DeleteAccount, GetUser } from '@/Services/UserRoutines';
 import DeleteDialog from './DeleteDialog';
 import { usePathname, useRouter } from 'next/navigation';
+import { EmailRoutines } from '@/Services/EmailRoutines';
 const drawerWidth = DashboardSize;
 
 export default function MyAccountComponent() 
@@ -51,9 +52,19 @@ export default function MyAccountComponent()
     };
     
     const handleDeleteAccount = async () => {
+        const userEmail = user?.email;
+        const role = pathname.split("/")[1];
+
         const response = await DeleteAccount({id: Number(user.id) || 0});
         if(response.success)
         {
+            await EmailRoutines({
+                task: 'AccountDeletion',
+                UserEmail: userEmail,
+                DeletionDate: new Date(),
+                role: role
+            });
+            
             setAlertContent({severity: 'success', message: response.message});
             setAlertOpen(true);
             Cookies.remove('user');

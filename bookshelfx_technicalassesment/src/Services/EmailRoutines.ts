@@ -1,3 +1,4 @@
+ 
 export async function EmailRoutines({
     task, 
     BookTitle, 
@@ -8,7 +9,9 @@ export async function EmailRoutines({
     BookReturnDate, 
     UserName, 
     UserEmail,
-    RegistrationDate
+    RegistrationDate,
+    role, 
+    DeletionDate
 }:{
     task: string;
     BookTitle?: string;
@@ -20,6 +23,8 @@ export async function EmailRoutines({
     UserName?: string;
     UserEmail?: string;
     RegistrationDate?: Date;
+    role?: string;
+    DeletionDate?: Date;
 })
 {
     let body = {};
@@ -34,7 +39,10 @@ export async function EmailRoutines({
         body = { task, BookTitle, BookAuthors, BookRentalDate, BookReturnDate, UserEmail};
     }
     else if(task === "UserRegistration") {
-        body = { task, UserName, UserEmail, RegistrationDate };
+        body = { task, UserName, UserEmail, RegistrationDate, role };
+    }
+    else if(task === "AccountDeletion") {
+        body = { task, UserEmail, DeletionDate, role };
     }
     else {
         return { success: false, message: "Task is required" };

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from 'resend';
-import { RentalRecipt, RentalCloser, RentalOverdue, RentalReturnRequest, UserRegistration } from "./EmailTemplates";
+import { RentalRecipt, RentalCloser, RentalOverdue, RentalReturnRequest, UserRegistration, UserDeletion } from "./EmailTemplates";
 
 export async function POST(req: Request)
 {
@@ -15,6 +15,8 @@ export async function POST(req: Request)
         UserName, 
         UserEmail,
         RegistrationDate,
+        DeletionDate,
+        role
     } = await req.json();
 
     let functiontoexecute = null;
@@ -62,12 +64,21 @@ export async function POST(req: Request)
     }
     else if(task === "UserRegistration")
     {
-        if(!UserName || !UserEmail || !RegistrationDate)
+        if(!UserName || !UserEmail || !RegistrationDate || !role)
         {
-            return NextResponse.json({ success: false, message: "UserName, UserEmail, RegistrationDate are required" }, {status: 400});
+            return NextResponse.json({ success: false, message: "UserName, UserEmail, RegistrationDate, role are required" }, {status: 400});
         }
         subject = 'User Registration from BookshelfX: Welcome to BookshelfX';
-        functiontoexecute = UserRegistration({UserName, UserEmail, RegistrationDate});
+        functiontoexecute = UserRegistration({UserName, UserEmail, RegistrationDate, role});
+    }
+    else if(task === 'AccountDeletion')
+    {
+        if(!UserName || !UserEmail || !DeletionDate || !role)
+        {
+            return NextResponse.json({ success: false, message: "UserName, UserEmail, DeletionDate, role are required" }, {status: 400});
+        }
+        subject = 'User Account deletion from BookshelfX: Adieu from BookshelfX';
+        functiontoexecute = UserDeletion({UserName, UserEmail, DeletionDate, role});
     }
     else
     {
