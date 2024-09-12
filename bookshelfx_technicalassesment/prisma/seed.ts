@@ -57,7 +57,6 @@ async function fetchWithRetry(url: string | URL | Request, options: RequestInit 
     }
     return response.json();
 }
-
 async function CreateBooks() {
     for (const bookCategory of BookCategories.bookCategories) {
         const data = await fetchWithRetry(`https://www.googleapis.com/books/v1/volumes?q=subject:${bookCategory}&maxResults=10&key=${process.env.GOOGLE_BOOKS_API_KEY}`, { method: 'GET' });
@@ -82,19 +81,21 @@ async function CreateBooks() {
                 category: bookCategory,
                 rating: book.volumeInfo?.averageRating ? book.volumeInfo.averageRating : 0,
                 coverimage: book.volumeInfo?.imageLinks?.thumbnail ? book.volumeInfo.imageLinks.thumbnail : "N/A",
-                availability: true,
+                availability: true, 
                 isFeaturedBook: isFeaturedBook,
             }
 
-            try {
-                const bookDataResponse = await prisma.bookDetails.create({
-                    data: bookData
-                });
-            } catch (error: any) {
-                if (error.code === 'P2002') {
-                    console.log(`\t\tSkipping book with title "${bookData.title}" and authors "${bookData.authors}" because it already exists in the database.`);
-                } else {
-                    console.error(error);
+            if (bookData.title !== "N/A" && bookData.authors[0] !== "N/A") {
+                try {
+                    const bookDataResponse = await prisma.bookDetails.create({
+                        data: bookData
+                    });
+                } catch (error: any) {
+                    if (error.code === 'P2002') {
+                        console.log(`\t\tSkipping book with title "${bookData.title}" and authors "${bookData.authors}" because it already exists in the database.`);
+                    } else {
+                        console.error(error);
+                    }
                 }
             }
         }));
@@ -108,8 +109,8 @@ async function CreateBooks() {
 async function CreateBookRentalDetails() {
     const allusers = await prisma.user.findMany();
     const books = await prisma.bookDetails.findMany();
-    const users = allusers.filter(allusers => allusers.role === 'customer');
-    const librarians = allusers.filter(allusers => allusers.role === 'librarian');
+    const users = allusers.filter(allusers => allusers.role === 'Customer');
+    const librarians = allusers.filter(allusers => allusers.role === 'Librarian');
 
     const bookRentalHistory: Record<number, {rentalDate: Date, returnDate: Date}> = {};
 
@@ -169,7 +170,7 @@ async function CreateBookRentalDetails() {
 async function CreateFavoriteBooks()
 {
     const allusers = await prisma.user.findMany();
-    const users = allusers.filter(allusers => allusers.role === 'customer');
+    const users = allusers.filter(allusers => allusers.role === 'Customer');
     const books = await prisma.bookDetails.findMany();
 
     const userBookPairs = new Set();
@@ -200,7 +201,7 @@ async function CreateFavoriteBooks()
 async function CreateCustomerReviews()
 {
     const allusers = await prisma.user.findMany();
-    const users = allusers.filter(allusers => allusers.role === 'customer');
+    const users = allusers.filter(allusers => allusers.role === 'Customer');
     const books = await prisma.bookDetails.findMany();
     
     const userBookPairs = new Set();

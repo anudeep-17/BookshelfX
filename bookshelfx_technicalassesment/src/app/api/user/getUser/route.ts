@@ -26,7 +26,7 @@ export async function GET(req: Request)
         });
 
         if(user){
-            if(user.role === 'customer')
+            if(user.role === 'Customer')
             {
                 const userDetails  = {
                     id: user.id,
@@ -44,7 +44,7 @@ export async function GET(req: Request)
                     data: userDetails
                 }, {status: 200});
             }
-            else if(user.role === 'librarian')
+            else if(user.role === 'Librarian')
             {
                 const userDetails  = {
                     id: user.id,

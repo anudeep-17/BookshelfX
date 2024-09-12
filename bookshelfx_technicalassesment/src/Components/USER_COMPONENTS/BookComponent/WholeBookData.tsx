@@ -31,7 +31,7 @@ import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 import bookcover from '@/assets/bookcover.png'
 import { BookDetails } from '../../interfaceModels';
 import RentalConfirmationDialog from '../RentaConfirmationDialogComponent/RentalConfirmationDialog';
-import { CheckIfAReveiwIsAlreadyGivenForTheBook, addAReviewToBook } from '@/Services/UserRoutines';
+import { CheckIfAReveiwIsAlreadyGivenForTheBook, DeleteAReviewForABook, addAReviewToBook } from '@/Services/UserRoutines';
 import ReviewConfirmationDialog from '../ReviewComponent/reviewDialogComponent';
 import { EmailRoutines } from '@/Services/EmailRoutines';
 
@@ -432,6 +432,25 @@ export default function WholeBookData({id}:{id: string})
         
     }
     
+    const handleDeleteReview = async () => 
+    {
+        const user = Cookies.get('user');
+        const userID = user ? JSON.parse(user).id.toString() : '';
+        const response = await DeleteAReviewForABook(Number(id) || 0, Number(userID) || 0);
+
+        if(response.success)
+        {
+            setAlreadyReviewed(false);
+            setAlert({severity: "success", message: "Review deleted successfully"});
+            setAlertOpen(true);
+        }
+        else
+        {
+            setAlert({severity: "error", message: "Failed to delete review"});
+            setAlertOpen(true);
+        } 
+    }
+
     return(
         <ThemeProvider theme={theme}>
         <Box sx={{ 
@@ -659,6 +678,7 @@ export default function WholeBookData({id}:{id: string})
                     setOpenDialog={setReviewDialog}
                     task={reviewDialog.task}
                     handleLeaveReview={handleReviewSubmission}
+                    handleDeleteReview={handleDeleteReview}
                     Userreview={reviewByUser}
                 />
             }

@@ -40,7 +40,7 @@ export default function Home() {
         {
           router.push('/Reader/home');
         }
-        else
+        else if(JSON.parse(user).role === 'Librarian')
         {
           router.push('/librarian/home');
         }

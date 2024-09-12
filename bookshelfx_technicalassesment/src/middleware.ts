@@ -33,7 +33,7 @@ export function middleware(request: NextRequest)
           const role = JSON.parse(user.value).role;
           const currentPath = request.nextUrl.pathname;          
 
-          if (role === 'customer') {
+          if (role === 'Customer') {
             if (isPathInRoutes(currentPath, customerRoutes)) {
               return NextResponse.next();
             }
@@ -42,7 +42,7 @@ export function middleware(request: NextRequest)
               return NextResponse.redirect('http://localhost:3000/notAuthorized');
             }
           } 
-          else if (role === 'librarian' && isPathInRoutes(currentPath, LibrarianRoutes)) 
+          else if (role === 'Librarian' && isPathInRoutes(currentPath, LibrarianRoutes)) 
           {
             return NextResponse.next();
           }
