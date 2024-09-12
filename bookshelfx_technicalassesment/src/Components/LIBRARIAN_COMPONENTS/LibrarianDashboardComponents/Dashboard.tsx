@@ -32,7 +32,7 @@ export default function Dashboard_Home()
     const router = useRouter();
     const [stats, setStats] = React.useState<statsData | null>(null);
     const user = Cookies.get('user')? JSON.parse(Cookies.get('user') || ''):null;
-    const librarianID = user ? user.role === 'librarian' ? user.id : undefined :  undefined;
+    const librarianID = user ? user.role === 'Librarian' ? user.id : undefined :  undefined;
 
     React.useEffect(() => {
         if(librarianID === undefined)
