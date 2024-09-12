@@ -8,6 +8,7 @@ import fs from 'fs';
 import { promisify } from 'util'; 
 import { join } from 'path';
 import bycrpt from 'bcrypt';
+//Commands to run the seed file
 //npx prisma migrate dev 
 //npx prisma db seed
 
