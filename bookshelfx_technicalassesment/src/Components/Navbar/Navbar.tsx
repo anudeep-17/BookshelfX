@@ -253,7 +253,7 @@ export default function Navbar()
               {(pathname.split("/")[1] === 'Reader'? UserDrawer : LibrarianDrawer).slice(6).map((item, index) => (
                 <ListItem key={item.text} disablePadding>
                   <ListItemButton 
-                    selected={pathname.startsWith(item.path? item.path : "null")}
+                    selected={pathname.startsWith(item.path)}
                     sx={{ 
                       borderRadius: '4px', // Make edges curved
                       m:2,
@@ -273,10 +273,11 @@ export default function Navbar()
                       },
                     }}
                     onClick={() => {
-                      if (index === 6) 
+                      if (index === 0 && item.path.endsWith("/settings")) 
                       {
                         item.path && router.push(item.path);
-                      } else {
+                      } else if(index === 1 && item.path.endsWith("/logout"))
+                      {
                         handleLogout();
                       }
                     }}
