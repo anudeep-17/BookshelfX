@@ -9,6 +9,5 @@ export async function ChatGPTSupport({messages}:{messages: {role: string, conten
     });
 
     const data = await response.json();
-    console.log(data);
     return data;
 }

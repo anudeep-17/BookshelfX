@@ -63,8 +63,6 @@ export default function UserRentalBookComponent()
     useEffect(() => {
         const fetchData = async () => {
             const data = await getRentalsofUser(Number(userID));
-            console.log(data.data);
-            console.log(data.data.rentals.filter((rental: BookRentalDetails) => rental.returned === false))
             if(data.success)
             {
                 setRentalBookWholeDetails(data.data.rentals);
