@@ -44,7 +44,14 @@ export function middleware(request: NextRequest)
           } 
           else if (role === 'Librarian' && isPathInRoutes(currentPath, LibrarianRoutes)) 
           {
-            return NextResponse.next();
+            if(isPathInRoutes(currentPath, LibrarianRoutes))
+            {
+              return NextResponse.next();
+            }
+            else if (isPathInRoutes(currentPath, customerRoutes)) 
+            {
+              return NextResponse.redirect('http://localhost:3000/notAuthorized');
+            }
           }
         } catch (error) {
           return NextResponse.error(); 

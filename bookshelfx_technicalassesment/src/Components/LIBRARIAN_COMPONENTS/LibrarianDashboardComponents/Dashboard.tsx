@@ -37,6 +37,7 @@ export default function Dashboard_Home()
     React.useEffect(() => {
         if(librarianID === undefined)
         {
+            Cookies.remove('user');
             router.push('/');
         }
     }
@@ -213,7 +214,7 @@ export default function Dashboard_Home()
                         </Grid>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             {
-                                 stats.overdueBooks?
+                                stats.overdueBooks?
                                 <Grid container spacing={0}>
                                     <Grid item xs={12} sm={12}>
                                         <Paper elevation={3} sx={{alignContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
