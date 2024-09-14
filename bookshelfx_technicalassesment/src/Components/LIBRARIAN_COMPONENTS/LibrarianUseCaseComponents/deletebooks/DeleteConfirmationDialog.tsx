@@ -34,7 +34,7 @@ export default function DeleteConfirmationDialog({book, openDialog, setOpenDialo
                             color: theme.palette.text.secondary,
                         }}>
                              
-                            'Please confirm you want to remove the book by typing the below text'
+                            {'Please confirm you want to remove the book by typing the below text'}
      
                         </Typography>
                         <Typography variant='body1' sx={{
@@ -42,7 +42,7 @@ export default function DeleteConfirmationDialog({book, openDialog, setOpenDialo
                             color: theme.palette.primary.main,
                         }}>
                              
-                             "DELETEBOOK" 
+                             {"DELETEBOOK" }
                        
                         </Typography>
                         <TextField

@@ -37,12 +37,12 @@ export default function BookCard({bookID, coverimage, title, rating, authors, av
 
     return(
         <ThemeProvider theme={theme}>
-      <Tooltip title={isRentedBytheSameUser ? (userInitiatedReturn ? "Return Under Review" : "Already Rented") : (!availability ? "Not Available" : null)} followCursor>
+        <Tooltip title={isRentedBytheSameUser ? (userInitiatedReturn ? "Return Under Review" : "Already Rented") : (!availability ? "Not Available" : null)} followCursor>
           <Box sx={{ 
                 display: 'flex',
                 flexDirection: 'column',
                 minWidth: {xs:'45%', sm:'19%'}, // Increased size
-                maxWidth: {xs:'100%', sm:'20%'}, // Increased size
+                maxWidth: {xs:'45%', sm:'20%'}, // Increased size
                 minHeight: 300, // Increased size
                 maxHeight: 300, // Increased size
                 transition: '0.5s', // Add transition for smooth elevation

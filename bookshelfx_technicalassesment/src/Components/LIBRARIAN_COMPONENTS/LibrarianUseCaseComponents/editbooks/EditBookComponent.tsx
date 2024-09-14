@@ -189,9 +189,10 @@ export default function EditBookComponent()
                                                             }}
                                                             renderInput={(params) => <TextField {...params} label="Authors" fullWidth variant="outlined" sx={{mb: 2}}/>}
                                                             renderTags={(value, getTagProps) =>
-                                                            value.map((option, index) => (
-                                                                <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-                                                            ))
+                                                                value.map((option, index) => {
+                                                                    const tagProps = getTagProps({ index });
+                                                                    return <Chip variant="outlined" label={option} {...tagProps} key={index} />;
+                                                                })
                                                             }
                                                         />
 
@@ -262,7 +263,7 @@ export default function EditBookComponent()
                                                     mb:3
                                                 }}>
                                                     {Object.entries(searchType).map(([key, value]) => (
-                                                        <Box display="flex" flexDirection="row" alignItems="center" sx={{
+                                                        <Box key={key} display="flex" flexDirection="row" alignItems="center" sx={{
                                                             mr:2
                                                         }}>
                                                             <Typography variant="body1" color="text.secondary" key={key} sx={{mr: 1}}>

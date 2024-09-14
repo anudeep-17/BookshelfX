@@ -205,7 +205,7 @@ export default function AddBookFromGoogleComponent()
                                                 mb:3
                                             }}>
                                                 {Object.entries(searchType).map(([key, value]) => (
-                                                    <Box display="flex" flexDirection="row" alignItems="center" sx={{
+                                                    <Box key={key} display="flex" flexDirection="row" alignItems="center" sx={{
                                                         mr:2
                                                     }}>
                                                         <Typography variant="body1" color="text.secondary" key={key} sx={{mr: 1}}>

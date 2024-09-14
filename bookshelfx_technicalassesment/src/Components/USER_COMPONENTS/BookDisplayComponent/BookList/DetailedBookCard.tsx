@@ -163,7 +163,7 @@ export default function DetailedBookCard({bookID, coverimage, title, description
                 <Box sx={{ 
                         display: 'flex',
                         flexDirection: 'column',
-                        minWidth: {xs:'35%', sm:'30%'}, // Increased size
+                        minWidth: {xs:'100%', sm:'30%'}, // Increased size
                         maxWidth: {xs:'100%', sm:'30%'}, // Increased size
                         minHeight: 600, // Increased size
                         maxHeight: 600, // Increased size

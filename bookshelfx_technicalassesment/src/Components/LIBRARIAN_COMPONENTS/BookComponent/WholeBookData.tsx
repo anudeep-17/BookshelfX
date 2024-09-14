@@ -323,7 +323,7 @@ export default function WholeBookData({id}:{id: string})
                 Rental ID: ${rental.id}
                 Rented By User: ${rental.userId}
                 Rental Date: ${new Date(rental.rentalDate).toLocaleString()}
-                Return Date: ${new Date(rental.returnDate).toLocaleString()}
+                ${rental.returned ? `Return Date: ${new Date(rental.returnDate || '').toLocaleString()}` : ''}
                 Returned: ${rental.returned ? 'Yes' : 'No'}
                 Is Overdue: ${rental.isOverdue ? 'Yes' : 'No'}
                 Rental Closed by Librarian: ${rental.librarianId}`
@@ -424,9 +424,10 @@ export default function WholeBookData({id}:{id: string})
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Authors" fullWidth variant="outlined" sx={{mb: 2}}/>}
                                                 renderTags={(value, getTagProps) =>
-                                                  value.map((option, index) => (
-                                                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-                                                  ))
+                                                    value.map((option, index) => {
+                                                        const tagProps = getTagProps({ index });
+                                                        return <Chip variant="outlined" label={option} {...tagProps} key={index} />;
+                                                    })
                                                 }
                                               />
 
