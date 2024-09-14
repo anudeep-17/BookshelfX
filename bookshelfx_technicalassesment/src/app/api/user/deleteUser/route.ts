@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { database } from "../../prismaConfig";
-import { NextApiRequest } from "next";
 
-export async function DELETE(req: NextApiRequest) 
+
+export async function DELETE(req: Request) 
 {
     const url = new URL(req.url || '');
     const ID = url.searchParams.get('id');
