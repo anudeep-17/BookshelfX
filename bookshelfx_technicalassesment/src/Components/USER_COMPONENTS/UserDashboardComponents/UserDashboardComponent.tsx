@@ -199,6 +199,7 @@ export default function UserDashboardComponent() {
                                             pl:1,
                                             pr:2,
                                             mb:2,
+                                            gap:{xs:0.5, sm:0}
                                         }}
                                         >
                                             {
