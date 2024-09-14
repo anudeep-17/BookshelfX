@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { BookDetails } from '@/Components/interfaceModels';
 import bookcover from '@/assets/bookcover.png';
+import QuickBookDetails from './BookDetails';
 
 const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false, loading: () => 
     <CircularProgress
@@ -381,7 +382,7 @@ export default function UserDashboardComponent() {
                             background: '-webkit-linear-gradient(90deg, hsla(0, 0%, 100%, 1) 0%, hsla(222, 36%, 95%, 1) 100%)',
                         }}
                     >                         
-                         { !isXs && book ? <BookDetails book={book}/> : <BookDetails/> }
+                         { !isXs && book ? <QuickBookDetails  book={book}/> : <QuickBookDetails/> }
                     </Box>
                 </Box>
         </ThemeProvider>
