@@ -111,6 +111,7 @@ export default function DetailedBookCard({bookID, coverimage, title, description
     }
 
     const handleClickonCheckout = async () => {
+        const user = Cookies.get('user');
         const result = await setAvailabilityofBook(Number(bookID), false, Number(userID));
         if(result.success)
         {
@@ -123,8 +124,9 @@ export default function DetailedBookCard({bookID, coverimage, title, description
                 BookTitle: title,
                 BookAuthors: authors.join(", "),
                 BookRentalDate: new Date(),
-                BookExpectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 14)),
+                BookExpectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 5)),
                 TotalBooksinlibrary: await getAllBooksCount(),
+                UserEmail: user ? JSON.parse(user).email : ''
             });
         }
         else
@@ -142,13 +144,6 @@ export default function DetailedBookCard({bookID, coverimage, title, description
             setAlertOpen(true);
             setIsBookRented(false);
             setIsRentedBytheSameUser(false);
-            await EmailRoutines({
-                task: "RentalReturnRequest",
-                BookTitle: title,
-                BookAuthors: authors.join(", "),
-                BookRentalDate: new Date(),
-                BookExpectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 14)),
-            });
         }
         else
         {

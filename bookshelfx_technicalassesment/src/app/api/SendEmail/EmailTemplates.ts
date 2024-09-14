@@ -1,6 +1,6 @@
 export const RentalRecipt = ({BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, TotalBooksinlibrary}:{
     BookTitle: string,
-    BookAuthors: string[],
+    BookAuthors: string,
     BookRentalDate: string,
     BookExpectedReturnDate: string,
     TotalBooksinlibrary: number
@@ -101,7 +101,7 @@ export const RentalRecipt = ({BookTitle, BookAuthors, BookRentalDate, BookExpect
                     </tr>
                     <tr>
                         <td>${BookTitle}</td>
-                        <td>${BookAuthors.join(", ")}</td>
+                        <td>${BookAuthors}</td>
                         <td>${BookRentalDate}</td>
                         <td>${BookExpectedReturnDate}</td>
                     </tr>

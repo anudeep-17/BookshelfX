@@ -373,6 +373,7 @@ export default function WholeBookData({id}:{id: string})
                 BookRentalDate: new Date(),
                 BookExpectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 14)),
                 TotalBooksinlibrary: await getAllBooksCount(),
+                UserEmail: user ? JSON.parse(user).email : ''
             });
         }
         else
@@ -400,6 +401,7 @@ export default function WholeBookData({id}:{id: string})
                 BookAuthors: book?.authors.join(", "),
                 BookRentalDate: new Date(),
                 BookExpectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 14)),
+                TotalBooksinlibrary: await getAllBooksCount(),
             });
         }
         else
