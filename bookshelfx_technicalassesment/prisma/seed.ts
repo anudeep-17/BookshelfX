@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-
 import BookCategories from './BookCategoriesCatalog.json';
 import customerReviews from './RandomCustomerReviews.json';
 import { Book } from '@/Components/interfaceModels';
