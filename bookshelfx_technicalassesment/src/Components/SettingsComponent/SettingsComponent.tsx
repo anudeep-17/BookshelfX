@@ -252,7 +252,7 @@ export default function SettingsComponent()
                                 />
                             </Grid>
                             {
-                                userCookie && userDetails && userDetails.role === 'librarian' ? 
+                                userCookie && userDetails && userDetails.role === 'Librarian' ? 
                                 null:
                                 <>
                                 <Grid item xs={12} sm={6}>

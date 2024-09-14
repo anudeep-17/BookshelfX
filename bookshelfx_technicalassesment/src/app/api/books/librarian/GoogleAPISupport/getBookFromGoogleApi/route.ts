@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { NextApiRequest } from "next";
 
-export async function GET(req: NextApiRequest)
+export async function GET(req: Request )
 {   
     try{
         const url = new URL(req.url || '');

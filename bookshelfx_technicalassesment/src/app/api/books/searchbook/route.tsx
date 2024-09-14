@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import { NextApiRequest } from "next";
 import { database } from "../../prismaConfig";
 
-export async function GET(req: NextApiRequest)
+export async function GET(req:  Request)
 {
     const url = new URL(req.url || '');
     const title = url.searchParams.get('title') ? url.searchParams.get('title') : '';

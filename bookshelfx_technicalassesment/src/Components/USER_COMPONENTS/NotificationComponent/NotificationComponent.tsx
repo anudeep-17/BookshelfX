@@ -48,7 +48,7 @@ export default function NotificationComponent({anchorEl, setAnchorEl}:
             let notificationStrings :{notificationGroup: "renting"| "initiatedReturn"|"overdue"|null, notificationMessage: React.ReactNode, bookID: number}[] = [];
             if(fetchActiveRentalDataOfUser.success)
             {
-                fetchActiveRentalDataOfUser.data.rentals.map((rental: BookRentalDetails) => {
+                fetchActiveRentalDataOfUser.data?.rentals.map((rental: BookRentalDetails) => {
                      let notificationMessage: React.ReactNode ;
                      let notificationGroup: "renting"| "initiatedReturn"|"overdue"|null = null;
                      let bookID = Number(rental.book.id);

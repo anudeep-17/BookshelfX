@@ -96,13 +96,13 @@ export default function BookDisplayDialog({open, handleClose, book, setAlertOpen
                                     mb:1, 
                                     color: theme.palette.text.secondary,
                                 }}>
-                                      'Please confirm you want to remove the book by typing the below text'
+                                      {'Please confirm you want to remove the book by typing the below text'}
                                 </Typography>
                                 <Typography variant='body1' sx={{
                                   mb:1,
                                   color: theme.palette.primary.main,
                                 }}>
-                                    "DELETEBOOK"
+                                    {"DELETEBOOK"}
                                 </Typography>
                                 <TextField
                                     autoFocus

@@ -31,7 +31,6 @@ export async function GET(req:Request)
     }
     catch(err)
     {
-        console.log(err);
         return NextResponse.json({success: false, message: err}, {status: 500});
     }
 }

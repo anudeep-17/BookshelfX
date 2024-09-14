@@ -4,7 +4,7 @@ import LibraryImage from "@/assets/Library.png";
 import theme from '../../Themes';
 import bookcover from '@/assets/bookcover.png';
 
-export default function BookDetails({ book }: { book?: BookDetails }) 
+export default function QuickBookDetails({ book }: { book?: BookDetails }) 
 {   
     return(
         <ThemeProvider theme={theme}>

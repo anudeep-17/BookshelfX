@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { database } from "../../../../prismaConfig";
 
-export async function GET(req: any) 
+export async function GET(req: Request) 
 {
     try{
-        const url = new URL(req.url);
+        const url = new URL(req.url || '');
         const title = url.searchParams.get('title');
         const author = url.searchParams.get('author');
         
@@ -29,7 +29,6 @@ export async function GET(req: any)
     }
     catch(err)
     {
-        console.error(err);
         return NextResponse.json({success: false, message: err}, {status: 500});
     }
 }
