@@ -38,7 +38,7 @@ export default function  DeleteDialog({openDialog, setOpenDialog, handleDeleteAc
                             color: theme.palette.primary.main,
                         }}>
                              
-                             "DELETEACCOUNT" 
+                             {"DELETEACCOUNT" }
                        
                         </Typography>
                         <TextField

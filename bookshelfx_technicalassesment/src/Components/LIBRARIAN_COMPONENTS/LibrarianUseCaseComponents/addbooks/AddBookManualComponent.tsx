@@ -259,9 +259,10 @@ export default function AddBookManualComponent()
                                                 }}
                                                 renderInput={(params) => <TextField {...params} label="Authors" fullWidth variant="outlined" sx={{mb: 2}}/>}
                                                 renderTags={(value, getTagProps) =>
-                                                  value.map((option, index) => (
-                                                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-                                                  ))
+                                                    value.map((option, index) => {
+                                                        const tagProps = getTagProps({ index });
+                                                        return <Chip variant="outlined" label={option} {...tagProps} key={index} />;
+                                                    })
                                                 }
                                         />
 
@@ -391,7 +392,7 @@ export default function AddBookManualComponent()
                                     mb:1, 
                                     color: theme.palette.text.secondary,
                                 }}>
-                                    Please confirm all book Details by typing "ADDBOOK" in the text field below.
+                                    {'Please confirm all book Details by typing "ADDBOOK" in the text field below.'}
                                 </Typography>
                                 <TextField
                                     autoFocus
