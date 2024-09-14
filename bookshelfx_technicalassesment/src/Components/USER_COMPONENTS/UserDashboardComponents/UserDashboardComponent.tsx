@@ -16,9 +16,9 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { BookDetails } from '@/Components/interfaceModels';
 import bookcover from '@/assets/bookcover.png';
-import QuickBookDetails from './BookDetails';
+import QuickBookDetails from './QuickBookDetails';
 
-const BookDetails = dynamic(() => import('./BookDetails'), { ssr: false, loading: () => 
+const BookDetails = dynamic(() => import('./QuickBookDetails'), { ssr: false, loading: () => 
     <CircularProgress
         sx={{
             position: 'absolute',
