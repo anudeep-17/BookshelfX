@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from 'resend';
-import { RentalRecipt, RentalCloser, RentalOverdue, RentalReturnRequest, UserRegistration, UserDeletion } from "./EmailTemplates";
+import { RentalRecipt, RentalCloser, RentalOverdue, RentalReturnRequest, UserRegistration, UserDeletion, BookReview } from "./EmailTemplates";
 
 export async function POST(req: Request)
 {
@@ -16,7 +16,11 @@ export async function POST(req: Request)
         UserEmail,
         RegistrationDate,
         DeletionDate,
-        role
+        role, 
+        BookReview,
+        ReviewContent, 
+        BookReviewDate,
+        BookReviewDeletionDate,
     } = await req.json();
 
     let functiontoexecute = null;
@@ -79,6 +83,24 @@ export async function POST(req: Request)
         }
         subject = 'User Account deletion from BookshelfX: Adieu from BookshelfX';
         functiontoexecute = UserDeletion({UserName, UserEmail, DeletionDate, role});
+    }
+    else if(task === 'BookReview')
+    {
+        if(!BookTitle || !BookAuthors || !BookReview || !ReviewContent)
+        {
+            return NextResponse.json({ success: false, message: "BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, TotalBooksinlibrary are required" }, {status: 400});
+        }
+        subject = 'Book Review from BookshelfX: Your review has been published';
+        functiontoexecute = BookReview({BookTitle, BookAuthors, BookReview, ReviewContent, BookReviewDate});
+    }
+    else if(task === 'BookReviewDeletion')
+    {
+        if(!BookTitle || !BookAuthors || !BookReview || !ReviewContent || !BookReviewDeletionDate)
+        {
+            return NextResponse.json({ success: false, message: "BookTitle, BookAuthors, BookReview, ReviewContent, BookReviewDeletionDate are required" }, {status: 400});
+        }
+        subject = 'Book Review Deletion from BookshelfX: Your review has been deleted';
+        functiontoexecute = BookReview({BookTitle, BookAuthors, BookReview, ReviewContent, BookReviewDeletionDate});
     }
     else
     {
