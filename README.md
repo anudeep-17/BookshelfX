@@ -5,8 +5,8 @@ Welcome to BookShelfX! This full-stack web application replicates the functional
 
 ## Documents to Explain the application:
 - <a href ="https://docs.google.com/presentation/d/1_UGKx3D1e9rAA5mn69heauWKn0tcD_15/edit?usp=sharing&ouid=106341078487048229041&rtpof=true&sd=true">PPT about the application</a>
-- Software requirement specification document
-- database diagram
+- <a href="https://drive.google.com/file/d/1-qhXPTJAJR2wPTPE4VrkXXB6XlfUwwGd/view?usp=drive_link">Software requirement specification document</a>
+- <a href="https://drive.google.com/file/d/1PT0_CdRyjbYapgowLKv9z2UmDpyFizlC/view?usp=drive_link">database diagram</a>
   
 ## How to Run
 
