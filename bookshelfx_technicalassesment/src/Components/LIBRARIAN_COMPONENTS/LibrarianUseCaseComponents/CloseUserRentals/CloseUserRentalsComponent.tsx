@@ -464,7 +464,19 @@ export default function CloseUserRentalsComponenet()
                                                     <TableCell align="right">{rental.returnDate ? new Date(rental.returnDate).toLocaleString() : 'N/A'}</TableCell>
                                                     <TableCell align="right">{rental.userInitiatedReturn ? 'Yes' : 'No'}</TableCell>
                                                     <TableCell align="right">{rental.returned ? 'Yes' : 'No'}</TableCell>
-                                                    <TableCell align="right">{rental.isOverdue ? 'Yes' : 'No'}</TableCell>
+                                                    <TableCell align="right" onClick={async()=>{
+                                                        if(rental.isOverdue)
+                                                        {
+                                                            await EmailRoutines({
+                                                                task: "RentalOverdue",
+                                                                BookTitle: rental.book.title,
+                                                                BookAuthors: rental.book.authors.join(", "),
+                                                                BookRentalDate: new Date(rental.rentalDate),
+                                                                BookExpectedReturnDate: new Date(rental.expectedReturnDate),
+                                                                UserEmail: rental.user?.email,
+                                                            });
+                                                        }else{null}
+                                                    }}>{rental.isOverdue ? 'Yes' : 'No'}</TableCell>
                                                     <TableCell align="right">
                                                         <Button variant="contained" color="primary"  disabled ={!rental.userInitiatedReturn} onClick={()=>{setOpenReturnConfirmationDialog(true); setCurrentRentalToClose(rental)}}>
                                                             Close Rental

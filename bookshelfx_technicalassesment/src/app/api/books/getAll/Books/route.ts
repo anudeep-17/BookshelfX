@@ -21,7 +21,7 @@ export async function GET(req: Request)
         });
         if (result.length === 0) 
         {
-            return NextResponse.json({success: false, message: "No featured books available"}, {status: 404});
+            return NextResponse.json({success: false, message: "No books available"}, {status: 404});
         }
         return NextResponse.json({success: true, data: result}, {status: 200});
 

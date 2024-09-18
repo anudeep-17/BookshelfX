@@ -5,7 +5,6 @@ export async function EmailRoutines({
     BookAuthors,
     BookRentalDate,
     BookExpectedReturnDate,
-    TotalBooksinlibrary,
     BookReturnDate, 
     UserName, 
     UserEmail,
@@ -22,7 +21,6 @@ export async function EmailRoutines({
     BookAuthors?: string;
     BookRentalDate?: Date;
     BookExpectedReturnDate?: Date;
-    TotalBooksinlibrary?: number;
     BookReturnDate?: Date;
     UserName?: string;
     UserEmail?: string;
@@ -38,7 +36,7 @@ export async function EmailRoutines({
     let body = {};
 
     if(task === "RentalRecipt") {
-        body = { task, BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, TotalBooksinlibrary, UserEmail };
+        body = { task, BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, UserEmail };
     }
     else if(task === "RentalOverdue" || task === "RentalReturnRequest") {
         body = { task, BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, UserEmail };

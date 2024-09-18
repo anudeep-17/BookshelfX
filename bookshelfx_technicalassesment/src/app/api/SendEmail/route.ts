@@ -10,7 +10,6 @@ export async function POST(req: Request)
         BookAuthors,
         BookRentalDate,
         BookExpectedReturnDate,
-        TotalBooksinlibrary,
         BookReturnDate, 
         UserName, 
         UserEmail,
@@ -32,12 +31,12 @@ export async function POST(req: Request)
     }
     if(task === "RentalRecipt")
     {
-        if(!BookTitle || !BookAuthors || !BookRentalDate || !BookExpectedReturnDate || !TotalBooksinlibrary)
+        if(!BookTitle || !BookAuthors || !BookRentalDate || !BookExpectedReturnDate)
         {
             return NextResponse.json({ success: false, message: "BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, TotalBooksinlibrary are required" }, {status: 400});
         }
         subject = 'Rental Receipt from BookshelfX: Confirmation of your rental, hopefully you enjoy the book!';
-        functiontoexecute = RentalRecipt({BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, TotalBooksinlibrary});
+        functiontoexecute = RentalRecipt({BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate});
     }
     else if(task === "RentalCloser")
     {

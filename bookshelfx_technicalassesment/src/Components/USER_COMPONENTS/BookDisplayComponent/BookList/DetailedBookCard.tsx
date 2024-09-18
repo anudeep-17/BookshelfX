@@ -143,7 +143,6 @@ export default function DetailedBookCard({bookID, coverimage, title, description
                 BookAuthors: authors.join(", "),
                 BookRentalDate: new Date(),
                 BookExpectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 5)),
-                TotalBooksinlibrary: await getAllBooksCount(),
                 UserEmail: user ? JSON.parse(user).email : ''
             });
         }
@@ -162,6 +161,13 @@ export default function DetailedBookCard({bookID, coverimage, title, description
             setAlertOpen(true);
             setIsBookRented(false);
             setIsRentedBytheSameUser(false);
+            await EmailRoutines({
+                task: "RentalReturnRequest",
+                BookTitle: title,
+                BookAuthors: authors.join(", "),
+                BookRentalDate: new Date(),
+                BookExpectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 14))
+            });
         }
         else
         {

@@ -373,7 +373,6 @@ export default function WholeBookData({id}:{id: string})
                 BookAuthors: book?.authors.join(", "),
                 BookRentalDate: new Date(),
                 BookExpectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 14)),
-                TotalBooksinlibrary: await getAllBooksCount(),
                 UserEmail: user ? JSON.parse(user).email : ''
             });
         }
@@ -393,8 +392,8 @@ export default function WholeBookData({id}:{id: string})
         {
             setAlert({severity: "success", message: "Book returned successfully"});
             setAlertOpen(true);
-            setIsBookRented(false); 
-            setIsBookRentedByCurrentUser(false);
+            setIsBookRented(true); 
+            setIsBookRentedByCurrentUser(true);
             setBookReturnUnderReview(true);
             await EmailRoutines({
                 task: "RentalReturnRequest",
@@ -402,7 +401,7 @@ export default function WholeBookData({id}:{id: string})
                 BookAuthors: book?.authors.join(", "),
                 BookRentalDate: new Date(),
                 BookExpectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 14)),
-                TotalBooksinlibrary: await getAllBooksCount(),
+                UserEmail: user ? JSON.parse(user).email : ''
             });
         }
         else

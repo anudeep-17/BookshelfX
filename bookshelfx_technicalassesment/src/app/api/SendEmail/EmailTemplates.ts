@@ -1,9 +1,8 @@
-export const RentalRecipt = ({BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, TotalBooksinlibrary}:{
+export const RentalRecipt = ({BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate}:{
     BookTitle: string,
     BookAuthors: string,
     BookRentalDate: string,
     BookExpectedReturnDate: string,
-    TotalBooksinlibrary: number
 }) => {
     return `
     <!DOCTYPE html>
@@ -83,7 +82,7 @@ export const RentalRecipt = ({BookTitle, BookAuthors, BookRentalDate, BookExpect
             <div class="header">
                 <p class="library-name">bookshelf<span class="green">X</span></p>
                 <div class="library-info">
-                    <p>With ${TotalBooksinlibrary} books, we are heading to be the best digital library management system. 📖✨</p>
+                    <p>With hundreads of books, we are heading to be the best digital library management system. 📖✨</p>
                 </div>
                 <h1>Library Book Rental Invoice</h1>
             </div>
