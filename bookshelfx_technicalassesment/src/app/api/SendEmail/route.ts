@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from 'resend';
-import { RentalRecipt, RentalCloser, RentalOverdue, RentalReturnRequest, UserRegistration, UserDeletion, BookReview } from "./EmailTemplates";
+import { RentalRecipt, RentalCloser, RentalOverdue, RentalReturnRequest, UserRegistration, UserDeletion, BookReview, BookReviewDeletion } from "./EmailTemplates";
 
 export async function POST(req: Request)
 {
@@ -17,7 +17,7 @@ export async function POST(req: Request)
         RegistrationDate,
         DeletionDate,
         role, 
-        BookReview,
+        BookRating,
         ReviewContent, 
         BookReviewDate,
         BookReviewDeletionDate,
@@ -86,21 +86,21 @@ export async function POST(req: Request)
     }
     else if(task === 'BookReview')
     {
-        if(!BookTitle || !BookAuthors || !BookReview || !ReviewContent)
+        if(!BookTitle || !BookAuthors || !BookRating || !ReviewContent || !BookReviewDate)
         {
             return NextResponse.json({ success: false, message: "BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, TotalBooksinlibrary are required" }, {status: 400});
         }
         subject = 'Book Review from BookshelfX: Your review has been published';
-        functiontoexecute = BookReview({BookTitle, BookAuthors, BookReview, ReviewContent, BookReviewDate});
+        functiontoexecute = BookReview({BookTitle, BookAuthors, BookRating, ReviewContent, BookReviewDate});
     }
     else if(task === 'BookReviewDeletion')
     {
-        if(!BookTitle || !BookAuthors || !BookReview || !ReviewContent || !BookReviewDeletionDate)
+        if(!BookTitle || !BookAuthors || !BookReviewDeletionDate)
         {
             return NextResponse.json({ success: false, message: "BookTitle, BookAuthors, BookReview, ReviewContent, BookReviewDeletionDate are required" }, {status: 400});
         }
         subject = 'Book Review Deletion from BookshelfX: Your review has been deleted';
-        functiontoexecute = BookReview({BookTitle, BookAuthors, BookReview, ReviewContent, BookReviewDeletionDate});
+        functiontoexecute = BookReviewDeletion({BookTitle, BookAuthors, BookReviewDeletionDate});
     }
     else
     {

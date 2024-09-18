@@ -648,14 +648,15 @@ export const UserDeletion = ({
 
 export const BookReview = ({
     BookTitle,
-    Author,
-    ReviewDate,
+    BookAuthors,
+    BookReviewDate,
+    BookRating,
     ReviewContent
 }: {
     BookTitle: string,
-    Author: string,
-    ReviewDate: string,
-    ReviewerName: string,
+    BookAuthors: string,
+    BookReviewDate: string,
+    BookRating: string,
     ReviewContent: string
 }) => {
     return `
@@ -664,7 +665,7 @@ export const BookReview = ({
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Book Review</title>
+        <title>Book Review Given by you</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -714,8 +715,9 @@ export const BookReview = ({
                 <h1>Book Review</h1>
             </div>
             <div class="content">
-                <h2>${BookTitle} by ${Author}</h2>
-                <p><strong>Date:</strong> ${ReviewDate}</p>
+                <h2>${BookTitle} by ${BookAuthors}</h2>
+                <p><strong>Date:</strong> ${BookReviewDate}</p>
+                <p>${BookRating}⭐</p>
                 <p>${ReviewContent}</p>
             </div>
             <div class="footer">
@@ -731,12 +733,12 @@ export const BookReview = ({
 
 export const BookReviewDeletion = ({
     BookTitle,
-    Author,
-    DeletionDate,
+    BookAuthors,
+    BookReviewDeletionDate,
 }: {
     BookTitle: string,
-    Author: string,
-    DeletionDate: string,
+    BookAuthors: string,
+    BookReviewDeletionDate: string,
 }) => {
     return `
     <!DOCTYPE html>
@@ -795,8 +797,8 @@ export const BookReviewDeletion = ({
             </div>
             <div class="content">
                 <h2>Review Deleted</h2>
-                <p><strong>Date:</strong> ${DeletionDate}</p>
-                <p>Your review for the book <strong>${BookTitle}</strong> by <strong>${Author}</strong> has been successfully deleted on ${DeletionDate}.</p>
+                <p><strong>Date:</strong> ${BookReviewDeletionDate}</p>
+                <p>Your review for the book <strong>${BookTitle}</strong> by <strong>${BookAuthors}</strong> has been successfully deleted on ${BookReviewDeletionDate}.</p>
                 <p>If you have any questions or need further assistance, please do not hesitate to contact us.</p>
                 <p>Thank you for your contributions to our community. We hope to see more reviews from you in the future. 😊📚</p>
             </div>

@@ -11,7 +11,11 @@ export async function EmailRoutines({
     UserEmail,
     RegistrationDate,
     role, 
-    DeletionDate
+    DeletionDate, 
+    BookReviewDate, 
+    BookReviewDeletionDate,
+    BookRating,
+    ReviewContent
 }:{
     task: string;
     BookTitle?: string;
@@ -25,6 +29,10 @@ export async function EmailRoutines({
     RegistrationDate?: Date;
     role?: string;
     DeletionDate?: Date;
+    BookReviewDate?: Date;
+    BookReviewDeletionDate?: Date;
+    BookRating?: number;
+    ReviewContent?: string;
 })
 {
     let body = {};
@@ -44,6 +52,12 @@ export async function EmailRoutines({
     else if(task === "AccountDeletion") {
         body = { task, UserEmail, DeletionDate, role };
     }
+    else if(task === "BookReview") {
+        body = { task, BookTitle, BookAuthors, UserEmail, BookReviewDate, BookRating, ReviewContent};
+    } 
+    else if(task === "BookReviewDeletion") {
+        body = { task, BookTitle, BookAuthors, UserEmail, BookReviewDeletionDate };
+    }   
     else {
         return { success: false, message: "Task is required" };
     }

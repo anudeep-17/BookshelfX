@@ -79,12 +79,22 @@ export default function DetailedBookCard({bookID, coverimage, title, description
 
     const handleReviewSubmission = async (rating: number, review: string) => 
     {
+        const user = Cookies.get('user');
         const response = await addAReviewToBook({bookId: bookID || 0, userID: userID || 0, rating: rating, review: review});
         if(response.success)
         {
             setAlreadyReviewed(true);
             setAlert({severity: "success", message: "Review submitted successfully"});
             setAlertOpen(true);
+            await EmailRoutines({  
+                task: "BookReview",
+                BookTitle:  title,
+                BookAuthors:  authors.join(", "),
+                BookRating: rating,
+                ReviewContent: review,
+                BookReviewDate: new Date(),
+                UserEmail: user ? JSON.parse(user).email : ''
+            });
         }
         else
         {
@@ -96,12 +106,20 @@ export default function DetailedBookCard({bookID, coverimage, title, description
 
     const handleDeleteReview = async () => 
     {
+        const user = Cookies.get('user');
         const response = await DeleteAReviewForABook(bookID || 0, userID || 0);
         if(response.success)
         {
             setAlreadyReviewed(false);
             setAlert({severity: "success", message: "Review deleted successfully"});
             setAlertOpen(true);
+            await EmailRoutines({
+                task: "BookReviewDeletion",
+                BookTitle: title,
+                BookAuthors: authors.join(", "),
+                UserEmail: user ? JSON.parse(user).email : '',
+                BookReviewDeletionDate: new Date()
+            });
         }
         else
         {

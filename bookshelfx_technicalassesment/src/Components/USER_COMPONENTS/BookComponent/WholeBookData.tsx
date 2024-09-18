@@ -34,6 +34,7 @@ import RentalConfirmationDialog from '../RentaConfirmationDialogComponent/Rental
 import { CheckIfAReveiwIsAlreadyGivenForTheBook, DeleteAReviewForABook, addAReviewToBook } from '@/Services/UserRoutines';
 import ReviewConfirmationDialog from '../ReviewComponent/reviewDialogComponent';
 import { EmailRoutines } from '@/Services/EmailRoutines';
+import Email from 'next-auth/providers/email';
 
 const drawerWidth = DashboardSize;
 const OPTIONS: EmblaOptionsType = { loop: true }
@@ -424,6 +425,16 @@ export default function WholeBookData({id}:{id: string})
             setAlert({severity: "success", message: "Review submitted successfully"});
             setAlertOpen(true);
             setReviewDialog({open: false, task: ''});
+            await EmailRoutines({  
+                task: "BookReview",
+                BookTitle: book?.title,
+                BookAuthors: book?.authors.join(", "),
+                BookRating: rating,
+                ReviewContent: review,
+                BookReviewDate: new Date(),
+                UserEmail: user ? JSON.parse(user).email : ''
+            });
+
         }
         else
         {
@@ -445,6 +456,13 @@ export default function WholeBookData({id}:{id: string})
             setAlreadyReviewed(false);
             setAlert({severity: "success", message: "Review deleted successfully"});
             setAlertOpen(true);
+            await EmailRoutines({
+                task: "BookReviewDeletion",
+                BookTitle: book?.title,
+                BookAuthors: book?.authors.join(", "),
+                UserEmail: user ? JSON.parse(user).email : '',
+                BookReviewDeletionDate: new Date()
+            });
         }
         else
         {
