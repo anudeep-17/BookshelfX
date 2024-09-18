@@ -5,8 +5,8 @@ Welcome to BookShelfX! This full-stack web application replicates the functional
 
 ## Documents to Explain the application:
 - <a href ="https://docs.google.com/presentation/d/1_UGKx3D1e9rAA5mn69heauWKn0tcD_15/edit?usp=sharing&ouid=106341078487048229041&rtpof=true&sd=true">PPT about the application</a>
-- Software requirement specification document
-- <a href="https://drive.google.com/file/d/17V9OxgKRmfwYHu54mNMFDyOGQr6Ok7Jh/view?usp=drive_link">database diagram</a>
+- <a href="https://drive.google.com/file/d/1-qhXPTJAJR2wPTPE4VrkXXB6XlfUwwGd/view?usp=drive_link">Software requirement specification document</a>
+- <a href="https://drive.google.com/file/d/1PT0_CdRyjbYapgowLKv9z2UmDpyFizlC/view?usp=drive_link">database diagram</a>
   
 ## How to Run
 
@@ -70,7 +70,7 @@ This application has requirement for .env and .env.local files to run the applic
 
 ## Deployment
 
-This application is also deployed using Vercel. You can access the live version <a href="www.bookshelfx.store">here</a>.
+This application is also deployed using Vercel. You can access the live version <a href="https://www.bookshelfx.store/">here</a>.
 
 ## Tech Stack
 
