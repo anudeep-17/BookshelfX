@@ -5,7 +5,6 @@ export async function POST(req: Request)
 {   
     try {
         const { bookId, availability, userId } = await req.json();
-        console.log(bookId, availability, userId);
         if(!bookId || availability === undefined || !userId)
         {
             return NextResponse.json({success: false, message: "Missing required fields"}, {status: 400});

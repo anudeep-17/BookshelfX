@@ -5,32 +5,38 @@ export async function EmailRoutines({
     BookAuthors,
     BookRentalDate,
     BookExpectedReturnDate,
-    TotalBooksinlibrary,
     BookReturnDate, 
     UserName, 
     UserEmail,
     RegistrationDate,
     role, 
-    DeletionDate
+    DeletionDate, 
+    BookReviewDate, 
+    BookReviewDeletionDate,
+    BookRating,
+    ReviewContent
 }:{
     task: string;
     BookTitle?: string;
     BookAuthors?: string;
     BookRentalDate?: Date;
     BookExpectedReturnDate?: Date;
-    TotalBooksinlibrary?: number;
     BookReturnDate?: Date;
     UserName?: string;
     UserEmail?: string;
     RegistrationDate?: Date;
     role?: string;
     DeletionDate?: Date;
+    BookReviewDate?: Date;
+    BookReviewDeletionDate?: Date;
+    BookRating?: number;
+    ReviewContent?: string;
 })
 {
     let body = {};
 
     if(task === "RentalRecipt") {
-        body = { task, BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, TotalBooksinlibrary, UserEmail };
+        body = { task, BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, UserEmail };
     }
     else if(task === "RentalOverdue" || task === "RentalReturnRequest") {
         body = { task, BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, UserEmail };
@@ -44,6 +50,12 @@ export async function EmailRoutines({
     else if(task === "AccountDeletion") {
         body = { task, UserEmail, DeletionDate, role };
     }
+    else if(task === "BookReview") {
+        body = { task, BookTitle, BookAuthors, UserEmail, BookReviewDate, BookRating, ReviewContent};
+    } 
+    else if(task === "BookReviewDeletion") {
+        body = { task, BookTitle, BookAuthors, UserEmail, BookReviewDeletionDate };
+    }   
     else {
         return { success: false, message: "Task is required" };
     }

@@ -5,7 +5,6 @@ export async function POST(req: Request)
 {
     try{
         const {bookID , userID, rentalID} = await req.json();
-        console.log(bookID, userID, rentalID);
         if(!bookID || !userID || !rentalID)
         {
             return NextResponse.json({success: false, message: "Invalid request"}, {status: 400});

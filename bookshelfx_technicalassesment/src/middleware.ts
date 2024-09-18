@@ -50,7 +50,7 @@ export function middleware(request: NextRequest)
             }
             else if (isPathInRoutes(currentPath, customerRoutes)) 
             {
-              return NextResponse.redirect('http://localhost:3000/notAuthorized');
+              return NextResponse.redirect('/notAuthorized');
             }
           }
         } catch (error) {
