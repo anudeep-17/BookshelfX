@@ -4,7 +4,7 @@
 Welcome to BookShelfX! This full-stack web application replicates the functionality of a local library, allowing librarians to manage books and customers to borrow them. The application supports user authentication, book checkout, customer reviews, and more.
 
 ## Documents to Explain the application:
-- PPT about the application
+- <a href ="https://docs.google.com/presentation/d/1_UGKx3D1e9rAA5mn69heauWKn0tcD_15/edit?usp=sharing&ouid=106341078487048229041&rtpof=true&sd=true">PPT about the application</a>
 - Software requirement specification document
 - database diagram
   
