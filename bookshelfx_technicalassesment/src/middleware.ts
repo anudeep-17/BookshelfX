@@ -39,7 +39,7 @@ export function middleware(request: NextRequest)
             }
             else if (isPathInRoutes(currentPath, LibrarianRoutes)) 
             {
-              return NextResponse.redirect('http://localhost:3000/notAuthorized');
+              return NextResponse.redirect('https://www.bookshelfx.store/notAuthorized');
             }
           } 
           else if (role === 'Librarian' && isPathInRoutes(currentPath, LibrarianRoutes)) 
@@ -50,7 +50,7 @@ export function middleware(request: NextRequest)
             }
             else if (isPathInRoutes(currentPath, customerRoutes)) 
             {
-              return NextResponse.redirect('http://localhost:3000/notAuthorized');
+              return NextResponse.redirect('https://www.bookshelfx.store/notAuthorized');
             }
           }
         } catch (error) {

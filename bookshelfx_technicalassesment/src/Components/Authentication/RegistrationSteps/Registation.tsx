@@ -144,11 +144,17 @@ export default function Registration()
       }
 
     if (!isError) {
-        const newActiveStep =
-            isLastStep() && !allStepsCompleted()
-                ? 
-                steps.findIndex((step, i) => !(i in completed))
+        let newActiveStep;
+
+        if (Role === 'Librarian' && activeStep === 0) {
+            setAllSetFromUserSide(true);
+            newActiveStep = 2;
+        } else {
+            newActiveStep = isLastStep() && !allStepsCompleted()
+                ? steps.findIndex((step, i) => !(i in completed))
                 : activeStep + 1;
+        }
+
         setActiveStep(newActiveStep);
     }
   };
@@ -179,7 +185,7 @@ export default function Registration()
           password: Password,
           role: Role,
           Avatar:  "https://avatar.iran.liara.run/public",
-         favoriteCategories: selectedCategories.length !== 0 ? selectedCategories : []
+          favoriteCategories: selectedCategories.length !== 0 ? selectedCategories : []
       }
       
       const register = await RegisterUser(Registerdetails);
@@ -206,7 +212,7 @@ export default function Registration()
 
 
   return (
-    <Box sx={{ p:1.5, width: '45vw'}}>
+    <Box sx={{ p:1.5, width: {xs:'100vw', sm:'45vw'}}}>
         <Button  sx={{mb:1}} onClick={()=>{router.push(pathname); }}>
           <ArrowBackIosIcon/> Login
         </Button>
@@ -250,7 +256,7 @@ export default function Registration()
                                           showPassword={showPassword} 
                                           setShowPassword={setShowPassword} 
                                       /> :
-                activeStep === 1 && Role !== 'Librarian' ?  <RegistrationStep2
+                activeStep === 1  ?  <RegistrationStep2
                                         setAlertopener={setAlertopener} 
                                         setAlert={setalert}
                                         selectedCategories={selectedCategories}

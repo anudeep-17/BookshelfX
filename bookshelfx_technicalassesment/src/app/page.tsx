@@ -34,7 +34,7 @@ export default function Home() {
   useEffect(() => {
     if (isAuthenticated) {
       const user = Cookies.get('user');
-      if(user)
+      if(user && router)
       {
         if(JSON.parse(user).role === 'Customer') 
         {

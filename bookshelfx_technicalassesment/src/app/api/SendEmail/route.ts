@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from 'resend';
-import { RentalRecipt, RentalCloser, RentalOverdue, RentalReturnRequest, UserRegistration, UserDeletion } from "./EmailTemplates";
+import { RentalRecipt, RentalCloser, RentalOverdue, RentalReturnRequest, UserRegistration, UserDeletion, BookReview, BookReviewDeletion } from "./EmailTemplates";
 
 export async function POST(req: Request)
 {
@@ -10,13 +10,16 @@ export async function POST(req: Request)
         BookAuthors,
         BookRentalDate,
         BookExpectedReturnDate,
-        TotalBooksinlibrary,
         BookReturnDate, 
         UserName, 
         UserEmail,
         RegistrationDate,
         DeletionDate,
-        role
+        role, 
+        BookRating,
+        ReviewContent, 
+        BookReviewDate,
+        BookReviewDeletionDate,
     } = await req.json();
 
     let functiontoexecute = null;
@@ -28,12 +31,12 @@ export async function POST(req: Request)
     }
     if(task === "RentalRecipt")
     {
-        if(!BookTitle || !BookAuthors || !BookRentalDate || !BookExpectedReturnDate || !TotalBooksinlibrary)
+        if(!BookTitle || !BookAuthors || !BookRentalDate || !BookExpectedReturnDate)
         {
             return NextResponse.json({ success: false, message: "BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, TotalBooksinlibrary are required" }, {status: 400});
         }
         subject = 'Rental Receipt from BookshelfX: Confirmation of your rental, hopefully you enjoy the book!';
-        functiontoexecute = RentalRecipt({BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, TotalBooksinlibrary});
+        functiontoexecute = RentalRecipt({BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate});
     }
     else if(task === "RentalCloser")
     {
@@ -79,6 +82,24 @@ export async function POST(req: Request)
         }
         subject = 'User Account deletion from BookshelfX: Adieu from BookshelfX';
         functiontoexecute = UserDeletion({UserName, UserEmail, DeletionDate, role});
+    }
+    else if(task === 'BookReview')
+    {
+        if(!BookTitle || !BookAuthors || !BookRating || !ReviewContent || !BookReviewDate)
+        {
+            return NextResponse.json({ success: false, message: "BookTitle, BookAuthors, BookRentalDate, BookExpectedReturnDate, TotalBooksinlibrary are required" }, {status: 400});
+        }
+        subject = 'Book Review from BookshelfX: Your review has been published';
+        functiontoexecute = BookReview({BookTitle, BookAuthors, BookRating, ReviewContent, BookReviewDate});
+    }
+    else if(task === 'BookReviewDeletion')
+    {
+        if(!BookTitle || !BookAuthors || !BookReviewDeletionDate)
+        {
+            return NextResponse.json({ success: false, message: "BookTitle, BookAuthors, BookReview, ReviewContent, BookReviewDeletionDate are required" }, {status: 400});
+        }
+        subject = 'Book Review Deletion from BookshelfX: Your review has been deleted';
+        functiontoexecute = BookReviewDeletion({BookTitle, BookAuthors, BookReviewDeletionDate});
     }
     else
     {
