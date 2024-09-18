@@ -70,7 +70,7 @@ This application has requirement for .env and .env.local files to run the applic
 
 ## Deployment
 
-This application is also deployed using Vercel. You can access the live version <a href="www.bookshelfx.store">here</a>.
+This application is also deployed using Vercel. You can access the live version <a href="https://www.bookshelfx.store/">here</a>.
 
 ## Tech Stack
 
