@@ -48,6 +48,10 @@ This application has requirement for .env and .env.local files to run the applic
   ```
 
 ### Running the application 
+- Root into ./bookshelfx_technicalassesment in your terminal
+  ```
+    cd ./bookshelfx_technicalassesment
+  ```
 - Now in Terminal put the below commands in the same sequence as given
   ```
     npm i
