@@ -119,10 +119,12 @@ export default function Registration()
           setAlertopener(true);
           if (selectedCategories.length > 1 ) {
               setalert({severity: 'success', message: 'Step 2 Completed, Favourite categories added '});
+              setAllSetFromUserSide(true);
           } else {
-              setalert({severity: 'success', message: 'Step 2 Skipped, no favourite categories selected'});
+              setalert({severity: 'error', message: 'Step 2 , please select atleast one categories selected'});
+              isError = true;
+              return; 
           }
-          setAllSetFromUserSide(true);
       }
       else if (activeStep+1 === 3) {
           let registeruser = await handleRegister();
@@ -159,13 +161,6 @@ export default function Registration()
     }
   };
 
-  const handleSkip = () => {
-    if (activeStep === 1) {
-        setAlertopener(true);
-        setalert({severity: 'success', message: 'Step 2 Skipped, no favourite categories selected'});
-        setActiveStep(2);
-    }
-  };
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -274,11 +269,6 @@ export default function Registration()
                 Back
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
-                  {activeStep === 1 && (
-                      <Button onClick={handleSkip} sx={{ mr: 1 }}>
-                          Skip
-                      </Button>
-                  )}
                   <Button onClick={handleNext} sx={{ mr: 1 }}>
                       {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                   </Button>

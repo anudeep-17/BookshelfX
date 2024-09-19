@@ -35,15 +35,12 @@ const QuickBookDetails = dynamic(() => import('./QuickBookDetails'), { ssr: fals
 export default function UserDashboardComponent() {
     const [categories, setCategory] = React.useState<string[]>([]);
     const [selectedCategory, setSelectedCategory] = React.useState('');
-
     React.useEffect(() => {
         const fetchData = async () => {
             const userCookie = Cookies.get('user');
-            console.log(userCookie)
             const data = userCookie ? JSON.parse(userCookie).favoriteCategories : undefined;
             if (data !== undefined) 
             {
-                console.log("data", data)
                 setCategory(data);
             }
             setSelectedCategory(data[0]);
