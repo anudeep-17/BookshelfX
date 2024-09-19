@@ -1,7 +1,7 @@
 # BookshelfX: Library Management System -- Technical Assesment
 ## Introduction
 
-Welcome to BookShelfX! This full-stack web application replicates the functionality of a local library, allowing librarians to manage books and customers to borrow them. The application supports user authentication, book checkout, customer reviews, and more.
+Welcome to BookShelfX! This full-stack web application replicates the functionality of a local library, allowing librarians to manage books and customers to borrow them. The application supports user authentication, book checkout, customer reviews, and more. ofcourse powered by AI 
 
 ## Documents to Explain the application:
 - <a href ="https://docs.google.com/presentation/d/1_UGKx3D1e9rAA5mn69heauWKn0tcD_15/edit?usp=sharing&ouid=106341078487048229041&rtpof=true&sd=true">PPT about the application</a>
@@ -48,6 +48,10 @@ This application has requirement for .env and .env.local files to run the applic
   ```
 
 ### Running the application 
+- Root into ./bookshelfx_technicalassesment in your terminal
+  ```
+    cd ./bookshelfx_technicalassesment
+  ```
 - Now in Terminal put the below commands in the same sequence as given
   ```
     npm i
